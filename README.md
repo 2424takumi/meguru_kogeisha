@@ -1,1 +1,0 @@
-# meguru_kogeisha
