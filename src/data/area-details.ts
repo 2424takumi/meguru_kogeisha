@@ -10,6 +10,11 @@ export type CraftAreaDetail = CraftArea & {
       value: string
       note?: string
     }[]
+    visual?: {
+      src: string
+      alt: string
+      credit?: string
+    }
   }
   story: {
     title: string
@@ -85,6 +90,10 @@ export const craftAreaDetails: CraftAreaDetail[] = [
           value: "越前奉書・越前鳥の子・和紙照明",
         },
       ],
+      visual: {
+        src: "/area-visuals/echizen-washi.svg",
+        alt: "越前和紙の道具と紙束の抽象イラスト",
+      },
     },
     story: {
       title: "水と紙のむすび目を次代へ",
@@ -217,6 +226,10 @@ export const craftAreaDetails: CraftAreaDetail[] = [
           value: "仏具・茶道具・クラフトオブジェ",
         },
       ],
+      visual: {
+        src: "/area-visuals/takaoka-douki.svg",
+        alt: "高岡銅器をモチーフにした花器のイラスト",
+      },
     },
     story: {
       title: "鋳物職人の手がつなぐ古今東西",
@@ -347,6 +360,10 @@ export const craftAreaDetails: CraftAreaDetail[] = [
           value: "着物地・日常着・インテリアファブリック",
         },
       ],
+      visual: {
+        src: "/area-visuals/kurume-gasuri.svg",
+        alt: "久留米絣の織り模様を表現したイラスト",
+      },
     },
     story: {
       title: "藍の香りが満ちる路地から",
