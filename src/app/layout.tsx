@@ -4,13 +4,6 @@ import Link from "next/link";
 import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
 
-const navItems = [
-  { href: "/", label: "ホーム" },
-  { href: "/areas", label: "産地を探す" },
-  { href: "/stories", label: "物語を読む" },
-  { href: "/about", label: "めぐる工芸舎について" },
-];
-
 const geistSans = Geist({
   variable: "--font-geist-sans",
   subsets: ["latin"],
@@ -37,34 +30,17 @@ export default function RootLayout({
         className={`${geistSans.variable} ${geistMono.variable} antialiased`}
       >
         <div className="flex min-h-screen flex-col bg-gray-50">
-          <header className="sticky top-0 z-50 border-b border-neutral-200/80 bg-white/90 backdrop-blur">
-            <div className="mx-auto flex w-full max-w-6xl items-center justify-between px-4 py-3 sm:px-6 lg:px-8">
-              <Link href="/" aria-label="めぐる工芸舎" className="flex items-center">
+          <header className="border-b border-slate-200 bg-white">
+            <div className="mx-auto flex w-full max-w-6xl items-center px-4 py-3 sm:px-6">
+              <Link href="/" aria-label="めぐる工芸舎">
                 <Image
                   src="/meguru_logo.png"
                   alt="めぐる工芸舎のロゴ"
-                  width={140}
-                  height={40}
+                  width={180}
+                  height={48}
                   priority
-                  className="h-10 w-auto"
+                  className="h-12 w-auto"
                 />
-              </Link>
-              <nav className="hidden items-center gap-6 text-sm font-medium text-neutral-600 md:flex">
-                {navItems.map((item) => (
-                  <Link
-                    key={item.href}
-                    href={item.href}
-                    className="transition-colors hover:text-brand-600 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-brand-500"
-                  >
-                    {item.label}
-                  </Link>
-                ))}
-              </nav>
-              <Link
-                href="/contact"
-                className="inline-flex items-center rounded-full border border-brand-500/40 bg-brand-500/90 px-3 py-2 text-xs font-semibold text-white shadow-sm transition hover:bg-brand-600 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-brand-500 sm:px-4 sm:text-sm md:px-5"
-              >
-                産地づくりに参加する
               </Link>
             </div>
           </header>
