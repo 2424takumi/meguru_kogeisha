@@ -1,3 +1,4 @@
+import Image from "next/image"
 import Link from "next/link"
 import type { Metadata } from "next"
 import { notFound } from "next/navigation"
@@ -37,15 +38,23 @@ export default function CraftAreaPage({ params }: CraftAreaPageProps) {
     notFound()
   }
 
+  const heroStatPlacement = [
+    "lg:absolute lg:-top-14 lg:-left-20 lg:mt-0 lg:w-56",
+    "lg:absolute lg:top-20 lg:-right-20 lg:mt-0 lg:w-56",
+    "lg:absolute lg:-bottom-14 lg:-left-10 lg:mt-0 lg:w-56",
+    "lg:absolute lg:-bottom-10 lg:-right-12 lg:mt-0 lg:w-56",
+  ]
+
   return (
     <div className="min-h-screen bg-neutral-50 text-neutral-900">
       <main className="flex flex-col gap-20 pb-24">
-        <section className="relative overflow-hidden bg-white">
+        <section className="relative isolate overflow-hidden bg-neutral-100">
           <div
-            className={`absolute inset-0 bg-gradient-to-br ${area.themeColor} opacity-90`}
+            className={`absolute inset-0 bg-gradient-to-br ${area.themeColor} opacity-80`}
             aria-hidden="true"
           />
-          <div className="relative mx-auto max-w-6xl px-4 py-16 sm:px-6 lg:px-8">
+          <div className="absolute inset-x-0 bottom-0 h-40 bg-white/70 backdrop-blur" aria-hidden="true" />
+          <div className="relative mx-auto max-w-6xl px-4 pb-24 pt-16 sm:px-6 lg:px-8">
             <nav className="text-xs font-medium text-neutral-700 sm:text-sm">
               <ol className="flex flex-wrap items-center gap-2">
                 <li>
@@ -69,40 +78,70 @@ export default function CraftAreaPage({ params }: CraftAreaPageProps) {
                 <li className="text-neutral-900">{area.name}</li>
               </ol>
             </nav>
-            <div className="mt-10 grid gap-12 lg:grid-cols-[minmax(0,2fr)_minmax(0,1fr)] lg:items-start">
-              <div>
-                <p className="text-sm font-semibold uppercase tracking-widest text-neutral-700">
+            <div className="mt-12 grid gap-12 lg:grid-cols-[minmax(0,1.4fr)_minmax(0,1fr)] lg:items-center">
+              <div className="order-2 flex flex-col gap-6 lg:order-1">
+                <p className="text-xs font-semibold uppercase tracking-widest text-neutral-700">
                   {area.region}
                 </p>
-                <h1 className="mt-4 text-4xl font-semibold sm:text-5xl">{area.name}</h1>
-                <p className="mt-5 text-xl font-medium text-neutral-800 sm:max-w-3xl">{area.hero.tagline}</p>
-                <p className="mt-6 max-w-3xl text-base leading-7 text-neutral-700">{area.hero.narrative}</p>
-                <div className="mt-7 flex flex-wrap gap-3">
+                <div className="flex flex-col gap-5">
+                  <h1 className="text-4xl font-semibold text-neutral-900 sm:text-5xl">{area.name}</h1>
+                  <p className="text-xl font-medium text-neutral-800 sm:max-w-3xl">{area.hero.tagline}</p>
+                  <div className="h-px w-16 bg-neutral-300" aria-hidden="true" />
+                  <p className="max-w-3xl text-base leading-7 text-neutral-700">{area.hero.narrative}</p>
+                </div>
+                <div className="flex flex-wrap gap-2">
                   {area.hero.keywords.map((keyword) => (
                     <span
                       key={keyword}
-                      className="inline-flex items-center rounded-full bg-white/80 px-3 py-1 text-xs font-semibold uppercase tracking-wide text-brand-600 shadow-sm"
+                      className="inline-flex items-center rounded-full border border-white/70 bg-white/80 px-3 py-1 text-xs font-semibold uppercase tracking-wide text-brand-600 shadow-sm backdrop-blur"
                     >
                       {keyword}
                     </span>
                   ))}
                 </div>
               </div>
-              <div className="space-y-4 rounded-3xl border border-white/70 bg-white/90 p-6 shadow-sm backdrop-blur">
-                <p className="text-sm font-semibold text-neutral-600">産地のスナップショット</p>
-                <dl className="mt-4 grid gap-4">
-                  {area.hero.stats.map((stat) => (
-                    <div key={stat.label} className="rounded-2xl bg-neutral-100/80 px-4 py-3">
-                      <dt className="text-xs font-semibold uppercase tracking-wide text-neutral-600">
-                        {stat.label}
-                      </dt>
-                      <dd className="mt-1 text-lg font-semibold text-neutral-900">{stat.value}</dd>
-                      {stat.note ? (
-                        <p className="mt-1 text-xs leading-5 text-neutral-500">{stat.note}</p>
-                      ) : null}
-                    </div>
-                  ))}
-                </dl>
+              <div className="order-1 flex justify-center lg:order-2">
+                <div className="relative flex w-full max-w-[22rem] flex-col items-center">
+                  <div
+                    className="absolute -left-24 -top-20 hidden h-56 w-56 rounded-full bg-white/60 blur-3xl lg:block"
+                    aria-hidden="true"
+                  />
+                  <div
+                    className="absolute -right-20 -bottom-16 hidden h-60 w-60 rounded-full bg-white/50 blur-3xl lg:block"
+                    aria-hidden="true"
+                  />
+                  <div className="relative flex aspect-square w-full items-center justify-center rounded-[3rem] border border-white/60 bg-white/80 p-10 shadow-xl shadow-neutral-300/50 backdrop-blur-sm">
+                    {area.hero.visual ? (
+                      <Image
+                        src={area.hero.visual.src}
+                        alt={area.hero.visual.alt}
+                        fill
+                        sizes="(min-width: 1024px) 352px, 70vw"
+                        className="object-contain"
+                        priority
+                      />
+                    ) : (
+                      <span className="text-3xl font-semibold text-neutral-800">{area.name.slice(0, 2)}</span>
+                    )}
+                  </div>
+                  <div className="relative mt-10 w-full space-y-4 lg:mt-0 lg:space-y-0">
+                    {area.hero.stats.map((stat, index) => (
+                      <div
+                        key={stat.label}
+                        className={`rounded-2xl border border-white/70 bg-white/90 px-5 py-4 text-left shadow-sm backdrop-blur-sm transition duration-300 hover:-translate-y-1 hover:shadow-lg ${heroStatPlacement[index] ?? heroStatPlacement[heroStatPlacement.length - 1]}`}
+                      >
+                        <p className="text-xs font-semibold uppercase tracking-wide text-neutral-500">{stat.label}</p>
+                        <p className="mt-2 text-xl font-semibold text-neutral-900">{stat.value}</p>
+                        {stat.note ? (
+                          <p className="mt-1 text-xs leading-5 text-neutral-500">{stat.note}</p>
+                        ) : null}
+                      </div>
+                    ))}
+                  </div>
+                  {area.hero.visual?.credit ? (
+                    <p className="mt-24 text-xs text-neutral-500 lg:mt-36">{area.hero.visual.credit}</p>
+                  ) : null}
+                </div>
               </div>
             </div>
           </div>
