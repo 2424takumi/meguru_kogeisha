@@ -5,11 +5,41 @@
   --foreground: #171717;
 }
 
-@theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
+@theme {
+  /* Brand */
+  --color-brand-50:  oklch(0.98 0.01 25);
+  --color-brand-100: oklch(0.96 0.02 25);
+  --color-brand-200: oklch(0.93 0.03 25);
+  --color-brand-300: oklch(0.88 0.05 25);
+  --color-brand-400: oklch(0.80 0.08 25);
+  --color-brand-500: oklch(0.70 0.10 25);
+  --color-brand-600: oklch(0.55 0.12 25); /* 推奨：落ち着いたえんじ */
+  --color-brand-700: oklch(0.48 0.11 25);
+  --color-brand-800: oklch(0.42 0.09 25);
+  --color-brand-900: oklch(0.36 0.08 25);
+
+  /* Accent（温かみのある黄土〜亜麻色） */
+  --color-accent-500: oklch(0.85 0.07 85);
+  --color-accent-600: oklch(0.78 0.07 85);
+
+  /* Neutral（グレーは色相を少し赤側に寄せて温かく） */
+  --color-neutral-50:  oklch(0.98 0.01 40);
+  --color-neutral-100: oklch(0.96 0.01 40);
+  --color-neutral-200: oklch(0.92 0.01 40);
+  --color-neutral-300: oklch(0.86 0.01 40);
+  --color-neutral-400: oklch(0.70 0.02 40);
+  --color-neutral-500: oklch(0.55 0.02 40);
+  --color-neutral-600: oklch(0.45 0.02 40);
+  --color-neutral-700: oklch(0.35 0.02 40);
+  --color-neutral-800: oklch(0.27 0.02 40);
+  --color-neutral-900: oklch(0.20 0.02 40);
+
+  /* Typography */
+  --font-sans: ui-sans-serif, system-ui, "Noto Sans JP", "Hiragino Kaku Gothic ProN", "Yu Gothic", sans-serif;
+  --font-serif: ui-serif, Georgia, "Noto Serif JP", "Hiragino Mincho ProN", "Yu Mincho", serif;
+
+  /* Spacing scale（必要に応じて） */
+  /* --spacing-3: 0.75rem; など、必要になったら追加 */
 }
 
 @media (prefers-color-scheme: dark) {
