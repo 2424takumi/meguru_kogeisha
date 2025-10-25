@@ -7,6 +7,7 @@ import { craftAreas, weeklyVote } from "@/data/home"
 
 export default function Home() {
   return (
+
     <div className="min-h-screen bg-neutral-50 text-neutral-900">
       <SiteHeader />
       <main className="flex flex-col gap-20 pb-20">
