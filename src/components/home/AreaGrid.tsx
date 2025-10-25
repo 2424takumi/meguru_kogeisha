@@ -24,29 +24,30 @@ export default function AreaGrid({ areas }: AreaGridProps) {
       </div>
       <div className="mt-8 grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
         {areas.map((area) => (
-          <article
+          <Link
             key={area.slug}
-            className="group relative overflow-hidden rounded-3xl border border-neutral-200/80 bg-white shadow-sm transition hover:-translate-y-1 hover:shadow-lg"
+            href={`/areas/${area.slug}`}
+            aria-label={`${area.name}の詳細ページを開く`}
+            className="group block rounded-3xl focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-600 focus-visible:ring-offset-2"
           >
-            <div className={`h-24 w-full bg-gradient-to-br ${area.themeColor}`} aria-hidden="true" />
-            <div className="flex h-full flex-col gap-4 px-6 pb-6 pt-4">
-              <div>
-                <p className="text-xs font-semibold uppercase tracking-wide text-brand-600">{area.region}</p>
-                <h3 className="mt-2 text-xl font-semibold text-neutral-900">{area.name}</h3>
-                <p className="mt-2 text-sm leading-6 text-neutral-600">{area.description}</p>
+            <article className="relative overflow-hidden rounded-3xl border border-neutral-200/80 bg-white shadow-sm transition group-hover:-translate-y-1 group-hover:shadow-lg">
+              <div className={`h-24 w-full bg-gradient-to-br ${area.themeColor}`} aria-hidden="true" />
+              <div className="flex h-full flex-col gap-4 px-6 pb-6 pt-4">
+                <div>
+                  <p className="text-xs font-semibold uppercase tracking-wide text-brand-600">{area.region}</p>
+                  <h3 className="mt-2 text-xl font-semibold text-neutral-900">{area.name}</h3>
+                  <p className="mt-2 text-sm leading-6 text-neutral-600">{area.description}</p>
+                </div>
+                <p className="text-sm font-medium text-brand-600">{area.highlight}</p>
+                <div className="mt-auto inline-flex items-center gap-2 text-sm font-semibold text-neutral-900 transition group-hover:text-brand-600">
+                  詳細を見る
+                  <span aria-hidden="true" className="transition group-hover:translate-x-1">
+                    →
+                  </span>
+                </div>
               </div>
-              <p className="text-sm font-medium text-brand-600">{area.highlight}</p>
-              <Link
-                href={`/areas/${area.slug}`}
-                className="mt-auto inline-flex items-center gap-2 text-sm font-semibold text-neutral-900 transition group-hover:text-brand-600"
-              >
-                詳細を見る
-                <span aria-hidden="true" className="transition group-hover:translate-x-1">
-                  →
-                </span>
-              </Link>
-            </div>
-          </article>
+            </article>
+          </Link>
         ))}
       </div>
     </section>
