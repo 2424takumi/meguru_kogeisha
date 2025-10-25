@@ -50,7 +50,7 @@ export default function WeeklyVote({ title, question, description, options }: We
             <h2 id="weekly-vote-heading" className="mt-3 text-2xl font-semibold text-neutral-900 sm:mt-4 sm:text-3xl">
               {question}
             </h2>
-            <p className="mt-4 text-sm leading-7 text-neutral-600 sm:text-base">
+            <p className="mt-4 text-sm leading-5 text-neutral-600 sm:text-base">
               {description}
             </p>
             <p className="mt-5 text-xs leading-relaxed text-neutral-400 sm:mt-6">

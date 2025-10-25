@@ -16,10 +16,10 @@ export default function SiteHeader() {
           <Image
             src="/meguru_logo.png"
             alt="めぐる工芸舎のロゴ"
-            width={140}
+            width={120}
             height={40}
             priority
-            className="h-10 w-auto"
+            className="h-[28px] w-auto"
           />
         </Link>
         <nav className="hidden items-center gap-6 text-sm font-medium text-neutral-600 md:flex">
