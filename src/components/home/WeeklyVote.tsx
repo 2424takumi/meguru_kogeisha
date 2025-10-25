@@ -19,7 +19,7 @@ export default function WeeklyVote({ title, question, description, options }: We
     [options, selectedOption],
   )
 
-  const sizeClasses = ["h-14 w-14", "h-12 w-12", "h-10 w-10", "h-12 w-12", "h-14 w-14"] as const
+  const sizeClasses = ["h-12 w-12", "h-11 w-11", "h-10 w-10", "h-11 w-11", "h-12 w-12"] as const
 
   const handleMobileKeyDown = (event: React.KeyboardEvent<HTMLButtonElement>, index: number) => {
     if (event.key === "ArrowRight" || event.key === "ArrowDown") {
@@ -87,15 +87,20 @@ export default function WeeklyVote({ title, question, description, options }: We
                         }`}
                       >
                         <span
+                          aria-hidden="true"
                           className={`flex items-center justify-center rounded-full border transition ${
                             size
                           } ${
                             isSelected
-                              ? "border-brand-500 bg-brand-500 text-white shadow-[0_0_0_4px_rgba(186,62,54,0.18)]"
-                              : "border-neutral-300 bg-neutral-50 text-neutral-500"
+                              ? "border-brand-500 bg-brand-500 shadow-[0_0_0_4px_rgba(186,62,54,0.18)]"
+                              : "border-neutral-300 bg-neutral-50"
                           }`}
                         >
-                          {index + 1}
+                          <span
+                            className={`h-2.5 w-2.5 rounded-full transition-transform ${
+                              isSelected ? "scale-100 bg-white" : "scale-0 bg-transparent"
+                            }`}
+                          />
                         </span>
                       </button>
                     )
@@ -122,10 +127,7 @@ export default function WeeklyVote({ title, question, description, options }: We
                         isSelected ? "border-brand-500 bg-brand-500/10 ring-4 ring-brand-500/10" : "border-neutral-200/80 bg-neutral-50"
                       }`}
                     >
-                      <span className="text-xs font-semibold uppercase tracking-wide text-neutral-400">
-                        選択肢 {index + 1}
-                      </span>
-                      <p className="mt-2 text-base font-semibold text-neutral-900">{option.label}</p>
+                      <p className="text-base font-semibold text-neutral-900">{option.label}</p>
                       <p className="mt-2 text-sm text-neutral-600">{option.description}</p>
                       <input
                         type="radio"
