@@ -3,7 +3,6 @@ import type { Metadata } from "next"
 import { notFound } from "next/navigation"
 
 import SiteFooter from "@/components/layout/SiteFooter"
-import SiteHeader from "@/components/layout/SiteHeader"
 import { getCraftAreaDetail, listCraftAreaSlugs } from "@/data/area-details"
 
 type CraftAreaPageProps = {
@@ -40,7 +39,6 @@ export default function CraftAreaPage({ params }: CraftAreaPageProps) {
 
   return (
     <div className="min-h-screen bg-neutral-50 text-neutral-900">
-      <SiteHeader />
       <main className="flex flex-col gap-20 pb-24">
         <section className="relative overflow-hidden bg-white">
           <div

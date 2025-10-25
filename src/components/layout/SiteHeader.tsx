@@ -1,24 +1,26 @@
-import Link from 'next/link'
+import Image from "next/image";
+import Link from "next/link";
 
 const navItems = [
-  { href: '/', label: 'ホーム' },
-  { href: '/areas', label: '産地を探す' },
-  { href: '/stories', label: '物語を読む' },
-  { href: '/about', label: 'めぐる工芸舎について' },
-]
+  { href: "/", label: "ホーム" },
+  { href: "/areas", label: "産地を探す" },
+  { href: "/stories", label: "物語を読む" },
+  { href: "/about", label: "めぐる工芸舎について" },
+];
 
 export default function SiteHeader() {
   return (
     <header className="sticky top-0 z-50 border-b border-neutral-200/80 bg-white/90 backdrop-blur">
-      <div className="mx-auto flex max-w-6xl items-center justify-between px-4 py-4 sm:px-6 lg:px-8">
-        <Link href="/" className="flex items-center gap-2">
-          <div className="flex h-10 w-10 items-center justify-center rounded-full bg-brand-500 text-white">
-            <span className="text-lg font-semibold">巡</span>
-          </div>
-          <div>
-            <p className="text-base font-semibold text-neutral-900">めぐる工芸舎</p>
-            <p className="text-xs text-neutral-500">Meguru Kogeisha</p>
-          </div>
+      <div className="mx-auto flex w-full max-w-6xl items-center justify-between px-4 py-3 sm:px-6 lg:px-8">
+        <Link href="/" aria-label="めぐる工芸舎" className="flex items-center">
+          <Image
+            src="/meguru_logo.png"
+            alt="めぐる工芸舎のロゴ"
+            width={140}
+            height={40}
+            priority
+            className="h-10 w-auto"
+          />
         </Link>
         <nav className="hidden items-center gap-6 text-sm font-medium text-neutral-600 md:flex">
           {navItems.map((item) => (
@@ -39,5 +41,5 @@ export default function SiteHeader() {
         </Link>
       </div>
     </header>
-  )
+  );
 }
