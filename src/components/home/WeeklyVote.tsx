@@ -13,6 +13,7 @@ type WeeklyVoteProps = {
 export default function WeeklyVote({ title, question, description, options }: WeeklyVoteProps) {
   const [selectedOption, setSelectedOption] = useState<string | null>(null)
   const [hasSubmitted, setHasSubmitted] = useState(false)
+  const [comment, setComment] = useState("")
 
   const selectedOptionDetail = useMemo(
     () => options.find((option) => option.id === selectedOption) ?? null,
@@ -106,11 +107,27 @@ export default function WeeklyVote({ title, question, description, options }: We
                     )
                   })}
                 </div>
-                <div className="mt-4 min-h-[92px] rounded-2xl border border-neutral-200/80 bg-neutral-50 p-4 text-sm leading-6 text-neutral-600">
+                <div className="mt-4 space-y-4 rounded-2xl border border-neutral-200/80 bg-neutral-50 p-4 text-sm leading-6 text-neutral-600">
                   {selectedOptionDetail ? (
                     <>
                       <p className="font-semibold text-neutral-900">{selectedOptionDetail.label}</p>
                       <p className="mt-2">{selectedOptionDetail.description}</p>
+                      {!hasSubmitted && (
+                        <div className="space-y-2 text-left">
+                          <label htmlFor="weekly-vote-comment-mobile" className="text-xs font-semibold uppercase tracking-wide text-neutral-500">
+                            コメント (任意)
+                          </label>
+                          <textarea
+                            id="weekly-vote-comment-mobile"
+                            name="weekly-vote-comment"
+                            value={comment}
+                            onChange={(event) => setComment(event.target.value)}
+                            placeholder="この意見にした理由を伝える。"
+                            rows={4}
+                            className="w-full rounded-2xl border border-neutral-200/80 bg-white px-4 py-3 text-sm text-neutral-700 placeholder-neutral-400 focus:border-brand-500 focus:outline-none focus:ring-4 focus:ring-brand-500/10"
+                          />
+                        </div>
+                      )}
                     </>
                   ) : (
                     <p className="text-neutral-500">選択すると詳しい説明が表示されます。</p>
@@ -143,6 +160,32 @@ export default function WeeklyVote({ title, question, description, options }: We
                 })}
               </div>
             </fieldset>
+            {!hasSubmitted && selectedOptionDetail && (
+              <div className="hidden space-y-4 rounded-2xl border border-neutral-200/80 bg-neutral-50 p-6 text-left text-sm text-neutral-600 sm:block">
+                <div>
+                  <p className="text-xs font-semibold uppercase tracking-[0.25em] text-neutral-500">選択中の意見</p>
+                  <p className="mt-2 text-base font-semibold text-neutral-900">{selectedOptionDetail.label}</p>
+                  <p className="mt-2 text-sm text-neutral-600">{selectedOptionDetail.description}</p>
+                </div>
+                <div className="space-y-2">
+                  <label
+                    htmlFor="weekly-vote-comment-desktop"
+                    className="text-xs font-semibold uppercase tracking-wide text-neutral-500"
+                  >
+                    コメント (任意)
+                  </label>
+                  <textarea
+                    id="weekly-vote-comment-desktop"
+                    name="weekly-vote-comment"
+                    value={comment}
+                    onChange={(event) => setComment(event.target.value)}
+                    placeholder="この意見にした理由を伝える。"
+                    rows={5}
+                    className="w-full rounded-2xl border border-neutral-200/80 bg-white px-4 py-3 text-sm text-neutral-700 placeholder-neutral-400 focus:border-brand-500 focus:outline-none focus:ring-4 focus:ring-brand-500/10"
+                  />
+                </div>
+              </div>
+            )}
             <button
               type="submit"
               disabled={!selectedOption || hasSubmitted}
