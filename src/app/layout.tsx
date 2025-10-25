@@ -1,4 +1,6 @@
 import type { Metadata } from "next";
+import Image from "next/image";
+import Link from "next/link";
 import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
 
@@ -27,7 +29,23 @@ export default function RootLayout({
       <body
         className={`${geistSans.variable} ${geistMono.variable} antialiased`}
       >
-        {children}
+        <div className="flex min-h-screen flex-col bg-gray-50">
+          <header className="border-b border-slate-200 bg-white">
+            <div className="mx-auto flex w-full max-w-6xl items-center px-4 py-3 sm:px-6">
+              <Link href="/" aria-label="めぐる工芸舎">
+                <Image
+                  src="/meguru_logo.png"
+                  alt="めぐる工芸舎のロゴ"
+                  width={180}
+                  height={48}
+                  priority
+                  className="h-12 w-auto"
+                />
+              </Link>
+            </div>
+          </header>
+          {children}
+        </div>
       </body>
     </html>
   );
