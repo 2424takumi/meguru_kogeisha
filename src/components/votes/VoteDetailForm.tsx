@@ -1,43 +1,90 @@
 "use client"
 
 import type { FormEvent } from "react"
-import { useEffect, useMemo, useState } from "react"
+import { useEffect, useId, useMemo, useState } from "react"
 import { useRouter } from "next/navigation"
 import type { VoteOptionDetail } from "@/data/vote-details"
+import type { VoteType } from "@/data/home"
 
 type VoteDetailFormProps = {
   question: string
   options: VoteOptionDetail[]
   resultSlug: string
-  initialSelectedOptionId?: string | null
+  voteType: VoteType
+  allowComment: boolean
+  commentLabel?: string
+  minChoices?: number
+  maxChoices?: number
+  initialSelectedOptionIds?: string[]
 }
 
 export default function VoteDetailForm({
   question,
   options,
   resultSlug,
-  initialSelectedOptionId = null,
+  voteType,
+  allowComment,
+  commentLabel,
+  minChoices,
+  maxChoices,
+  initialSelectedOptionIds = [],
 }: VoteDetailFormProps) {
-  const [selectedOption, setSelectedOption] = useState<string | null>(initialSelectedOptionId)
-  const [hasSubmitted, setHasSubmitted] = useState<boolean>(Boolean(initialSelectedOptionId))
+  const [selectedOptionIds, setSelectedOptionIds] = useState<string[]>(initialSelectedOptionIds)
+  const [hasSubmitted, setHasSubmitted] = useState<boolean>(initialSelectedOptionIds.length > 0)
   const [comment, setComment] = useState("")
+  const [validationMessage, setValidationMessage] = useState<string | null>(null)
   const router = useRouter()
+  const fieldsetLegendId = useId()
+  const commentCounterId = useId()
+
+  const isMultiple = voteType === "multiple"
+  const minimumRequired = minChoices ?? (isMultiple ? 1 : 1)
+  const maximumAllowed = maxChoices ?? (isMultiple ? options.length : 1)
+  const commentMaxLength = 2000
 
   useEffect(() => {
-    setSelectedOption(initialSelectedOptionId)
-    setHasSubmitted(Boolean(initialSelectedOptionId))
-  }, [initialSelectedOptionId])
+    setSelectedOptionIds(initialSelectedOptionIds)
+    setHasSubmitted(initialSelectedOptionIds.length > 0)
+  }, [initialSelectedOptionIds])
 
-  const selectedOptionDetail = useMemo(
-    () => options.find((option) => option.id === selectedOption) ?? null,
-    [options, selectedOption],
+  const selectedOptionDetails = useMemo(
+    () =>
+      selectedOptionIds
+        .map((optionId) => options.find((option) => option.id === optionId))
+        .filter((option): option is VoteOptionDetail => Boolean(option)),
+    [options, selectedOptionIds],
   )
+
+  const hasSelection = selectedOptionIds.length > 0
+  const formattedCommentLabel = commentLabel ?? "コメント (任意)"
+
+  const handleOptionChange = (optionId: string) => {
+    setValidationMessage(null)
+    if (isMultiple) {
+      setSelectedOptionIds((previous) => {
+        if (previous.includes(optionId)) {
+          return previous.filter((id) => id !== optionId)
+        }
+        if (previous.length >= maximumAllowed) {
+          setValidationMessage(`選択できるのは最大で${maximumAllowed}件までです。`)
+          return previous
+        }
+        return [...previous, optionId]
+      })
+      return
+    }
+    setSelectedOptionIds([optionId])
+  }
 
   const handleSubmit = (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault()
-    if (!selectedOption) return
+    if (selectedOptionIds.length < minimumRequired) {
+      setValidationMessage(`少なくとも${minimumRequired}件選択してください。`)
+      return
+    }
+    const selectedQuery = selectedOptionIds.join(",")
     setHasSubmitted(true)
-    router.replace(`/votes/${resultSlug}/results?selected=${selectedOption}#vote-distribution`)
+    router.replace(`/votes/${resultSlug}/results?selected=${encodeURIComponent(selectedQuery)}#vote-distribution`)
   }
 
   return (
@@ -55,11 +102,14 @@ export default function VoteDetailForm({
           背景を読んだうえで、今の考えに近い選択肢を選んでください。コメントは産地チームが参考にします。
         </p>
       </div>
-      <fieldset className="space-y-3">
-        <legend className="sr-only">投票先を選択</legend>
+      <fieldset className="space-y-3" aria-labelledby={fieldsetLegendId}>
+        <legend id={fieldsetLegendId} className="sr-only">
+          投票先を選択
+        </legend>
         <div className="grid gap-3 sm:grid-cols-2">
           {options.map((option) => {
-            const isSelected = selectedOption === option.id
+            const isSelected = selectedOptionIds.includes(option.id)
+            const optionLabelId = `vote-detail-${option.id}-label`
             return (
               <label
                 key={option.id}
@@ -68,37 +118,47 @@ export default function VoteDetailForm({
                 }`}
               >
                 <div className="space-y-2">
-                  <span className="text-base font-semibold text-neutral-900">{option.label}</span>
+                  <span id={optionLabelId} className="text-base font-semibold text-neutral-900">
+                    {option.label}
+                  </span>
                   <span className="text-sm text-neutral-600">{option.description}</span>
                 </div>
                 <input
-                  type="radio"
+                  type={isMultiple ? "checkbox" : "radio"}
                   name="vote-detail-option"
                   value={option.id}
                   checked={isSelected}
-                  onChange={() => setSelectedOption(option.id)}
+                  onChange={() => handleOptionChange(option.id)}
                   className="sr-only"
-                  aria-label={option.label}
+                  aria-labelledby={optionLabelId}
                 />
               </label>
             )
           })}
         </div>
       </fieldset>
-      {selectedOptionDetail && !hasSubmitted ? (
+      {selectedOptionDetails.length > 0 && !hasSubmitted ? (
         <div className="space-y-2 rounded-2xl border border-neutral-200/80 bg-neutral-50 p-4 text-sm leading-6 text-neutral-600">
-          <p className="text-xs font-semibold uppercase tracking-[0.25em] text-neutral-500">選択中の意見</p>
-          <p className="text-base font-semibold text-neutral-900">{selectedOptionDetail.label}</p>
-          <p className="text-sm text-neutral-600">{selectedOptionDetail.description}</p>
+          <p className="text-xs font-semibold uppercase tracking-[0.25em] text-neutral-500">
+            選択中の意見{isMultiple ? `（${selectedOptionDetails.length}件）` : ""}
+          </p>
+          <ul className="space-y-2">
+            {selectedOptionDetails.map((option) => (
+              <li key={option?.id ?? ""}>
+                <p className="text-base font-semibold text-neutral-900">{option?.label}</p>
+                <p className="text-sm text-neutral-600">{option?.description}</p>
+              </li>
+            ))}
+          </ul>
         </div>
       ) : null}
-      {!hasSubmitted && (
+      {!hasSubmitted && allowComment && hasSelection ? (
         <div className="space-y-2">
           <label
             htmlFor="vote-detail-comment"
             className="text-xs font-semibold uppercase tracking-[0.2em] text-neutral-500"
           >
-            コメント (任意)
+            {formattedCommentLabel}
           </label>
           <textarea
             id="vote-detail-comment"
@@ -107,14 +167,25 @@ export default function VoteDetailForm({
             onChange={(event) => setComment(event.target.value)}
             placeholder="素材選びに関する考えや現場で感じていることを教えてください。"
             rows={4}
+            maxLength={commentMaxLength}
+            aria-describedby={commentCounterId}
             className="w-full rounded-2xl border border-neutral-200/80 bg-white px-4 py-3 text-sm text-neutral-700 placeholder-neutral-400 focus:border-brand-500 focus:outline-none focus:ring-4 focus:ring-brand-500/10"
           />
+          <div className="flex items-center justify-between text-xs text-neutral-500">
+            <span id={commentCounterId}>任意入力・{comment.length}/{commentMaxLength}</span>
+            <span>2000文字まで</span>
+          </div>
         </div>
-      )}
+      ) : null}
+      {validationMessage ? (
+        <p role="alert" className="text-sm font-medium text-red-600">
+          {validationMessage}
+        </p>
+      ) : null}
       <div className="flex flex-wrap items-center gap-3">
         <button
           type="submit"
-          disabled={!selectedOption || hasSubmitted}
+          disabled={!hasSelection || hasSubmitted}
           className="inline-flex items-center justify-center rounded-full bg-brand-600 px-6 py-3 text-sm font-semibold text-white transition hover:bg-brand-700 disabled:cursor-not-allowed disabled:bg-brand-400"
         >
           {hasSubmitted ? "投票ありがとうございました" : "この意見で投票する"}
