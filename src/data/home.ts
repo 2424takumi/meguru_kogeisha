@@ -1,8 +1,7 @@
 import { getVoteResultDetail } from "./vote-details"
 import type { VoteOptionBase } from "./vote-details"
 import type { VoteStatus, VoteType } from "./votes/types"
-
-export type { VoteType }
+export type { VoteType } from "./votes/types"
 
 export type CraftArea = {
   slug: string
@@ -52,8 +51,6 @@ export const craftAreas: CraftArea[] = [
   },
 ]
 
-export type { VoteType }
-
 export type WeeklyVoteOption = VoteOptionBase
 
 export type WeeklyVote = {
@@ -81,9 +78,10 @@ if (!weeklyVoteDetail) {
   throw new Error(`Vote detail not found for slug "${FEATURED_VOTE_SLUG}"`)
 }
 
-const weeklyVoteOptions: WeeklyVoteOption[] = weeklyVoteDetail.options.map(
-  ({ narrative: _narrative, ...option }) => option,
-)
+const weeklyVoteOptions: WeeklyVoteOption[] = weeklyVoteDetail.options.map(({ narrative, ...option }) => {
+  void narrative
+  return option
+})
 
 const weeklyVoteDescription =
   weeklyVoteDetail.home?.description ??

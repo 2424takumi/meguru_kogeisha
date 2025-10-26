@@ -6,9 +6,7 @@ import SiteFooter from "@/components/layout/SiteFooter"
 import VoteDetailForm from "@/components/votes/VoteDetailForm"
 import { listVoteSlugs, getVoteDefinition, VoteError } from "@/lib/votes/service"
 
-type VoteDetailPageProps = {
-  params: { slug: string }
-}
+type VoteDetailPageParams = Promise<{ slug: string }>
 
 const updatedAtFormatter = new Intl.DateTimeFormat("ja-JP", {
   dateStyle: "long",
@@ -19,9 +17,10 @@ export function generateStaticParams() {
   return listVoteSlugs().map((slug) => ({ slug }))
 }
 
-export function generateMetadata({ params }: VoteDetailPageProps): Metadata {
+export async function generateMetadata({ params }: { params: VoteDetailPageParams }): Promise<Metadata> {
   try {
-    const vote = getVoteDefinition(params.slug)
+    const { slug } = await params
+    const vote = getVoteDefinition(slug)
 
     return {
       title: `${vote.question} | めぐる工芸舎`,
@@ -37,10 +36,11 @@ export function generateMetadata({ params }: VoteDetailPageProps): Metadata {
   }
 }
 
-export default function VoteDetailPage({ params }: VoteDetailPageProps) {
+export default async function VoteDetailPage({ params }: { params: VoteDetailPageParams }) {
+  const { slug } = await params
   let vote
   try {
-    vote = getVoteDefinition(params.slug)
+    vote = getVoteDefinition(slug)
   } catch (error) {
     if (error instanceof VoteError && error.status === 404) {
       notFound()
@@ -130,7 +130,7 @@ export default function VoteDetailPage({ params }: VoteDetailPageProps) {
                 賛成・反対・様子見など立場ごとのコメントを匿名で整理しています。開いて読むと、具体的な背景やニュアンスがわかります。
               </p>
             </div>
-            <div className="space-y-4">
+            <article className="space-y-4">
               {vote.voices.map((voice) => (
                 <details
                   key={voice.position}

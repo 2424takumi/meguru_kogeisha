@@ -2,13 +2,8 @@ import { NextResponse, type NextRequest } from "next/server"
 
 import { submitBallot, VoteError, type VoteBallotInput } from "@/lib/votes/service"
 
-type RouteParams = {
-  params: {
-    slug: string
-  }
-}
-
-export async function POST(request: NextRequest, { params }: RouteParams) {
+export async function POST(request: NextRequest, context: unknown) {
+  const { params } = context as { params: { slug: string } }
   const slug = params.slug
 
   let payload: unknown

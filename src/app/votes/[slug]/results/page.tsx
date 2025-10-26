@@ -6,10 +6,8 @@ import SiteFooter from "@/components/layout/SiteFooter"
 import type { VoteResultDetail } from "@/data/vote-details"
 import { getVoteDefinition, getVoteResults, listVoteSlugs, VoteError } from "@/lib/votes/service"
 
-type VoteResultPageProps = {
-  params: { slug: string }
-  searchParams?: { selected?: string }
-}
+type VoteResultPageParams = Promise<{ slug: string }>
+type VoteResultSearchParams = Promise<{ selected?: string | string[] }>
 
 const updatedAtFormatter = new Intl.DateTimeFormat("ja-JP", {
   dateStyle: "long",
@@ -20,9 +18,10 @@ export function generateStaticParams() {
   return listVoteSlugs().map((slug) => ({ slug }))
 }
 
-export function generateMetadata({ params }: VoteResultPageProps): Metadata {
+export async function generateMetadata({ params }: { params: VoteResultPageParams }): Promise<Metadata> {
   try {
-    const vote = getVoteDefinition(params.slug)
+    const { slug } = await params
+    const vote = getVoteDefinition(slug)
 
     return {
       title: `${vote.title} | めぐる工芸舎`,
@@ -38,10 +37,19 @@ export function generateMetadata({ params }: VoteResultPageProps): Metadata {
   }
 }
 
-export default function VoteResultPage({ params, searchParams }: VoteResultPageProps) {
+export default async function VoteResultPage({
+  params,
+  searchParams,
+}: {
+  params: VoteResultPageParams
+  searchParams?: VoteResultSearchParams
+}) {
+  const { slug } = await params
+  const resolvedSearchParams = searchParams ? await searchParams : undefined
+
   let vote: VoteResultDetail
   try {
-    vote = getVoteDefinition(params.slug)
+    vote = getVoteDefinition(slug)
   } catch (error) {
     if (error instanceof VoteError && error.status === 404) {
       notFound()
@@ -49,15 +57,15 @@ export default function VoteResultPage({ params, searchParams }: VoteResultPageP
     throw error
   }
 
-  const results = getVoteResults(params.slug)
+  const results = getVoteResults(slug)
 
-  const selectedParam = searchParams?.selected ?? ""
-  const selectedOptionIds = selectedParam
-    ? selectedParam
-        .split(",")
-        .map((value) => decodeURIComponent(value.trim()))
-        .filter(Boolean)
-    : []
+  const rawSelected = resolvedSearchParams?.selected
+  const selectedValues = Array.isArray(rawSelected) ? rawSelected : rawSelected ? [rawSelected] : []
+  const decodedSelections = selectedValues
+    .flatMap((value) => value.split(","))
+    .map((value) => decodeURIComponent(value.trim()))
+    .filter(Boolean)
+  const selectedOptionIds = decodedSelections
   const totalVotes = results.total
   const optionsWithPercentage = vote.options.map((option) => {
     const distributionPoint = results.distribution.find(
