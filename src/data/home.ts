@@ -1,5 +1,7 @@
 import type { VoteStatus, VoteType } from "./votes/types"
 
+export type { VoteType }
+
 export type CraftArea = {
   slug: string
   name: string
@@ -47,10 +49,6 @@ export const craftAreas: CraftArea[] = [
     themeColor: 'bg-rose-500/10',
   },
 ]
-
-import type { VoteType } from './votes/types'
-
-export type { VoteType }
 
 export type WeeklyVoteOption = {
   id: string
@@ -139,5 +137,3 @@ export const weeklyVote: WeeklyVote = {
   startAt: '2024-05-20T00:00:00+09:00',
   endAt: '2024-07-31T23:59:59+09:00',
 }
-
-export type { VoteType }
