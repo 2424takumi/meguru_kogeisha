@@ -1,11 +1,14 @@
 "use client"
 
-import type { FormEvent } from "react"
-import { useEffect, useId, useMemo, useState } from "react"
+import { useCallback, useId } from "react"
 import { useRouter } from "next/navigation"
 import type { VoteOptionDetail } from "@/data/vote-details"
 import type { VoteType } from "@/data/home"
 import type { VoteStatus } from "@/data/votes/types"
+import {
+  COMMENT_MAX_LENGTH,
+  useBallotForm,
+} from "@/components/votes/useBallotForm"
 
 type VoteDetailFormProps = {
   question: string
@@ -20,52 +23,6 @@ type VoteDetailFormProps = {
   status: VoteStatus
   startAt: string
   endAt: string
-}
-
-type StoredBallot = {
-  choices?: string[]
-  comment?: string | null
-  submittedAt?: string
-}
-
-const COMMENT_MAX_LENGTH = 2000
-const periodFormatter = new Intl.DateTimeFormat("ja-JP", {
-  dateStyle: "medium",
-  timeStyle: "short",
-})
-
-function computeVoteWindow(status: VoteStatus, startAt: string, endAt: string) {
-  const start = new Date(startAt).getTime()
-  const end = new Date(endAt).getTime()
-  const now = Date.now()
-  const beforeStart = Number.isFinite(start) && now < start
-  const afterEnd = Number.isFinite(end) && now > end
-  const isActive = status === "open" && !beforeStart && !afterEnd
-  let reason: string | null = null
-  if (beforeStart) {
-    reason = "投票はまだ開始していません。"
-  } else if (afterEnd) {
-    reason = "投票期間が終了しました。"
-  } else if (status !== "open") {
-    reason = "この投票は現在準備中です。"
-  }
-  return { isActive, beforeStart, afterEnd, reason }
-}
-
-function formatPeriodLabel(value: string) {
-  const date = new Date(value)
-  if (Number.isNaN(date.getTime())) {
-    return null
-  }
-  return periodFormatter.format(date)
-}
-
-function haveSameMembers(left: string[], right: string[]) {
-  if (left.length !== right.length) {
-    return false
-  }
-  const rightSet = new Set(right)
-  return left.every((value) => rightSet.has(value))
 }
 
 export default function VoteDetailForm({
@@ -85,167 +42,47 @@ export default function VoteDetailForm({
   const router = useRouter()
   const fieldsetLegendId = useId()
   const commentCounterId = useId()
-  const [selectedOptionIds, setSelectedOptionIds] = useState<string[]>([])
-  const [hasSubmitted, setHasSubmitted] = useState(false)
-  const [comment, setComment] = useState("")
-  const [formError, setFormError] = useState<string | null>(null)
-  const [isSubmitting, setIsSubmitting] = useState(false)
-
-  const ballotStorageKey = useMemo(() => `ballot:${resultSlug}`, [resultSlug])
-  const trimmedComment = comment.trim()
   const isMultiple = voteType === "multiple"
-  const minimumRequired = minChoices ?? (isMultiple ? 1 : 1)
-  const maximumAllowed = maxChoices ?? (isMultiple ? options.length : 1)
   const commentLabelText =
     commentLabel ?? (commentRequired ? "コメント (必須)" : "コメント (任意)")
 
-  const voteWindow = useMemo(
-    () => computeVoteWindow(status, startAt, endAt),
-    [status, startAt, endAt],
-  )
-  const startLabel = useMemo(() => formatPeriodLabel(startAt), [startAt])
-  const endLabel = useMemo(() => formatPeriodLabel(endAt), [endAt])
-
-  useEffect(() => {
-    if (typeof window === "undefined") return
-    try {
-      const raw = window.localStorage.getItem(ballotStorageKey)
-      if (!raw) return
-      const stored = JSON.parse(raw) as StoredBallot
-      if (Array.isArray(stored.choices) && stored.choices.length > 0) {
-        const persistedChoices = stored.choices.filter(
-          (value): value is string => typeof value === "string",
-        )
-        if (persistedChoices.length === 0) {
-          return
-        }
-        setSelectedOptionIds((previous) =>
-          haveSameMembers(previous, persistedChoices) ? previous : persistedChoices,
-        )
-        setHasSubmitted((previous) => previous || persistedChoices.length > 0)
-      }
-    } catch {
-      // ローカルストレージの値が壊れていても無視する
-    }
-  }, [ballotStorageKey])
-
-  const selectedOptionDetails = useMemo(
-    () =>
-      selectedOptionIds
-        .map((optionId) => options.find((option) => option.id === optionId))
-        .filter((option): option is VoteOptionDetail => Boolean(option)),
-    [options, selectedOptionIds],
-  )
-
-  const hasSelection = selectedOptionIds.length > 0
-
-  const handleOptionChange = (optionId: string) => {
-    if (hasSubmitted) {
-      return
-    }
-    setFormError(null)
-    if (isMultiple) {
-      setSelectedOptionIds((previous) => {
-        if (previous.includes(optionId)) {
-          return previous.filter((id) => id !== optionId)
-        }
-        if (previous.length >= maximumAllowed) {
-          setFormError(`選択できるのは最大で${maximumAllowed}件までです。`)
-          return previous
-        }
-        return [...previous, optionId]
-      })
-      return
-    }
-    setSelectedOptionIds([optionId])
-  }
-
-  const handleSubmit = async (event: FormEvent<HTMLFormElement>) => {
-    event.preventDefault()
-    setFormError(null)
-
-    if (!voteWindow.isActive) {
-      setFormError(voteWindow.reason ?? "現在この投票には参加できません。")
-      return
-    }
-
-    if (selectedOptionIds.length < minimumRequired) {
-      setFormError(`少なくとも${minimumRequired}件選択してください。`)
-      return
-    }
-    if (isMultiple && selectedOptionIds.length > maximumAllowed) {
-      setFormError(`選択できるのは最大で${maximumAllowed}件までです。`)
-      return
-    }
-
-    const sanitizedComment = comment.trim()
-    if (commentRequired && sanitizedComment.length === 0) {
-      setFormError("コメントを入力してください。")
-      return
-    }
-    if (sanitizedComment.length > COMMENT_MAX_LENGTH) {
-      setFormError("コメントは2000文字以内で入力してください。")
-      return
-    }
-
-    const payload = {
-      choices: selectedOptionIds.map((optionId) => {
-        const option = options.find((candidate) => candidate.id === optionId)
-        return {
-          option_id: optionId,
-          ...(typeof option?.numericValue === "number" ? { numeric_value: option.numericValue } : {}),
-        }
-      }),
-      comment: sanitizedComment.length > 0 ? sanitizedComment : undefined,
-    }
-
-    setIsSubmitting(true)
-    try {
-      const response = await fetch(`/api/votes/${resultSlug}/ballots`, {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify(payload),
-      })
-      const data = await response.json().catch(() => null)
-
-      if (!response.ok) {
-        const message =
-          (data && typeof data.error === "string" && data.error) ||
-          "投票の送信に失敗しました。時間をおいて再度お試しください。"
-        setFormError(message)
-        return
-      }
-
-      if (typeof window !== "undefined") {
-        const storedBallot: StoredBallot = {
-          choices: selectedOptionIds,
-          comment: sanitizedComment.length > 0 ? sanitizedComment : null,
-          submittedAt: new Date().toISOString(),
-        }
-        window.localStorage.setItem(ballotStorageKey, JSON.stringify(storedBallot))
-      }
-
-      setHasSubmitted(true)
-      const selectedQuery = selectedOptionIds.join(",")
+  const handleSubmitSuccess = useCallback(
+    (selection: string[]) => {
+      const selectedQuery = selection.join(",")
       router.replace(
         `/votes/${resultSlug}/results?selected=${encodeURIComponent(selectedQuery)}#vote-distribution`,
       )
-    } catch {
-      setFormError("ネットワークエラーが発生しました。接続状況をご確認ください。")
-    } finally {
-      setIsSubmitting(false)
-    }
-  }
+    },
+    [resultSlug, router],
+  )
 
-  const submitDisabled =
-    hasSubmitted ||
-    isSubmitting ||
-    !voteWindow.isActive ||
-    selectedOptionIds.length < minimumRequired ||
-    (isMultiple && selectedOptionIds.length > maximumAllowed) ||
-    (commentRequired && trimmedComment.length === 0)
+  const {
+    selectedOptionIds,
+    selectedOptions: selectedOptionDetails,
+    hasSelection,
+    hasSubmitted,
+    comment,
+    setComment,
+    formError,
+    isSubmitting,
+    submitDisabled,
+    voteWindow,
+    startLabel,
+    endLabel,
+    handleOptionToggle,
+    handleSubmit,
+  } = useBallotForm<VoteOptionDetail>({
+    resultSlug,
+    options,
+    voteType,
+    status,
+    startAt,
+    endAt,
+    minChoices,
+    maxChoices,
+    commentRequired,
+    onSubmitSuccess: handleSubmitSuccess,
+  })
 
   const startEndBadges = (
     <div className="flex flex-wrap items-center gap-2 text-xs text-neutral-500 sm:text-sm">
@@ -315,7 +152,7 @@ export default function VoteDetailForm({
                   value={option.id}
                   checked={isSelected}
                   disabled={hasSubmitted}
-                  onChange={() => handleOptionChange(option.id)}
+                  onChange={() => handleOptionToggle(option.id)}
                   className="sr-only"
                   aria-labelledby={optionLabelId}
                 />
