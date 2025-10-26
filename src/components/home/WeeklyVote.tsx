@@ -42,18 +42,23 @@ export default function WeeklyVote({ title, question, description, options }: We
   }
 
   return (
-    <section aria-labelledby="weekly-vote-heading" className="mx-auto w-full max-w-4xl px-4 sm:px-6">
-      <div className="overflow-hidden rounded-3xl border border-neutral-200/80 bg-white shadow-md shadow-brand-500/10">
+    <section aria-labelledby="weekly-vote-heading" className="mx-auto w-full max-w-[56rem]">
+      <div className="overflow-hidden rounded-[6px] border border-[--neu-200] bg-white/95">
         <div className="grid gap-8 p-6 sm:p-8 md:grid-cols-[1.1fr,0.9fr] md:p-10">
           <div>
-            <p className="text-xs font-semibold uppercase tracking-[0.35em] text-brand-600 sm:text-sm">{title}</p>
-            <h2 id="weekly-vote-heading" className="mt-3 text-2xl font-semibold text-neutral-900 sm:mt-4 sm:text-3xl">
+            <p className="text-xs font-medium uppercase tracking-[0.35em] text-[--brand-600] sm:text-sm">
+              {title}
+            </p>
+            <h2
+              id="weekly-vote-heading"
+              className="mt-3 font-serif text-[1.875rem] font-semibold text-[--neu-900] sm:mt-4 sm:text-[2.125rem]"
+            >
               {question}
             </h2>
-            <p className="mt-4 text-sm leading-5 text-neutral-600 sm:text-base">
+            <p className="mt-5 text-sm leading-relaxed text-[--neu-600] sm:text-base sm:leading-7">
               {description}
             </p>
-            <p className="mt-5 text-xs leading-relaxed text-neutral-400 sm:mt-6">
+            <p className="mt-6 text-xs leading-relaxed text-[--neu-500] sm:mt-7">
               ※ 現在はベータ版のため、投票結果は週次レポートで共有します。賛否の分布のみ集計し、個人情報は記録しません。
             </p>
           </div>
@@ -61,7 +66,7 @@ export default function WeeklyVote({ title, question, description, options }: We
             <fieldset className="space-y-4">
               <legend className="sr-only">投票先を選択</legend>
               <div className="sm:hidden">
-                <div className="flex items-end justify-between text-[11px] font-medium text-neutral-500">
+                <div className="flex items-end justify-between text-[11px] font-medium text-[--neu-500]">
                   <span>強く反対</span>
                   <span>強く賛成</span>
                 </div>
@@ -83,18 +88,16 @@ export default function WeeklyVote({ title, question, description, options }: We
                         tabIndex={isSelected || (!selectedOption && index === 0) ? 0 : -1}
                         onClick={() => setSelectedOption(option.id)}
                         onKeyDown={(event) => handleMobileKeyDown(event, index)}
-                        className={`flex flex-col items-center gap-2 text-[11px] font-semibold transition ${
-                          isSelected ? "text-brand-600" : "text-neutral-400"
+                        className={`flex flex-col items-center gap-2 text-[11px] font-medium transition-colors focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[--info-600] ${
+                          isSelected ? "text-[--brand-600]" : "text-[--neu-400]"
                         }`}
                       >
                         <span
                           aria-hidden="true"
-                          className={`flex items-center justify-center rounded-full border transition ${
-                            size
-                          } ${
+                          className={`flex items-center justify-center rounded-full border ${size} transition-colors ${
                             isSelected
-                              ? "border-brand-500 bg-brand-500 shadow-[0_0_0_4px_rgba(186,62,54,0.18)]"
-                              : "border-neutral-300 bg-neutral-50"
+                              ? "border-[--brand-600] bg-[--brand-600]"
+                              : "border-[--neu-300] bg-white"
                           }`}
                         >
                           <span
@@ -107,14 +110,17 @@ export default function WeeklyVote({ title, question, description, options }: We
                     )
                   })}
                 </div>
-                <div className="mt-4 space-y-4 rounded-2xl border border-neutral-200/80 bg-neutral-50 p-4 text-sm leading-6 text-neutral-600">
+                <div className="mt-4 space-y-4 rounded-[6px] border border-[--neu-200] bg-[--neu-50] p-4 text-sm leading-6 text-[--neu-600]">
                   {selectedOptionDetail ? (
                     <>
-                      <p className="font-semibold text-neutral-900">{selectedOptionDetail.label}</p>
+                      <p className="font-medium text-[--neu-900]">{selectedOptionDetail.label}</p>
                       <p className="mt-2">{selectedOptionDetail.description}</p>
                       {!hasSubmitted && (
                         <div className="space-y-2 text-left">
-                          <label htmlFor="weekly-vote-comment-mobile" className="text-xs font-semibold uppercase tracking-wide text-neutral-500">
+                          <label
+                            htmlFor="weekly-vote-comment-mobile"
+                            className="text-xs font-medium uppercase tracking-wide text-[--neu-500]"
+                          >
                             コメント (任意)
                           </label>
                           <textarea
@@ -124,13 +130,13 @@ export default function WeeklyVote({ title, question, description, options }: We
                             onChange={(event) => setComment(event.target.value)}
                             placeholder="この意見にした理由を伝える。"
                             rows={4}
-                            className="w-full rounded-2xl border border-neutral-200/80 bg-white px-4 py-3 text-sm text-neutral-700 placeholder-neutral-400 focus:border-brand-500 focus:outline-none focus:ring-4 focus:ring-brand-500/10"
+                            className="w-full rounded-[6px] border border-[--neu-200] bg-white/95 px-4 py-3 text-sm text-[--neu-700] placeholder:text-[--neu-400] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[--info-600]"
                           />
                         </div>
                       )}
                     </>
                   ) : (
-                    <p className="text-neutral-500">選択すると詳しい説明が表示されます。</p>
+                    <p className="text-[--neu-500]">選択すると詳しい説明が表示されます。</p>
                   )}
                 </div>
               </div>
@@ -140,12 +146,14 @@ export default function WeeklyVote({ title, question, description, options }: We
                   return (
                     <label
                       key={option.id}
-                      className={`group flex flex-col rounded-2xl border px-4 py-4 transition hover:border-brand-500/50 hover:bg-brand-500/5 ${
-                        isSelected ? "border-brand-500 bg-brand-500/10 ring-4 ring-brand-500/10" : "border-neutral-200/80 bg-neutral-50"
+                      className={`group flex flex-col gap-3 rounded-[6px] border px-4 py-4 transition-colors hover:border-[--brand-600] focus-within:outline focus-within:outline-2 focus-within:outline-offset-2 focus-within:outline-[--info-600] ${
+                        isSelected
+                          ? "border-[--brand-600] bg-[--brand-600]/10"
+                          : "border-[--neu-200] bg-[--neu-50]"
                       }`}
                     >
-                      <p className="text-base font-semibold text-neutral-900">{option.label}</p>
-                      <p className="mt-2 text-sm text-neutral-600">{option.description}</p>
+                      <p className="text-base font-medium text-[--neu-900]">{option.label}</p>
+                      <p className="text-sm leading-relaxed text-[--neu-600]">{option.description}</p>
                       <input
                         type="radio"
                         name="weekly-vote"
@@ -161,16 +169,16 @@ export default function WeeklyVote({ title, question, description, options }: We
               </div>
             </fieldset>
             {!hasSubmitted && selectedOptionDetail && (
-              <div className="hidden space-y-4 rounded-2xl border border-neutral-200/80 bg-neutral-50 p-6 text-left text-sm text-neutral-600 sm:block">
+              <div className="hidden space-y-4 rounded-[6px] border border-[--neu-200] bg-[--neu-50] p-6 text-left text-sm text-[--neu-600] sm:block">
                 <div>
-                  <p className="text-xs font-semibold uppercase tracking-[0.25em] text-neutral-500">選択中の意見</p>
-                  <p className="mt-2 text-base font-semibold text-neutral-900">{selectedOptionDetail.label}</p>
-                  <p className="mt-2 text-sm text-neutral-600">{selectedOptionDetail.description}</p>
+                  <p className="text-xs font-medium uppercase tracking-[0.25em] text-[--neu-500]">選択中の意見</p>
+                  <p className="mt-2 text-base font-medium text-[--neu-900]">{selectedOptionDetail.label}</p>
+                  <p className="mt-2 text-sm text-[--neu-600]">{selectedOptionDetail.description}</p>
                 </div>
                 <div className="space-y-2">
                   <label
                     htmlFor="weekly-vote-comment-desktop"
-                    className="text-xs font-semibold uppercase tracking-wide text-neutral-500"
+                    className="text-xs font-medium uppercase tracking-wide text-[--neu-500]"
                   >
                     コメント (任意)
                   </label>
@@ -181,7 +189,7 @@ export default function WeeklyVote({ title, question, description, options }: We
                     onChange={(event) => setComment(event.target.value)}
                     placeholder="この意見にした理由を伝える。"
                     rows={5}
-                    className="w-full rounded-2xl border border-neutral-200/80 bg-white px-4 py-3 text-sm text-neutral-700 placeholder-neutral-400 focus:border-brand-500 focus:outline-none focus:ring-4 focus:ring-brand-500/10"
+                    className="w-full rounded-[6px] border border-[--neu-200] bg-white/95 px-4 py-3 text-sm text-[--neu-700] placeholder:text-[--neu-400] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[--info-600]"
                   />
                 </div>
               </div>
@@ -189,22 +197,22 @@ export default function WeeklyVote({ title, question, description, options }: We
             <button
               type="submit"
               disabled={!selectedOption || hasSubmitted}
-              className="inline-flex w-full items-center justify-center rounded-full bg-brand-600 px-6 py-3 text-sm font-semibold text-white transition hover:bg-brand-700 disabled:cursor-not-allowed disabled:bg-brand-400 sm:w-auto"
+              className="inline-flex w-full items-center justify-center rounded-[6px] bg-[--brand-600] px-6 py-3 text-sm font-medium text-white transition-colors hover:bg-[--brand-700] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[--info-600] disabled:cursor-not-allowed disabled:opacity-60 sm:w-auto"
             >
               {hasSubmitted ? "投票ありがとうございました" : "この意見で投票して、みんなの意見を見る"}
             </button>
             {hasSubmitted && (
-              <div className="space-y-3 text-xs text-neutral-500">
+              <div className="space-y-3 text-xs text-[--neu-500]">
                 <p aria-live="polite">
                   集計結果がアンロックされました。来週のレポートではコメントサマリーを掲載予定です。
                 </p>
-                <div className="space-y-2 rounded-2xl border border-neutral-200/80 bg-neutral-50 p-4 text-neutral-600">
-                  <p className="text-xs font-semibold uppercase tracking-wide text-neutral-400">現在の分布</p>
+                <div className="space-y-2 rounded-[6px] border border-[--neu-200] bg-[--neu-50] p-4 text-[--neu-600]">
+                  <p className="text-xs font-medium uppercase tracking-wide text-[--neu-500]">現在の分布</p>
                   <ul className="space-y-1 text-sm">
                     {options.map((option) => (
                       <li key={option.id} className="flex items-center justify-between gap-3">
                         <span>{option.label}</span>
-                        <span className="font-semibold text-brand-600">{option.supporters} 票</span>
+                        <span className="font-medium text-[--brand-600]">{option.supporters} 票</span>
                       </li>
                     ))}
                   </ul>
