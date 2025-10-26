@@ -136,8 +136,8 @@ export const weeklyVote: WeeklyVote = {
   minChoices: 1,
   maxChoices: 1,
   status: 'open',
-  startAt: '2024-05-20T00:00:00+09:00',
-  endAt: '2024-07-31T23:59:59+09:00',
+  startAt: '2025-01-01T00:00:00+09:00',
+  endAt: '2025-12-31T23:59:59+09:00',
 }
 
 export type { VoteType }
