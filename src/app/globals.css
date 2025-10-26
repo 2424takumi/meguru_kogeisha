@@ -1,111 +1,64 @@
 @import "tailwindcss";
 
 :root {
-  /* Brand – 落ち着いたえんじ */
-  --brand-50: #FBF3F4;
-  --brand-100: #F6E7E9;
-  --brand-200: #EECFD3;
-  --brand-300: #E0AEB4;
-  --brand-400: #C97B86;
-  --brand-500: #A84E5C;
-  --brand-600: #8C2E3C;
-  --brand-700: #742431;
-  --brand-800: #5C1C27;
-  --brand-900: #47161F;
-
-  /* Accent – 生成り/麻色ニュアンス */
-  --accent-500: #D9C9AC;
-  --accent-600: #C9B896;
-
-  /* Neutral – 暖みのあるグレー */
-  --neu-50: #FAF9F8;
-  --neu-100: #F3F1EF;
-  --neu-200: #E7E3E0;
-  --neu-300: #D8D3CF;
-  --neu-400: #B8B1AB;
-  --neu-500: #958E88;
-  --neu-600: #6F6964;
-  --neu-700: #55504C;
-  --neu-800: #3E3A37;
-  --neu-900: #2A2826;
-
-  /* 状態色 */
-  --info-600: #356CA8;
-  --success-600: #2F7D53;
-  --warn-600: #9C6A00;
-  --danger-600: #8C2E3C;
-
-  --surface-card: #FFFFFF;
-  --surface-muted: rgba(217, 201, 172, 0.08);
-
-  --focus-outline: 2px solid var(--info-600);
-  --focus-offset: 2px;
+  --color-paper: oklch(0.97 0.01 40);
+  --background: var(--color-paper);
+  --foreground: oklch(0.20 0.02 40);
 }
 
-html {
-  font-size: 16px;
+@theme {
+  /* Brand (主色) */
+  --color-brand-50:  oklch(0.98 0.01 25);
+  --color-brand-100: oklch(0.96 0.02 25);
+  --color-brand-200: oklch(0.93 0.03 25);
+  --color-brand-300: oklch(0.88 0.05 25);
+  --color-brand-400: oklch(0.80 0.08 25);
+  --color-brand-500: oklch(0.70 0.10 25);
+  --color-brand-600: oklch(0.55 0.12 25); /* 基調：落ち着いたえんじ ≈ #7B2E2B */
+  --color-brand-700: oklch(0.48 0.11 25);
+  --color-brand-800: oklch(0.42 0.09 25);
+  --color-brand-900: oklch(0.36 0.08 25);
+
+  /* Accent（温かみのある黄土〜亜麻色） */
+  --color-accent-500: oklch(0.83 0.05 85);
+  --color-accent-600: oklch(0.78 0.06 85);
+
+  /* Warm Neutral（和紙感のある温かいグレー） */
+  --color-neutral-50:  oklch(0.97 0.01 40); /* paper 背景 */
+  --color-neutral-100: oklch(0.96 0.01 40);
+  --color-neutral-200: oklch(0.92 0.01 40);
+  --color-neutral-300: oklch(0.86 0.01 40);
+  --color-neutral-400: oklch(0.70 0.02 40);
+  --color-neutral-500: oklch(0.55 0.02 40); /* 本文色 */
+  --color-neutral-600: oklch(0.45 0.02 40);
+  --color-neutral-700: oklch(0.35 0.02 40);
+  --color-neutral-800: oklch(0.27 0.02 40);
+  --color-neutral-900: oklch(0.20 0.02 40);
+
+  /* Paper baseline */
+  --color-paper: oklch(0.97 0.01 40);
+
+  /* Typography */
+  --font-sans: ui-sans-serif, system-ui, "Noto Sans JP", "Hiragino Kaku Gothic ProN", "Yu Gothic", sans-serif;
+  --font-serif: ui-serif, Georgia, "Noto Serif JP", "Hiragino Mincho ProN", "Yu Mincho", serif;
+
+  /* Spacing scale（必要に応じて） */
+  /* --spacing-3: 0.75rem; など、必要になったら追加 */
 }
 
-body {
-  background-color: var(--neu-50);
-  color: var(--neu-900);
-  font-family: var(--font-sans, "Noto Sans JP", "Hiragino Kaku Gothic ProN", "Yu Gothic", ui-sans-serif, system-ui, sans-serif);
-  font-weight: 400;
-  line-height: 1.8;
-  text-rendering: optimizeLegibility;
+/* デフォルト背景/本文 */
+:root {
+  --background: var(--color-neutral-50);
+  --foreground: var(--color-neutral-900);
+}
+@media (prefers-color-scheme: dark) {
+  :root {
+    --background: oklch(0.12 0.02 40); /* 深い温灰 */
+    --foreground: oklch(0.94 0.02 40);
+  }
 }
 
-h1,
-h2,
-h3,
-h4 {
-  font-family: var(--font-serif, "Noto Serif JP", "Hiragino Mincho ProN", "Yu Mincho", serif);
-  font-weight: 600;
-  line-height: 1.35;
-}
-
-h5,
-h6 {
-  font-family: var(--font-sans, "Noto Sans JP", "Hiragino Kaku Gothic ProN", "Yu Gothic", ui-sans-serif, system-ui, sans-serif);
-  font-weight: 500;
-  line-height: 1.4;
-}
-
-a {
-  color: inherit;
-  text-decoration: none;
-}
-
-a:hover {
-  color: var(--brand-700);
-}
-
-button,
-input,
-textarea,
-select {
-  font: inherit;
-  color: inherit;
-}
-
-img {
-  max-width: 100%;
-  height: auto;
-}
-
-:focus-visible {
-  outline: var(--focus-outline);
-  outline-offset: var(--focus-offset);
-}
-
-.prose p + p {
-  margin-top: 1rem;
-}
-
-.font-sans {
-  font-family: var(--font-sans, "Noto Sans JP", "Hiragino Kaku Gothic ProN", "Yu Gothic", ui-sans-serif, system-ui, sans-serif);
-}
-
-.font-serif {
-  font-family: var(--font-serif, "Noto Serif JP", "Hiragino Mincho ProN", "Yu Mincho", serif);
+html, body {
+  background: var(--background);
+  color: var(--foreground);
 }
