@@ -15,7 +15,7 @@ export const craftAreas: CraftArea[] = [
     description:
       '1500年の歴史を持つ手漉き和紙の里。神事と共に受け継がれる「紙漉きの神様」を祀る文化が根付く。',
     highlight: '越前和紙の里で、伝統と最先端の紙づくりを体験。',
-    themeColor: 'from-brand-500/10 to-brand-500/20',
+    themeColor: 'bg-brand-500/10',
   },
   {
     slug: 'takaoka-douki',
@@ -24,7 +24,7 @@ export const craftAreas: CraftArea[] = [
     description:
       '鋳造の町として発展した高岡。仏具から現代アートまで、多彩な鋳物職人が活躍している。',
     highlight: '銅を溶かし、型に流し込むライブデモンストレーションを開催。',
-    themeColor: 'from-amber-500/10 to-amber-500/20',
+    themeColor: 'bg-amber-500/10',
   },
   {
     slug: 'kurume-gasuri',
@@ -33,7 +33,7 @@ export const craftAreas: CraftArea[] = [
     description:
       '木綿の素朴な風合いと、かすり模様が魅力の久留米絣。民藝の精神が息づく産地。',
     highlight: '職人と一緒に織機を体験し、オリジナルストールを仕立てるワークショップ。',
-    themeColor: 'from-sky-500/10 to-sky-500/20',
+    themeColor: 'bg-sky-500/10',
   },
   {
     slug: 'tokyo-wagakki',
@@ -42,7 +42,7 @@ export const craftAreas: CraftArea[] = [
     description:
       '三味線や鼓など邦楽器を手掛ける職人が集まる町工場エリア。演奏家と共創しながら素材の議論を重ねている。',
     highlight: '工房と稽古場を巡り、三味線の皮張り工程を体験できるスタディツアーを準備中。',
-    themeColor: 'from-rose-500/10 to-amber-500/20',
+    themeColor: 'bg-rose-500/10',
   },
 ]
 

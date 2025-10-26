@@ -6,9 +6,9 @@ import { craftAreas, weeklyVote } from "@/data/home"
 
 export default function Home() {
   return (
-    <div className="min-h-screen bg-neutral-50 text-neutral-900">
+    <div className="min-h-screen bg-white text-neutral-900">
       <main className="flex flex-col gap-6 pb-12">
-        <div className="bg-gradient-to-b from-white via-white to-neutral-50 pb-6 pt-6">
+        <div className="bg-white pb-6 pt-6">
           <WeeklyVote {...weeklyVote} />
         </div>
         <AreaGrid areas={craftAreas} />

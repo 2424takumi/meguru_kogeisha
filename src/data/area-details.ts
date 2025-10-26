@@ -68,7 +68,7 @@ export const craftAreaDetails: CraftAreaDetail[] = [
     description:
       "1500年の歴史を持つ手漉き和紙の里。神事と共に受け継がれる「紙漉きの神様」を祀る文化が根付く。",
     highlight: "越前和紙の里で、伝統と最先端の紙づくりを体験。",
-    themeColor: "from-brand-500/10 to-brand-500/20",
+    themeColor: "bg-brand-500/10",
     hero: {
       tagline: "紙の神様と暮らす、越前五箇の里。",
       narrative:
@@ -204,7 +204,7 @@ export const craftAreaDetails: CraftAreaDetail[] = [
     description:
       "鋳造の町として発展した高岡。仏具から現代アートまで、多彩な鋳物職人が活躍している。",
     highlight: "銅を溶かし、型に流し込むライブデモンストレーションを開催。",
-    themeColor: "from-amber-500/10 to-amber-500/20",
+    themeColor: "bg-amber-500/10",
     hero: {
       tagline: "炎と金属が織りなす、まちぐるみの鋳物文化。",
       narrative:
@@ -339,7 +339,7 @@ export const craftAreaDetails: CraftAreaDetail[] = [
     description:
       "木綿の素朴な風合いと、かすり模様が魅力の久留米絣。民藝の精神が息づく産地。",
     highlight: "職人と一緒に織機を体験し、オリジナルストールを仕立てるワークショップ。",
-    themeColor: "from-sky-500/10 to-sky-500/20",
+    themeColor: "bg-sky-500/10",
     hero: {
       tagline: "糸と人が織りなす、生活に寄り添う布づくり。",
       narrative:
@@ -473,7 +473,7 @@ export const craftAreaDetails: CraftAreaDetail[] = [
     description:
       "三味線や太鼓をはじめとする邦楽器を支える職人が集う下町エリア。素材の調達と音づくりの最前線に立つ産地。",
     highlight: "張師と演奏家が協働した音づくりワークショップや、素材研究の公開実験を開催。",
-    themeColor: "from-rose-500/10 to-amber-500/20",
+    themeColor: "bg-rose-500/10",
     hero: {
       tagline: "音の余韻を編み出す、下町の和楽器工房ネットワーク。",
       narrative:

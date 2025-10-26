@@ -11,9 +11,9 @@ export const metadata: Metadata = {
 
 export default function AreaRegisterPage() {
   return (
-    <div className="min-h-screen bg-neutral-50 text-neutral-900">
+    <div className="min-h-screen bg-white text-neutral-900">
       <main className="flex flex-col gap-6 pb-12">
-        <section className="bg-gradient-to-br from-white via-neutral-50 to-brand-50/50">
+        <section className="bg-white">
           <div className="mx-auto flex w-full max-w-4xl flex-col gap-6 px-4 py-6 sm:px-6 lg:px-8 lg:py-8">
             <nav className="text-xs font-medium text-neutral-600 sm:text-sm">
               <ol className="flex flex-wrap items-center gap-2">

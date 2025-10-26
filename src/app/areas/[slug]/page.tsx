@@ -39,14 +39,10 @@ export default function CraftAreaPage({ params }: CraftAreaPageProps) {
   }
 
   return (
-    <div className="min-h-screen bg-neutral-50 text-neutral-900">
+    <div className="min-h-screen bg-white text-neutral-900">
       <main className="flex flex-col gap-6 pb-12">
-        <section className="relative isolate overflow-hidden bg-neutral-100">
-          <div
-            className={`absolute inset-0 bg-gradient-to-br ${area.themeColor} opacity-80`}
-            aria-hidden="true"
-          />
-          <div className="absolute inset-x-0 bottom-0 h-40 bg-white/70 backdrop-blur" aria-hidden="true" />
+        <section className="relative isolate overflow-hidden bg-white">
+          <div className={`absolute inset-x-0 top-0 h-1 ${area.themeColor}`} aria-hidden="true" />
           <div className="relative mx-auto max-w-6xl px-4 pb-8 pt-6 sm:px-6 lg:px-8">
             <nav className="text-xs font-medium text-neutral-700 sm:text-sm">
               <ol className="flex flex-wrap items-center gap-2">
@@ -309,7 +305,7 @@ export default function CraftAreaPage({ params }: CraftAreaPageProps) {
         </section>
 
         <section className="mx-auto w-full max-w-6xl px-4 sm:px-6 lg:px-8">
-          <div className="rounded-3xl bg-gradient-to-br from-brand-500/10 via-brand-500/5 to-white p-6 shadow-sm">
+          <div className="rounded-3xl border border-brand-500/10 bg-white p-6 shadow-sm">
             <div className="flex flex-col gap-6 lg:flex-row lg:items-center lg:justify-between">
               <div>
                 <p className="text-sm font-semibold uppercase tracking-widest text-brand-600">支援・連絡先</p>
