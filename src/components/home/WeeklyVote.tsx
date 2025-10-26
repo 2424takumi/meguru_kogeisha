@@ -466,10 +466,10 @@ export default function WeeklyVote({
               </div>
             </fieldset>
             {selectedOptionDetails.length > 0 ? (
-              <div className="space-y-2 rounded-2xl border border-neutral-200/80 bg-neutral-50 p-4 text-sm leading-6 text-neutral-600">
-                <p className="text-xs font-semibold uppercase tracking-[0.25em] text-neutral-500">
-                  {hasSubmitted ? "投票した意見" : `選択中の意見${isMultiple ? `（${selectedOptionDetails.length}件）` : ""}`}
-                </p>
+              <div className="space-y-2 text-sm leading-6 text-neutral-600">
+                {hasSubmitted ? (
+                  <p className="text-xs font-semibold uppercase tracking-[0.25em] text-neutral-500">投票した意見</p>
+                ) : null}
                 <ul className="space-y-2">
                   {selectedOptionDetails.map((option) => (
                     <li key={option.id}>
