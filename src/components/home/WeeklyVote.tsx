@@ -53,9 +53,6 @@ export default function WeeklyVote({ title, question, description, options }: We
             <p className="mt-4 text-sm leading-5 text-neutral-600 sm:text-base">
               {description}
             </p>
-            <p className="mt-5 text-xs leading-relaxed text-neutral-400 sm:mt-6">
-              ※ 現在はベータ版のため、投票結果は週次レポートで共有します。賛否の分布のみ集計し、個人情報は記録しません。
-            </p>
           </div>
           <form onSubmit={handleSubmit} className="flex flex-col gap-5">
             <fieldset className="space-y-4">
