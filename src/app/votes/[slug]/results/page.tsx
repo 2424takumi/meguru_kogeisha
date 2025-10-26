@@ -226,132 +226,43 @@ export default function VoteResultPage({ params, searchParams }: VoteResultPageP
           </div>
         </section>
 
-        <section aria-labelledby="vote-insights-heading" className="bg-white py-10">
-          <div className="mx-auto flex w-full max-w-5xl flex-col gap-6 px-4 sm:px-6 lg:px-8">
-            <div className="space-y-3">
-              <p className="text-xs font-semibold uppercase tracking-[0.3em] text-brand-600">Insights</p>
-              <h2 id="vote-insights-heading" className="text-2xl font-semibold text-neutral-900 sm:text-3xl">
-                見えてきた論点
-              </h2>
-              <p className="text-sm leading-6 text-neutral-600 sm:text-base">
-                投票時に寄せられたコメントを整理し、これからの議論に向けた要点をまとめました。
-              </p>
-            </div>
-            <div className="grid gap-6 lg:grid-cols-2">
-              {vote.insights.map((insight) => (
-                <article
-                  key={insight.title}
-                  className="flex h-full flex-col gap-4 rounded-3xl border border-neutral-200/80 bg-neutral-50 p-6 shadow-sm"
-                >
-                  <div>
-                    <h3 className="text-lg font-semibold text-neutral-900">{insight.title}</h3>
-                    <p className="mt-2 text-sm leading-6 text-neutral-600">{insight.description}</p>
-                  </div>
-                  <ul className="space-y-3 text-sm text-neutral-600">
-                    {insight.points.map((point) => (
-                      <li key={point.label} className="rounded-2xl bg-white p-4">
-                        <p className="text-xs font-semibold uppercase tracking-wide text-brand-600">{point.label}</p>
-                        <p className="mt-1 leading-6 text-neutral-600">{point.detail}</p>
-                      </li>
-                    ))}
-                  </ul>
-                </article>
-              ))}
-            </div>
-          </div>
-        </section>
-
         <section
           aria-labelledby="vote-voices-heading"
           className="mx-auto w-full max-w-5xl px-4 sm:px-6 lg:px-8"
         >
-          <div className="space-y-6 rounded-3xl border border-neutral-200/80 bg-white p-6 shadow-sm sm:p-6">
+          <div className="space-y-6 rounded-3xl border border-neutral-200/80 bg-white p-6 shadow-sm">
             <div className="space-y-3">
               <p className="text-xs font-semibold uppercase tracking-[0.3em] text-brand-600">Community Voices</p>
               <h2 id="vote-voices-heading" className="text-2xl font-semibold text-neutral-900 sm:text-3xl">
                 みんなの声のハイライト
               </h2>
               <p className="text-sm leading-6 text-neutral-600 sm:text-base">
-                属性ごとに寄せられたコメントを抜粋し、議論の幅を感じられるように整理しています。
+                立場ごとに寄せられたコメントを匿名で整理しています。開いて読むと、意見のニュアンスを確認できます。
               </p>
             </div>
-            <div className="grid gap-6 lg:grid-cols-3">
+            <div className="space-y-4">
               {vote.voices.map((voice) => (
-                <article
-                  key={voice.segment}
-                  className="flex h-full flex-col gap-4 rounded-2xl border border-neutral-100 bg-neutral-50 p-5"
+                <details
+                  key={voice.position}
+                  className="group rounded-2xl border border-neutral-100 bg-neutral-50 p-5 text-neutral-700"
                 >
-                  <div className="space-y-1">
-                    <p className="text-xs font-semibold uppercase tracking-wide text-brand-600">{voice.segment}</p>
-                    <p className="text-sm leading-6 text-neutral-600">{voice.summary}</p>
-                  </div>
-                  <ul className="space-y-3 text-sm text-neutral-600">
-                    {voice.quotes.map((quote) => (
-                      <li key={quote.comment} className="space-y-2 rounded-xl bg-white p-4 shadow-sm">
-                        <p className="text-sm font-semibold text-neutral-800">{quote.speaker}</p>
-                        <p className="text-xs text-neutral-500">{quote.role}</p>
-                        <p className="text-sm leading-6 text-neutral-600">“{quote.comment}”</p>
+                  <summary className="flex cursor-pointer items-start justify-between gap-3 text-left text-neutral-900 outline-none transition hover:text-brand-700 focus-visible:text-brand-700 [&::-webkit-details-marker]:hidden">
+                    <div className="space-y-1">
+                      <p className="text-xs font-semibold uppercase tracking-wide text-brand-600">{voice.position}</p>
+                      <p className="text-sm leading-6 text-neutral-600">{voice.summary}</p>
+                    </div>
+                    <span className="whitespace-nowrap text-sm text-neutral-400 group-open:hidden">開く</span>
+                    <span className="hidden whitespace-nowrap text-sm text-neutral-400 group-open:inline">閉じる</span>
+                  </summary>
+                  <ul className="mt-4 space-y-3 text-sm leading-6 text-neutral-600">
+                    {voice.highlights.map((highlight, index) => (
+                      <li key={`${voice.position}-${index}`} className="rounded-xl bg-white p-4 shadow-sm">
+                        {highlight}
                       </li>
                     ))}
                   </ul>
-                </article>
+                </details>
               ))}
-            </div>
-          </div>
-        </section>
-
-        <section aria-labelledby="vote-area-context-heading" className="bg-white py-10">
-          <div className="mx-auto flex w-full max-w-5xl flex-col gap-6 px-4 sm:px-6 lg:px-8">
-            <div className="space-y-3">
-              <p className="text-xs font-semibold uppercase tracking-[0.3em] text-brand-600">Area Context</p>
-              <h2 id="vote-area-context-heading" className="text-2xl font-semibold text-neutral-900 sm:text-3xl">
-                {vote.area.name} の背景と課題
-              </h2>
-              <p className="text-sm leading-6 text-neutral-600 sm:text-base">{vote.area.overview}</p>
-            </div>
-            <div className="grid gap-6 lg:grid-cols-[minmax(0,1.4fr)_minmax(0,1fr)]">
-              <div className="space-y-4">
-                {vote.area.background.map((section) => (
-                  <article key={section.heading} className="rounded-3xl border border-neutral-200/80 bg-neutral-50 p-6 shadow-sm">
-                    <h3 className="text-lg font-semibold text-neutral-900">{section.heading}</h3>
-                    <p className="mt-2 text-sm leading-6 text-neutral-600">{section.body}</p>
-                  </article>
-                ))}
-              </div>
-              <div className="space-y-6">
-                <div className="rounded-3xl border border-brand-200/70 bg-white p-6 shadow-sm">
-                  <h3 className="text-sm font-semibold uppercase tracking-[0.2em] text-brand-600">課題とアクション</h3>
-                  <ul className="mt-4 space-y-4 text-sm text-neutral-600">
-                    {vote.area.challenges.map((challenge) => (
-                      <li key={challenge.title} className="rounded-2xl bg-brand-50/60 p-4">
-                        <p className="text-sm font-semibold text-brand-700">{challenge.title}</p>
-                        <p className="mt-2 leading-6 text-neutral-600">{challenge.description}</p>
-                      </li>
-                    ))}
-                  </ul>
-                </div>
-                <div className="rounded-3xl border border-neutral-200/80 bg-white p-6 shadow-sm">
-                  <h3 className="text-sm font-semibold uppercase tracking-[0.2em] text-neutral-500">次のアクション</h3>
-                  <p className="mt-2 text-sm leading-6 text-neutral-600">
-                    産地の活動に参加したい方や、あなたの地域の工房を掲載したい方は以下からご連絡ください。
-                  </p>
-                  <div className="mt-5 flex flex-col gap-3 sm:flex-row">
-                    <Link
-                      href={`/areas/${vote.area.slug}`}
-                      className="inline-flex flex-1 items-center justify-center rounded-full bg-brand-600 px-5 py-3 text-sm font-semibold text-white transition hover:bg-brand-700 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-brand-500"
-                    >
-                      産地ページへ
-                    </Link>
-                    <Link
-                      href={vote.area.registerLink.href}
-                      className="inline-flex flex-1 items-center justify-center rounded-full border border-brand-500/60 bg-white px-5 py-3 text-sm font-semibold text-brand-700 transition hover:border-brand-500 hover:text-brand-800 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-brand-500"
-                    >
-                      {vote.area.registerLink.label}
-                    </Link>
-                  </div>
-                  <p className="mt-3 text-xs leading-5 text-neutral-500">{vote.area.registerLink.description}</p>
-                </div>
-              </div>
             </div>
           </div>
         </section>
