@@ -135,15 +135,31 @@ export default function VoteDetailPage({ params }: VoteDetailPageProps) {
                 {vote.area.name} でこの問いが生まれた背景
               </h2>
               <p className="text-sm leading-6 text-neutral-600 sm:text-base">
-                現場のメンバーがまとめた背景レポートです。どんな課題感が共有され、投票という形になったのかを辿ってみてください。
+                賛成・反対・様子見など立場ごとのコメントを匿名で整理しています。開いて読むと、具体的な背景やニュアンスがわかります。
               </p>
             </div>
-            <article className="space-y-8 rounded-3xl border border-neutral-200/80 bg-neutral-50 p-6 text-sm leading-7 text-neutral-700 shadow-sm sm:p-8 sm:text-base">
-              {vote.area.background.map((section) => (
-                <section key={section.heading} className="space-y-3">
-                  <h3 className="text-lg font-semibold text-neutral-900 sm:text-xl">{section.heading}</h3>
-                  <p>{section.body}</p>
-                </section>
+            <div className="space-y-4">
+              {vote.voices.map((voice) => (
+                <details
+                  key={voice.position}
+                  className="group rounded-2xl border border-neutral-100 bg-neutral-50 p-5 text-neutral-700"
+                >
+                  <summary className="flex cursor-pointer items-start justify-between gap-3 text-left text-neutral-900 outline-none transition hover:text-brand-700 focus-visible:text-brand-700 [&::-webkit-details-marker]:hidden">
+                    <div className="space-y-1">
+                      <p className="text-xs font-semibold uppercase tracking-wide text-brand-600">{voice.position}</p>
+                      <p className="text-sm leading-6 text-neutral-600">{voice.summary}</p>
+                    </div>
+                    <span className="whitespace-nowrap text-sm text-neutral-400 group-open:hidden">開く</span>
+                    <span className="hidden whitespace-nowrap text-sm text-neutral-400 group-open:inline">閉じる</span>
+                  </summary>
+                  <ul className="mt-4 space-y-3 text-sm leading-6 text-neutral-600">
+                    {voice.highlights.map((highlight, index) => (
+                      <li key={`${voice.position}-${index}`} className="rounded-xl bg-white p-4 shadow-sm">
+                        {highlight}
+                      </li>
+                    ))}
+                  </ul>
+                </details>
               ))}
             </article>
             <div className="grid gap-6 lg:grid-cols-[minmax(0,1.4fr)_minmax(0,1fr)]">
