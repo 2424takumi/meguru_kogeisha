@@ -38,11 +38,11 @@ export default function AreaGrid({ areas }: AreaGridProps) {
               <article className="relative flex aspect-[3/4] w-full flex-col overflow-hidden rounded-3xl border border-neutral-200/80 bg-white shadow-sm transition group-hover:-translate-y-1 group-hover:shadow-lg">
                 <div className="relative w-full overflow-hidden">
                   <div
-                    className={`aspect-[4/3] w-full ${area.themeColor}`}
+                    className={`aspect-[3/4] w-full ${area.themeColor}`}
                     aria-hidden="true"
                   />
                 </div>
-                <div className="flex flex-1 flex-col px-5 pb-5 pt-4">
+                <div className="flex flex-1 flex-col pl-4 pr-5 pb-5 pt-4">
                   <h3 className="text-xl font-semibold text-neutral-900">{area.name}</h3>
                   <span className="mt-2 inline-flex w-fit items-center rounded-full border border-neutral-200 bg-neutral-100 px-3 py-1 text-xs font-medium text-neutral-600">
                     {extractPrefecture(area.region)}
@@ -50,7 +50,7 @@ export default function AreaGrid({ areas }: AreaGridProps) {
                   <p className="mt-3 overflow-hidden text-sm leading-relaxed text-neutral-600 [display:-webkit-box] [-webkit-line-clamp:3] [-webkit-box-orient:vertical]">
                     {area.description}
                   </p>
-                  <div className="mt-auto flex items-center justify-end text-sm font-semibold text-neutral-900 transition group-hover:text-brand-600">
+                  <div className="mt-auto flex items-center justify-end pt-4 text-sm font-semibold text-neutral-900 transition group-hover:text-brand-600">
                     詳細を見る
                     <span aria-hidden="true" className="transition group-hover:translate-x-1">
                       →
