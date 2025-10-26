@@ -175,28 +175,6 @@ export default function WeeklyVote({
             >
               さらに詳しい説明をみる
             </Link>
-            <div className="mt-3 flex flex-wrap items-center gap-2 text-[11px] text-neutral-500 sm:text-xs">
-              {startLabel ? (
-                <span className="inline-flex items-center gap-2 rounded-full bg-neutral-100 px-3 py-1 font-medium">
-                  開始: {startLabel}
-                </span>
-              ) : null}
-              {endLabel ? (
-                <span className="inline-flex items-center gap-2 rounded-full bg-neutral-100 px-3 py-1 font-medium">
-                  締切: {endLabel}
-                </span>
-              ) : null}
-              {!voteWindow.isActive && voteWindow.reason ? (
-                <span className="inline-flex items-center gap-2 rounded-full bg-amber-100 px-3 py-1 font-medium text-amber-700">
-                  {voteWindow.reason}
-                </span>
-              ) : null}
-              {hasSubmitted ? (
-                <span className="inline-flex items-center gap-2 rounded-full bg-brand-100 px-3 py-1 font-medium text-brand-700">
-                  投票済み
-                </span>
-              ) : null}
-            </div>
           </div>
           <form onSubmit={handleSubmit} className="flex flex-col gap-5">
             <fieldset className="space-y-4" aria-labelledby={fieldsetLegendId}>
@@ -348,6 +326,20 @@ export default function WeeklyVote({
                 {isSubmitting ? "送信中..." : "この意見で投票する"}
               </button>
             )}
+            <div className="mt-3 flex flex-wrap items-center gap-2 text-[11px] text-neutral-500 sm:text-xs">
+              {startLabel ? <span className="font-medium text-neutral-600">開始: {startLabel}</span> : null}
+              {endLabel ? <span className="font-medium text-neutral-600">締切: {endLabel}</span> : null}
+              {!voteWindow.isActive && voteWindow.reason ? (
+                <span className="inline-flex items-center gap-2 rounded-full bg-amber-100 px-3 py-1 font-medium text-amber-700">
+                  {voteWindow.reason}
+                </span>
+              ) : null}
+              {hasSubmitted ? (
+                <span className="inline-flex items-center gap-2 rounded-full bg-brand-100 px-3 py-1 font-medium text-brand-700">
+                  投票済み
+                </span>
+              ) : null}
+            </div>
             <p className="text-[11px] leading-5 text-neutral-500 sm:text-xs">
               {hasSubmitted
                 ? "集計ページであなたの投票が反映されています。"
