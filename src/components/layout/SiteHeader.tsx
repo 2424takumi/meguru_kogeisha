@@ -10,7 +10,7 @@ const navItems = [
 
 export default function SiteHeader() {
   return (
-    <header className="sticky top-0 z-50 border-b border-brand-100/80 bg-brand-50/90 backdrop-blur">
+    <header className="sticky top-0 z-50 border-b border-brand-100/80 bg-white">
       <div className="mx-auto flex w-full max-w-6xl items-center justify-between px-4 py-3 sm:px-6 lg:px-8">
         <Link href="/" aria-label="めぐる工芸舎" className="flex items-center">
           <Image
@@ -33,12 +33,20 @@ export default function SiteHeader() {
             </Link>
           ))}
         </nav>
-        <Link
-          href="/contact"
-          className="inline-flex items-center rounded-full border border-brand-500/40 bg-brand-600 px-3 py-2 text-xs font-semibold text-white shadow-sm transition hover:bg-brand-700 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-brand-500 sm:px-4 sm:text-sm md:px-5"
-        >
-          産地づくりに参加する
-        </Link>
+        <div className="flex items-center gap-2 sm:gap-3">
+          <Link
+            href="/login"
+            className="inline-flex items-center rounded-full border border-brand-200 bg-transparent px-3 py-2 text-xs font-semibold text-brand-700 transition hover:border-brand-400 hover:text-brand-900 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-brand-500 sm:px-4 sm:text-sm"
+          >
+            ログイン
+          </Link>
+          <Link
+            href="/signup"
+            className="inline-flex items-center rounded-full border border-brand-500/40 bg-brand-600 px-3 py-2 text-xs font-semibold text-white shadow-sm transition hover:bg-brand-700 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-brand-500 sm:px-4 sm:text-sm"
+          >
+            新規登録
+          </Link>
+        </div>
       </div>
     </header>
   );
