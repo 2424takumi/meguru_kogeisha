@@ -1,3 +1,5 @@
+import type { VoteStatus, VoteType } from "./votes/types"
+
 export type CraftArea = {
   slug: string
   name: string
@@ -46,7 +48,9 @@ export const craftAreas: CraftArea[] = [
   },
 ]
 
-export type VoteType = 'likert5' | 'yesno' | 'single' | 'multiple'
+import type { VoteType } from './votes/types'
+
+export type { VoteType }
 
 export type WeeklyVoteOption = {
   id: string
@@ -66,8 +70,12 @@ export type WeeklyVote = {
   voteType: VoteType
   allowComment: boolean
   commentLabel?: string
+  commentRequired?: boolean
   minChoices?: number
   maxChoices?: number
+  status: VoteStatus
+  startAt: string
+  endAt: string
 }
 
 export const weeklyVote: WeeklyVote = {
@@ -124,6 +132,12 @@ export const weeklyVote: WeeklyVote = {
   voteType: 'likert5',
   allowComment: true,
   commentLabel: 'コメント (任意)',
+  commentRequired: false,
   minChoices: 1,
   maxChoices: 1,
+  status: 'open',
+  startAt: '2024-05-20T00:00:00+09:00',
+  endAt: '2024-07-31T23:59:59+09:00',
 }
+
+export type { VoteType }

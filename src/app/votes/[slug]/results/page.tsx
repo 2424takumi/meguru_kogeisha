@@ -3,7 +3,8 @@ import type { Metadata } from "next"
 import { notFound } from "next/navigation"
 
 import SiteFooter from "@/components/layout/SiteFooter"
-import { getVoteResultDetail, listVoteResultSlugs } from "@/data/vote-details"
+import type { VoteResultDetail } from "@/data/vote-details"
+import { getVoteDefinition, getVoteResults, listVoteSlugs, VoteError } from "@/lib/votes/service"
 
 type VoteResultPageProps = {
   params: { slug: string }
@@ -16,30 +17,39 @@ const updatedAtFormatter = new Intl.DateTimeFormat("ja-JP", {
 })
 
 export function generateStaticParams() {
-  return listVoteResultSlugs().map((slug) => ({ slug }))
+  return listVoteSlugs().map((slug) => ({ slug }))
 }
 
 export function generateMetadata({ params }: VoteResultPageProps): Metadata {
-  const vote = getVoteResultDetail(params.slug)
+  try {
+    const vote = getVoteDefinition(params.slug)
 
-  if (!vote) {
     return {
-      title: "投票が見つかりません | めぐる工芸舎",
+      title: `${vote.title} | めぐる工芸舎`,
+      description: vote.description,
     }
-  }
-
-  return {
-    title: `${vote.title} | めぐる工芸舎`,
-    description: vote.description,
+  } catch (error) {
+    if (error instanceof VoteError && error.status === 404) {
+      return {
+        title: "投票が見つかりません | めぐる工芸舎",
+      }
+    }
+    throw error
   }
 }
 
 export default function VoteResultPage({ params, searchParams }: VoteResultPageProps) {
-  const vote = getVoteResultDetail(params.slug)
-
-  if (!vote) {
-    notFound()
+  let vote: VoteResultDetail
+  try {
+    vote = getVoteDefinition(params.slug)
+  } catch (error) {
+    if (error instanceof VoteError && error.status === 404) {
+      notFound()
+    }
+    throw error
   }
+
+  const results = getVoteResults(params.slug)
 
   const selectedParam = searchParams?.selected ?? ""
   const selectedOptionIds = selectedParam
@@ -48,10 +58,14 @@ export default function VoteResultPage({ params, searchParams }: VoteResultPageP
         .map((value) => decodeURIComponent(value.trim()))
         .filter(Boolean)
     : []
-  const totalVotes = vote.options.reduce((accumulator, option) => accumulator + option.supporters, 0)
+  const totalVotes = results.total
   const optionsWithPercentage = vote.options.map((option) => {
-    const percentage = totalVotes === 0 ? 0 : Number(((option.supporters / totalVotes) * 100).toFixed(1))
-    return { ...option, percentage }
+    const distributionPoint = results.distribution.find(
+      (point) => point.optionId === option.id || point.key === (option.valueKey ?? option.id),
+    )
+    const count = distributionPoint?.count ?? 0
+    const percentage = distributionPoint?.percent ?? 0
+    return { ...option, count, percentage }
   })
   const selectedOptions = vote.options.filter((option) => selectedOptionIds.includes(option.id))
   const formattedUpdatedAt = updatedAtFormatter.format(new Date(vote.updatedAt))
@@ -126,6 +140,12 @@ export default function VoteResultPage({ params, searchParams }: VoteResultPageP
                   <span className="text-neutral-500">総票数</span>
                   <span className="text-lg font-semibold text-brand-700">{totalVotes.toLocaleString()} 票</span>
                 </div>
+                {typeof results.avg === "number" ? (
+                  <div className="flex flex-col gap-1 text-sm">
+                    <span className="text-neutral-500">平均スコア</span>
+                    <span className="text-lg font-semibold text-brand-600">{results.avg.toFixed(2)}</span>
+                  </div>
+                ) : null}
                 <p className="text-xs leading-5 text-neutral-500">
                   本票数はプロトタイピング用のサンプルデータです。正式な調査開始後に更新されます。
                 </p>
@@ -183,7 +203,7 @@ export default function VoteResultPage({ params, searchParams }: VoteResultPageP
                           ) : null}
                         </div>
                         <span className="text-sm font-semibold text-neutral-700 sm:text-base">
-                          {option.supporters.toLocaleString()} 票
+                          {option.count.toLocaleString()} 票
                           <span className="ml-2 text-neutral-500">({option.percentage}%)</span>
                         </span>
                       </div>

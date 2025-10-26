@@ -4,7 +4,7 @@ import { notFound } from "next/navigation"
 
 import SiteFooter from "@/components/layout/SiteFooter"
 import VoteDetailForm from "@/components/votes/VoteDetailForm"
-import { getVoteResultDetail, listVoteResultSlugs } from "@/data/vote-details"
+import { listVoteSlugs, getVoteDefinition, VoteError } from "@/lib/votes/service"
 
 type VoteDetailPageProps = {
   params: { slug: string }
@@ -16,29 +16,36 @@ const updatedAtFormatter = new Intl.DateTimeFormat("ja-JP", {
 })
 
 export function generateStaticParams() {
-  return listVoteResultSlugs().map((slug) => ({ slug }))
+  return listVoteSlugs().map((slug) => ({ slug }))
 }
 
 export function generateMetadata({ params }: VoteDetailPageProps): Metadata {
-  const vote = getVoteResultDetail(params.slug)
+  try {
+    const vote = getVoteDefinition(params.slug)
 
-  if (!vote) {
     return {
-      title: "投票が見つかりません | めぐる工芸舎",
+      title: `${vote.question} | めぐる工芸舎`,
+      description: vote.area.overview,
     }
-  }
-
-  return {
-    title: `${vote.question} | めぐる工芸舎`,
-    description: vote.area.overview,
+  } catch (error) {
+    if (error instanceof VoteError && error.status === 404) {
+      return {
+        title: "投票が見つかりません | めぐる工芸舎",
+      }
+    }
+    throw error
   }
 }
 
 export default function VoteDetailPage({ params }: VoteDetailPageProps) {
-  const vote = getVoteResultDetail(params.slug)
-
-  if (!vote) {
-    notFound()
+  let vote
+  try {
+    vote = getVoteDefinition(params.slug)
+  } catch (error) {
+    if (error instanceof VoteError && error.status === 404) {
+      notFound()
+    }
+    throw error
   }
 
   const formattedUpdatedAt = updatedAtFormatter.format(new Date(vote.updatedAt))
@@ -104,8 +111,12 @@ export default function VoteDetailPage({ params }: VoteDetailPageProps) {
                   voteType={vote.voteType}
                   allowComment={vote.allowComment}
                   commentLabel={vote.commentLabel}
+                  commentRequired={vote.commentRequired}
                   minChoices={vote.minChoices}
                   maxChoices={vote.maxChoices}
+                  status={vote.status}
+                  startAt={vote.startAt}
+                  endAt={vote.endAt}
                 />
                 <div className="mt-4 rounded-2xl border border-neutral-200/80 bg-white px-6 py-5 text-xs leading-6 text-neutral-500">
                   <p>投票内容はプロトタイピング段階の集計に反映されます。正式公開まではテストデータとして扱われます。</p>

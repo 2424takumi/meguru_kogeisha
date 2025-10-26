@@ -1,10 +1,11 @@
 "use client"
 
-import { useId, useMemo, useState } from "react"
+import { useEffect, useId, useMemo, useState } from "react"
 import type { FormEvent, KeyboardEvent } from "react"
 import Link from "next/link"
 import { useRouter } from "next/navigation"
 import type { VoteType, WeeklyVoteOption } from "@/data/home"
+import type { VoteStatus } from "@/data/votes/types"
 
 type WeeklyVoteProps = {
   title: string
@@ -15,8 +16,50 @@ type WeeklyVoteProps = {
   voteType: VoteType
   allowComment: boolean
   commentLabel?: string
+  commentRequired?: boolean
   minChoices?: number
   maxChoices?: number
+  status: VoteStatus
+  startAt: string
+  endAt: string
+}
+
+type StoredBallot = {
+  choices?: string[]
+  comment?: string | null
+  submittedAt?: string
+}
+
+const COMMENT_MAX_LENGTH = 2000
+const periodFormatter = new Intl.DateTimeFormat("ja-JP", {
+  dateStyle: "medium",
+  timeStyle: "short",
+})
+
+function computeVoteWindow(status: VoteStatus, startAt: string, endAt: string) {
+  const start = new Date(startAt).getTime()
+  const end = new Date(endAt).getTime()
+  const now = Date.now()
+  const beforeStart = Number.isFinite(start) && now < start
+  const afterEnd = Number.isFinite(end) && now > end
+  const isActive = status === "open" && !beforeStart && !afterEnd
+  let reason: string | null = null
+  if (beforeStart) {
+    reason = "投票はまだ開始していません。"
+  } else if (afterEnd) {
+    reason = "投票期間が終了しました。"
+  } else if (status !== "open") {
+    reason = "この投票は現在準備中です。"
+  }
+  return { isActive, reason }
+}
+
+function formatPeriodLabel(value: string) {
+  const date = new Date(value)
+  if (Number.isNaN(date.getTime())) {
+    return null
+  }
+  return periodFormatter.format(date)
 }
 
 export default function WeeklyVote({
@@ -28,25 +71,57 @@ export default function WeeklyVote({
   voteType,
   allowComment,
   commentLabel,
+  commentRequired = false,
   minChoices,
   maxChoices,
+  status,
+  startAt,
+  endAt,
 }: WeeklyVoteProps) {
-  const [selectedOptionIds, setSelectedOptionIds] = useState<string[]>([])
-  const [hasSubmitted, setHasSubmitted] = useState(false)
-  const [comment, setComment] = useState("")
-  const [validationMessage, setValidationMessage] = useState<string | null>(null)
   const router = useRouter()
   const commentIdBase = useId()
   const fieldsetLegendId = useId()
+  const [selectedOptionIds, setSelectedOptionIds] = useState<string[]>([])
+  const [hasSubmitted, setHasSubmitted] = useState(false)
+  const [comment, setComment] = useState("")
+  const [formError, setFormError] = useState<string | null>(null)
+  const [isSubmitting, setIsSubmitting] = useState(false)
 
-  const commentCounterMobileId = `${commentIdBase}-mobile`
-  const commentCounterDesktopId = `${commentIdBase}-desktop`
+  const ballotStorageKey = useMemo(() => `ballot:${resultSlug}`, [resultSlug])
+  const commentFieldMobileId = `${commentIdBase}-mobile`
+  const commentCounterMobileId = `${commentIdBase}-mobile-counter`
+  const commentFieldDesktopId = `${commentIdBase}-desktop`
+  const commentCounterDesktopId = `${commentIdBase}-desktop-counter`
   const isMultiple = voteType === "multiple"
   const isLikert = voteType === "likert5" && options.length === 5
   const minSelection = minChoices ?? (isMultiple ? 1 : 1)
   const maxSelection = maxChoices ?? (isMultiple ? options.length : 1)
-  const commentMaxLength = 2000
-  const formattedCommentLabel = commentLabel ?? "コメント (任意)"
+  const commentLabelText =
+    commentLabel ?? (commentRequired ? "コメント (必須)" : "コメント (任意)")
+  const trimmedComment = comment.trim()
+  const voteWindow = useMemo(
+    () => computeVoteWindow(status, startAt, endAt),
+    [status, startAt, endAt],
+  )
+  const startLabel = useMemo(() => formatPeriodLabel(startAt), [startAt])
+  const endLabel = useMemo(() => formatPeriodLabel(endAt), [endAt])
+
+  useEffect(() => {
+    if (typeof window === "undefined") return
+    try {
+      const raw = window.localStorage.getItem(ballotStorageKey)
+      if (!raw) return
+      const stored = JSON.parse(raw) as StoredBallot
+      if (Array.isArray(stored.choices) && stored.choices.length > 0) {
+        setSelectedOptionIds(
+          stored.choices.filter((value): value is string => typeof value === "string"),
+        )
+        setHasSubmitted(true)
+      }
+    } catch {
+      // 壊れたデータは無視する
+    }
+  }, [ballotStorageKey])
 
   const selectedOptionDetails = useMemo(
     () =>
@@ -61,7 +136,7 @@ export default function WeeklyVote({
   const sizeClasses = ["h-12 w-12", "h-11 w-11", "h-10 w-10", "h-11 w-11", "h-12 w-12"] as const
 
   const handleMobileKeyDown = (event: KeyboardEvent<HTMLButtonElement>, index: number) => {
-    if (!isLikert) return
+    if (!isLikert || hasSubmitted) return
     if (event.key === "ArrowRight" || event.key === "ArrowDown") {
       event.preventDefault()
       const nextIndex = Math.min(index + 1, options.length - 1)
@@ -81,14 +156,17 @@ export default function WeeklyVote({
   }
 
   const handleOptionSelect = (optionId: string) => {
-    setValidationMessage(null)
+    if (hasSubmitted) {
+      return
+    }
+    setFormError(null)
     if (isMultiple) {
       setSelectedOptionIds((previous) => {
         if (previous.includes(optionId)) {
           return previous.filter((id) => id !== optionId)
         }
         if (previous.length >= maxSelection) {
-          setValidationMessage(`選択できるのは最大で${maxSelection}件までです。`)
+          setFormError(`選択できるのは最大で${maxSelection}件までです。`)
           return previous
         }
         return [...previous, optionId]
@@ -98,17 +176,6 @@ export default function WeeklyVote({
     setSelectedOptionIds([optionId])
   }
 
-  const handleSubmit = (event: FormEvent<HTMLFormElement>) => {
-    event.preventDefault()
-    if (selectedOptionIds.length < minSelection) {
-      setValidationMessage(`少なくとも${minSelection}件選択してください。`)
-      return
-    }
-    const selectedQuery = selectedOptionIds.join(",")
-    setHasSubmitted(true)
-    router.push(`/votes/${resultSlug}/results?selected=${encodeURIComponent(selectedQuery)}`)
-  }
-
   const renderCommentField = (id: string, counterId: string) => {
     if (!allowComment || !hasSelection || hasSubmitted) {
       return null
@@ -116,7 +183,7 @@ export default function WeeklyVote({
     return (
       <div className="space-y-2">
         <label htmlFor={id} className="text-xs font-semibold uppercase tracking-wide text-neutral-500">
-          {formattedCommentLabel}
+          {commentLabelText}
         </label>
         <textarea
           id={id}
@@ -125,17 +192,105 @@ export default function WeeklyVote({
           onChange={(event) => setComment(event.target.value)}
           placeholder="この意見にした理由を伝える。"
           rows={4}
-          maxLength={commentMaxLength}
+          maxLength={COMMENT_MAX_LENGTH}
           aria-describedby={counterId}
+          required={commentRequired}
           className="w-full rounded-2xl border border-neutral-200/80 bg-white px-4 py-3 text-sm text-neutral-700 placeholder-neutral-400 focus:border-brand-500 focus:outline-none focus:ring-4 focus:ring-brand-500/10"
         />
         <div className="flex items-center justify-between text-xs text-neutral-500">
-          <span id={counterId}>任意入力・{comment.length}/{commentMaxLength}</span>
+          <span id={counterId}>
+            {commentRequired ? "必須入力" : "任意入力"}・{comment.length}/{COMMENT_MAX_LENGTH}
+          </span>
           <span>2000文字まで</span>
         </div>
       </div>
     )
   }
+
+  const handleSubmit = async (event: FormEvent<HTMLFormElement>) => {
+    event.preventDefault()
+    setFormError(null)
+
+    if (!voteWindow.isActive) {
+      setFormError(voteWindow.reason ?? "現在この投票には参加できません。")
+      return
+    }
+
+    if (selectedOptionIds.length < minSelection) {
+      setFormError(`少なくとも${minSelection}件選択してください。`)
+      return
+    }
+    if (isMultiple && selectedOptionIds.length > maxSelection) {
+      setFormError(`選択できるのは最大で${maxSelection}件までです。`)
+      return
+    }
+
+    const sanitizedComment = comment.trim()
+    if (commentRequired && sanitizedComment.length === 0) {
+      setFormError("コメントを入力してください。")
+      return
+    }
+    if (sanitizedComment.length > COMMENT_MAX_LENGTH) {
+      setFormError("コメントは2000文字以内で入力してください。")
+      return
+    }
+
+    const payload = {
+      choices: selectedOptionIds.map((optionId) => {
+        const option = options.find((candidate) => candidate.id === optionId)
+        return {
+          option_id: optionId,
+          ...(typeof option?.numericValue === "number" ? { numeric_value: option.numericValue } : {}),
+        }
+      }),
+      comment: sanitizedComment.length > 0 ? sanitizedComment : undefined,
+    }
+
+    setIsSubmitting(true)
+    try {
+      const response = await fetch(`/api/votes/${resultSlug}/ballots`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(payload),
+      })
+      const data = await response.json().catch(() => null)
+
+      if (!response.ok) {
+        const message =
+          (data && typeof data.error === "string" && data.error) ||
+          "投票の送信に失敗しました。時間をおいて再度お試しください。"
+        setFormError(message)
+        return
+      }
+
+      if (typeof window !== "undefined") {
+        const storedBallot: StoredBallot = {
+          choices: selectedOptionIds,
+          comment: sanitizedComment.length > 0 ? sanitizedComment : null,
+          submittedAt: new Date().toISOString(),
+        }
+        window.localStorage.setItem(ballotStorageKey, JSON.stringify(storedBallot))
+      }
+
+      setHasSubmitted(true)
+      const selectedQuery = selectedOptionIds.join(",")
+      router.push(`/votes/${resultSlug}/results?selected=${encodeURIComponent(selectedQuery)}`)
+    } catch {
+      setFormError("ネットワークエラーが発生しました。接続状況をご確認ください。")
+    } finally {
+      setIsSubmitting(false)
+    }
+  }
+
+  const submitDisabled =
+    hasSubmitted ||
+    isSubmitting ||
+    !voteWindow.isActive ||
+    selectedOptionIds.length < minSelection ||
+    (isMultiple && selectedOptionIds.length > maxSelection) ||
+    (commentRequired && trimmedComment.length === 0)
 
   return (
     <section
@@ -161,6 +316,28 @@ export default function WeeklyVote({
             >
               さらに詳しい説明をみる
             </Link>
+            <div className="mt-3 flex flex-wrap items-center gap-2 text-[11px] text-neutral-500 sm:text-xs">
+              {startLabel ? (
+                <span className="inline-flex items-center gap-2 rounded-full bg-neutral-100 px-3 py-1 font-medium">
+                  開始: {startLabel}
+                </span>
+              ) : null}
+              {endLabel ? (
+                <span className="inline-flex items-center gap-2 rounded-full bg-neutral-100 px-3 py-1 font-medium">
+                  締切: {endLabel}
+                </span>
+              ) : null}
+              {!voteWindow.isActive && voteWindow.reason ? (
+                <span className="inline-flex items-center gap-2 rounded-full bg-amber-100 px-3 py-1 font-medium text-amber-700">
+                  {voteWindow.reason}
+                </span>
+              ) : null}
+              {hasSubmitted ? (
+                <span className="inline-flex items-center gap-2 rounded-full bg-brand-100 px-3 py-1 font-medium text-brand-700">
+                  投票済み
+                </span>
+              ) : null}
+            </div>
           </div>
           <form onSubmit={handleSubmit} className="flex flex-col gap-5">
             <fieldset className="space-y-4" aria-labelledby={fieldsetLegendId}>
@@ -190,12 +367,14 @@ export default function WeeklyVote({
                             role="radio"
                             aria-checked={isSelected}
                             aria-labelledby={optionLabelId}
-                            tabIndex={isSelected || (!hasSelection && index === 0) ? 0 : -1}
+                            aria-disabled={hasSubmitted}
+                            tabIndex={hasSubmitted ? -1 : isSelected || (!hasSelection && index === 0) ? 0 : -1}
                             onClick={() => handleOptionSelect(option.id)}
                             onKeyDown={(event) => handleMobileKeyDown(event, index)}
+                            disabled={hasSubmitted}
                             className={`flex flex-col items-center gap-2 text-[11px] font-semibold transition ${
                               isSelected ? "text-brand-600" : "text-neutral-400"
-                            }`}
+                            } ${hasSubmitted ? "opacity-60" : ""}`}
                           >
                             <span id={optionLabelId} className="sr-only">
                               {option.label}
@@ -222,166 +401,92 @@ export default function WeeklyVote({
                     </div>
                   </>
                 ) : (
-                  <div className="space-y-3">
+                  <div className="space-y-2">
                     {options.map((option) => {
                       const isSelected = selectedOptionIds.includes(option.id)
-                      const optionLabelId = `weekly-generic-mobile-${option.id}-label`
                       return (
-                        <label
+                        <button
                           key={option.id}
-                          className={`flex items-start justify-between gap-3 rounded-2xl border px-4 py-3 transition hover:border-brand-500/50 hover:bg-brand-500/5 ${
+                          type="button"
+                          onClick={() => handleOptionSelect(option.id)}
+                          disabled={hasSubmitted}
+                          className={`w-full rounded-full border px-4 py-2.5 text-left text-sm font-semibold transition focus:outline-none focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-brand-500 ${
                             isSelected
-                              ? "border-brand-500 bg-brand-500/10 ring-4 ring-brand-500/10"
-                              : "border-neutral-200/80 bg-neutral-50"
-                          }`}
+                              ? "border-brand-500 bg-brand-500/10 text-brand-700"
+                              : "border-neutral-200/80 text-neutral-600"
+                          } ${hasSubmitted ? "opacity-60" : ""}`}
                         >
-                          <div>
-                            <p id={optionLabelId} className="text-sm font-semibold text-neutral-900">
-                              {option.label}
-                            </p>
-                            <p className="mt-1 text-xs text-neutral-600">{option.description}</p>
-                          </div>
-                          <input
-                            type={isMultiple ? "checkbox" : "radio"}
-                            name="weekly-vote"
-                            value={option.id}
-                            checked={isSelected}
-                            onChange={() => handleOptionSelect(option.id)}
-                            className="mt-1"
-                            aria-labelledby={optionLabelId}
-                          />
-                        </label>
+                          {option.label}
+                        </button>
                       )
                     })}
                   </div>
                 )}
-                {selectedOptionDetails.length > 0 && !hasSubmitted ? (
-                  <div className="mt-4 space-y-4 text-sm leading-6 text-neutral-600">
-                    <p className="font-semibold text-neutral-900">
-                      選択中の意見{isMultiple ? `（${selectedOptionDetails.length}件）` : ""}
-                    </p>
-                    <ul className="space-y-3">
-                      {selectedOptionDetails.map((option) => (
-                        <li key={option?.id ?? ""}>
-                          <p className="text-sm font-semibold text-neutral-900">{option?.label}</p>
-                          <p className="mt-1 text-sm text-neutral-600">{option?.description}</p>
-                        </li>
-                      ))}
-                    </ul>
-                    {renderCommentField("weekly-vote-comment-mobile", commentCounterMobileId)}
-                  </div>
-                ) : null}
               </div>
-              <div className="hidden gap-4 sm:grid sm:grid-cols-5">
-                {isLikert
-                  ? options.map((option) => {
-                      const isSelected = selectedOptionIds.includes(option.id)
-                      const optionLabelId = `weekly-desktop-${option.id}-label`
-                      return (
-                        <label
-                          key={option.id}
-                          className={`group flex flex-col rounded-2xl border px-4 py-4 transition hover:border-brand-500/50 hover:bg-brand-500/5 ${
-                            isSelected
-                              ? "border-brand-500 bg-brand-500/10 ring-4 ring-brand-500/10"
-                              : "border-neutral-200/80 bg-neutral-50"
-                          }`}
-                        >
-                          <p id={optionLabelId} className="text-base font-semibold text-neutral-900">
-                            {option.label}
-                          </p>
-                          <p className="mt-2 text-sm text-neutral-600">{option.description}</p>
-                          <input
-                            type="radio"
-                            name="weekly-vote"
-                            value={option.id}
-                            checked={isSelected}
-                            onChange={() => handleOptionSelect(option.id)}
-                            className="sr-only"
-                            aria-labelledby={optionLabelId}
-                          />
-                        </label>
-                      )
-                    })
-                  : options.map((option) => {
-                      const isSelected = selectedOptionIds.includes(option.id)
-                      const optionLabelId = `weekly-desktop-generic-${option.id}-label`
-                      return (
-                        <label
-                          key={option.id}
-                          className={`col-span-5 flex items-start justify-between gap-4 rounded-2xl border px-5 py-4 transition hover:border-brand-500/50 hover:bg-brand-500/5 ${
-                            isSelected
-                              ? "border-brand-500 bg-brand-500/10 ring-4 ring-brand-500/10"
-                              : "border-neutral-200/80 bg-neutral-50"
-                          }`}
-                        >
-                          <div>
-                            <p id={optionLabelId} className="text-base font-semibold text-neutral-900">
-                              {option.label}
-                            </p>
-                            <p className="mt-1 text-sm text-neutral-600">{option.description}</p>
-                          </div>
-                          <input
-                            type={isMultiple ? "checkbox" : "radio"}
-                            name="weekly-vote"
-                            value={option.id}
-                            checked={isSelected}
-                            onChange={() => handleOptionSelect(option.id)}
-                            className="mt-1 h-5 w-5"
-                            aria-labelledby={optionLabelId}
-                          />
-                        </label>
-                      )
-                    })}
+              <div className="hidden gap-2 sm:grid">
+                {options.map((option) => {
+                  const isSelected = selectedOptionIds.includes(option.id)
+                  return (
+                    <label
+                      key={option.id}
+                      className={`flex cursor-pointer items-start gap-3 rounded-2xl border p-4 transition focus-within:outline focus-within:outline-2 focus-within:outline-offset-4 focus-within:outline-brand-500 hover:border-brand-500/50 hover:bg-brand-500/5 ${
+                        isSelected ? "border-brand-500 bg-brand-500/10 ring-4 ring-brand-500/10" : "border-neutral-200/80 bg-neutral-50"
+                      } ${hasSubmitted ? "opacity-60" : ""}`}
+                    >
+                      <input
+                        type={isMultiple ? "checkbox" : "radio"}
+                        name="weekly-vote-option"
+                        value={option.id}
+                        checked={isSelected}
+                        disabled={hasSubmitted}
+                        onChange={() => handleOptionSelect(option.id)}
+                        className="mt-1.5 h-4 w-4 border-neutral-300 text-brand-600 focus:ring-brand-500"
+                      />
+                      <div className="space-y-1">
+                        <p className="text-sm font-semibold text-neutral-900">{option.label}</p>
+                        <p className="text-sm text-neutral-600">{option.description}</p>
+                      </div>
+                    </label>
+                  )
+                })}
               </div>
             </fieldset>
-            {!hasSubmitted && selectedOptionDetails.length > 0 ? (
-              <div className="hidden space-y-4 rounded-2xl border border-neutral-200/80 bg-neutral-50 p-6 text-left text-sm text-neutral-600 sm:block">
-                <div>
-                  <p className="text-xs font-semibold uppercase tracking-[0.25em] text-neutral-500">
-                    選択中の意見{isMultiple ? `（${selectedOptionDetails.length}件）` : ""}
-                  </p>
-                  <ul className="mt-3 space-y-3">
-                    {selectedOptionDetails.map((option) => (
-                      <li key={option?.id ?? ""}>
-                        <p className="text-base font-semibold text-neutral-900">{option?.label}</p>
-                        <p className="mt-1 text-sm text-neutral-600">{option?.description}</p>
-                      </li>
-                    ))}
-                  </ul>
-                </div>
-                {renderCommentField("weekly-vote-comment-desktop", commentCounterDesktopId)}
+            {selectedOptionDetails.length > 0 ? (
+              <div className="space-y-2 rounded-2xl border border-neutral-200/80 bg-neutral-50 p-4 text-sm leading-6 text-neutral-600">
+                <p className="text-xs font-semibold uppercase tracking-[0.25em] text-neutral-500">
+                  {hasSubmitted ? "投票した意見" : `選択中の意見${isMultiple ? `（${selectedOptionDetails.length}件）` : ""}`}
+                </p>
+                <ul className="space-y-2">
+                  {selectedOptionDetails.map((option) => (
+                    <li key={option.id}>
+                      <p className="text-sm font-semibold text-neutral-900">{option.label}</p>
+                      <p className="text-sm text-neutral-600">{option.description}</p>
+                    </li>
+                  ))}
+                </ul>
               </div>
             ) : null}
-            {validationMessage ? (
+            <div className="sm:hidden">{renderCommentField(commentFieldMobileId, commentCounterMobileId)}</div>
+            <div className="hidden sm:block">{renderCommentField(commentFieldDesktopId, commentCounterDesktopId)}</div>
+            {formError ? (
               <p role="alert" className="text-sm font-medium text-red-600">
-                {validationMessage}
+                {formError}
               </p>
             ) : null}
             <button
               type="submit"
-              disabled={!hasSelection || hasSubmitted}
-              className="inline-flex w-full items-center justify-center rounded-full bg-brand-600 px-6 py-3 text-sm font-semibold text-white transition hover:bg-brand-700 disabled:cursor-not-allowed disabled:bg-brand-400 sm:w-auto"
+              disabled={submitDisabled}
+              className="inline-flex items-center justify-center rounded-full bg-brand-600 px-5 py-2.5 text-sm font-semibold text-white transition hover:bg-brand-700 disabled:cursor-not-allowed disabled:bg-brand-400"
             >
-              {hasSubmitted ? "投票ありがとうございました" : "この意見で投票して、みんなの意見を見る"}
+              {hasSubmitted ? "投票ありがとうございました" : isSubmitting ? "送信中..." : "この意見で投票する"}
             </button>
-            {hasSubmitted && (
-              <div className="space-y-3 text-xs text-neutral-500">
-                <p aria-live="polite">
-                  集計結果がアンロックされました。来週のレポートではコメントサマリーを掲載予定です。
-                </p>
-                <div className="space-y-2 rounded-2xl border border-neutral-200/80 bg-neutral-50 p-4 text-neutral-600">
-                  <p className="text-xs font-semibold uppercase tracking-wide text-neutral-400">現在の分布</p>
-                  <ul className="space-y-1 text-sm">
-                    {options.map((option) => (
-                      <li key={option.id} className="flex items-center justify-between gap-3">
-                        <span>{option.label}</span>
-                        <span className="font-semibold text-brand-600">{option.supporters} 票</span>
-                      </li>
-                    ))}
-                  </ul>
-                </div>
-              </div>
-            )}
+            <p className="text-[11px] leading-5 text-neutral-500 sm:text-xs">
+              {hasSubmitted
+                ? "集計ページであなたの投票が反映されています。"
+                : voteWindow.isActive
+                  ? "投票すると、集計ページで現在の結果と論点を確認できます。"
+                  : "投票期間外のため、集計ページで最新の結果のみご確認いただけます。"}
+            </p>
           </form>
         </div>
       </div>
