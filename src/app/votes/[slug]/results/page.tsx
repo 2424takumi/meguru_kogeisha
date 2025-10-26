@@ -3,11 +3,11 @@ import type { Metadata } from "next"
 import { notFound } from "next/navigation"
 
 import SiteFooter from "@/components/layout/SiteFooter"
-import VoteDetailForm from "@/components/votes/VoteDetailForm"
 import { getVoteResultDetail, listVoteResultSlugs } from "@/data/vote-details"
 
-type VoteDetailPageProps = {
+type VoteResultPageProps = {
   params: { slug: string }
+  searchParams?: { selected?: string }
 }
 
 const updatedAtFormatter = new Intl.DateTimeFormat("ja-JP", {
@@ -19,7 +19,7 @@ export function generateStaticParams() {
   return listVoteResultSlugs().map((slug) => ({ slug }))
 }
 
-export function generateMetadata({ params }: VoteDetailPageProps): Metadata {
+export function generateMetadata({ params }: VoteResultPageProps): Metadata {
   const vote = getVoteResultDetail(params.slug)
 
   if (!vote) {
@@ -29,18 +29,25 @@ export function generateMetadata({ params }: VoteDetailPageProps): Metadata {
   }
 
   return {
-    title: `${vote.question} | めぐる工芸舎`,
-    description: vote.area.overview,
+    title: `${vote.title} | めぐる工芸舎`,
+    description: vote.description,
   }
 }
 
-export default function VoteDetailPage({ params }: VoteDetailPageProps) {
+export default function VoteResultPage({ params, searchParams }: VoteResultPageProps) {
   const vote = getVoteResultDetail(params.slug)
 
   if (!vote) {
     notFound()
   }
 
+  const selectedOptionId = searchParams?.selected ?? null
+  const totalVotes = vote.options.reduce((accumulator, option) => accumulator + option.supporters, 0)
+  const optionsWithPercentage = vote.options.map((option) => {
+    const percentage = totalVotes === 0 ? 0 : Number(((option.supporters / totalVotes) * 100).toFixed(1))
+    return { ...option, percentage }
+  })
+  const selectedOption = vote.options.find((option) => option.id === selectedOptionId) ?? null
   const formattedUpdatedAt = updatedAtFormatter.format(new Date(vote.updatedAt))
 
   return (
@@ -68,72 +75,121 @@ export default function VoteDetailPage({ params }: VoteDetailPageProps) {
                   </Link>
                 </li>
                 <li aria-hidden="true">/</li>
-                <li className="text-neutral-900">{vote.question}</li>
+                <li>
+                  <Link
+                    href={`/votes/${vote.slug}`}
+                    className="transition hover:text-brand-600 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-brand-500"
+                  >
+                    {vote.question}
+                  </Link>
+                </li>
+                <li aria-hidden="true">/</li>
+                <li className="text-neutral-900">投票結果</li>
               </ol>
             </nav>
-            <div className="grid gap-12 lg:grid-cols-[minmax(0,1.5fr)_minmax(0,1fr)]">
-              <div className="space-y-6">
-                <p className="text-xs font-semibold uppercase tracking-[0.35em] text-brand-600">Vote Guide</p>
-                <h1 className="text-3xl font-semibold text-neutral-900 sm:text-4xl">{vote.question}</h1>
-                <div className="space-y-4 text-sm leading-6 text-neutral-600 sm:text-base">
-                  <p className="text-neutral-800">
-                    {vote.area.name} が抱える課題を共有し、立場の違う人たちと視点を照らし合わせながら考えるための投票です。
-                  </p>
-                  <p>{vote.area.overview}</p>
-                  <p className="rounded-2xl bg-neutral-100 px-5 py-4 text-sm text-neutral-700">
-                    このページでは投票の背景や各選択肢の考え方をまとめています。内容を確認したうえで、あなたの考えに近い選択を投票してください。
-                  </p>
+            <div className="grid gap-12 lg:grid-cols-[minmax(0,1.5fr)_minmax(0,1fr)] lg:items-start">
+              <div className="space-y-8">
+                <p className="text-xs font-semibold uppercase tracking-[0.35em] text-brand-600">Result</p>
+                <h1 className="text-3xl font-semibold text-neutral-900 sm:text-4xl">{vote.title}</h1>
+                <div className="space-y-3 text-sm leading-6 text-neutral-700 sm:text-base">
+                  <p className="font-semibold text-neutral-800">{vote.question}</p>
+                  <p>{vote.description}</p>
                 </div>
-                <div className="flex flex-wrap items-center gap-3 text-xs text-neutral-500 sm:text-sm">
-                  <span className="inline-flex items-center gap-2 rounded-full bg-neutral-100 px-3 py-1 font-medium text-neutral-600">
-                    更新: {formattedUpdatedAt}
-                  </span>
-                  <Link
-                    href={`/votes/${vote.slug}/results`}
-                    className="inline-flex items-center text-brand-600 transition hover:text-brand-700 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-brand-500"
+                <div className="flex flex-wrap items-center gap-3 text-sm">
+                  <a
+                    href="#vote-distribution-heading"
+                    className="inline-flex items-center rounded-full bg-brand-600 px-5 py-2 text-sm font-semibold text-white transition hover:bg-brand-700 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-brand-500"
                   >
-                    現在の集計を見る
+                    集計を見る
+                  </a>
+                  <Link
+                    href={`/votes/${vote.slug}`}
+                    className="inline-flex items-center font-semibold text-brand-600 transition hover:text-brand-700 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-brand-500"
+                  >
+                    投票の背景をもう一度読む
                   </Link>
                 </div>
               </div>
-              <div id="vote-entry" className="lg:sticky lg:top-20">
-                <VoteDetailForm question={vote.question} options={vote.options} resultSlug={vote.slug} />
-                <div className="mt-4 rounded-2xl border border-neutral-200/80 bg-white px-6 py-5 text-xs leading-6 text-neutral-500">
-                  <p>投票内容はプロトタイピング段階の集計に反映されます。正式公開まではテストデータとして扱われます。</p>
-                  <p className="mt-2">投票後は自動的に集計ページへ移動し、あなたの選択と議論のハイライトを確認できます。</p>
+              <div className="flex flex-col gap-4 rounded-3xl border border-neutral-200/80 bg-neutral-50 p-6 shadow-sm">
+                <p className="text-xs font-semibold uppercase tracking-[0.25em] text-neutral-500">集計状況</p>
+                <div className="flex flex-col gap-1 text-sm">
+                  <span className="text-neutral-500">更新日時</span>
+                  <span className="text-lg font-semibold text-neutral-900">{formattedUpdatedAt}</span>
                 </div>
+                <div className="flex flex-col gap-1 text-sm">
+                  <span className="text-neutral-500">総票数</span>
+                  <span className="text-lg font-semibold text-brand-700">{totalVotes.toLocaleString()} 票</span>
+                </div>
+                <p className="text-xs leading-5 text-neutral-500">
+                  本票数はプロトタイピング用のサンプルデータです。正式な調査開始後に更新されます。
+                </p>
+                {selectedOption ? (
+                  <div className="mt-2 rounded-2xl border border-brand-200/70 bg-white px-4 py-3 text-sm leading-6 text-neutral-600">
+                    <p className="text-xs font-semibold uppercase tracking-wide text-brand-600">あなたの投票</p>
+                    <p className="mt-1 text-base font-semibold text-neutral-900">{selectedOption.label}</p>
+                    <p className="mt-1 text-sm text-neutral-600">{selectedOption.description}</p>
+                  </div>
+                ) : null}
               </div>
             </div>
           </div>
         </section>
 
         <section
-          aria-labelledby="vote-options-heading"
+          aria-labelledby="vote-distribution-heading"
           className="mx-auto w-full max-w-5xl px-4 sm:px-6 lg:px-8"
         >
-          <div className="space-y-6">
+          <div className="flex flex-col gap-6">
             <div className="space-y-3">
-              <p className="text-xs font-semibold uppercase tracking-[0.3em] text-brand-600">Choices</p>
-              <h2 id="vote-options-heading" className="text-2xl font-semibold text-neutral-900 sm:text-3xl">
-                選択肢ごとの考えかた
+              <p className="text-xs font-semibold uppercase tracking-[0.3em] text-brand-600">Distribution</p>
+              <h2 id="vote-distribution-heading" className="text-2xl font-semibold text-neutral-900 sm:text-3xl">
+                投票結果の内訳
               </h2>
               <p className="text-sm leading-6 text-neutral-600 sm:text-base">
-                それぞれの選択肢は、現場で語られている価値観や課題感の違いを表しています。内容を読み比べ、自分の視点に近いところを探してください。
+                各選択肢の票数と割合、寄せられた主な論点をまとめています。
               </p>
             </div>
-            <div className="grid gap-4 lg:grid-cols-2">
-              {vote.options.map((option) => (
-                <article
-                  key={option.id}
-                  className="flex h-full flex-col justify-between rounded-3xl border border-neutral-200/80 bg-white p-6 shadow-sm"
-                >
-                  <div className="space-y-3">
-                    <h3 className="text-lg font-semibold text-neutral-900">{option.label}</h3>
-                    <p className="text-sm leading-6 text-neutral-600">{option.description}</p>
-                    <p className="rounded-2xl bg-neutral-100 px-4 py-3 text-sm leading-6 text-neutral-600">{option.narrative}</p>
-                  </div>
-                </article>
-              ))}
+            <div className="space-y-6 rounded-3xl border border-neutral-200/80 bg-white p-6 shadow-sm sm:p-6">
+              <ol className="space-y-6">
+                {optionsWithPercentage.map((option) => {
+                  const isSelected = selectedOptionId === option.id
+                  return (
+                    <li key={option.id} className="space-y-3">
+                      <div className="flex flex-wrap items-center justify-between gap-3">
+                        <div className="flex items-center gap-3">
+                          <span
+                            className={`text-base font-semibold ${
+                              isSelected ? "text-brand-700" : "text-neutral-900"
+                            }`}
+                          >
+                            {option.label}
+                          </span>
+                          {isSelected ? (
+                            <span className="inline-flex items-center rounded-full bg-brand-100 px-3 py-1 text-xs font-semibold uppercase tracking-wide text-brand-700">
+                              あなたの投票
+                            </span>
+                          ) : null}
+                        </div>
+                        <span className="text-sm font-semibold text-neutral-700 sm:text-base">
+                          {option.supporters.toLocaleString()} 票
+                          <span className="ml-2 text-neutral-500">({option.percentage}%)</span>
+                        </span>
+                      </div>
+                      <div className="h-2 rounded-full bg-neutral-200/80">
+                        <div
+                          className={`h-2 rounded-full ${isSelected ? "bg-brand-600" : "bg-brand-400/80"}`}
+                          style={{ width: `${option.percentage}%` }}
+                          aria-hidden="true"
+                        />
+                      </div>
+                      <div className="space-y-1 text-sm leading-6 text-neutral-600 sm:text-base">
+                        <p>{option.description}</p>
+                        <p className="text-neutral-500">{option.narrative}</p>
+                      </div>
+                    </li>
+                  )
+                })}
+              </ol>
             </div>
           </div>
         </section>
@@ -141,12 +197,12 @@ export default function VoteDetailPage({ params }: VoteDetailPageProps) {
         <section aria-labelledby="vote-insights-heading" className="bg-white py-10">
           <div className="mx-auto flex w-full max-w-5xl flex-col gap-6 px-4 sm:px-6 lg:px-8">
             <div className="space-y-3">
-              <p className="text-xs font-semibold uppercase tracking-[0.3em] text-brand-600">Discussion</p>
+              <p className="text-xs font-semibold uppercase tracking-[0.3em] text-brand-600">Insights</p>
               <h2 id="vote-insights-heading" className="text-2xl font-semibold text-neutral-900 sm:text-3xl">
-                背景で押さえておきたい論点
+                見えてきた論点
               </h2>
               <p className="text-sm leading-6 text-neutral-600 sm:text-base">
-                事前のヒアリングで浮かび上がった論点を整理しました。投票する際の判断材料としてご覧ください。
+                投票時に寄せられたコメントを整理し、これからの議論に向けた要点をまとめました。
               </p>
             </div>
             <div className="grid gap-6 lg:grid-cols-2">
@@ -159,11 +215,11 @@ export default function VoteDetailPage({ params }: VoteDetailPageProps) {
                     <h3 className="text-lg font-semibold text-neutral-900">{insight.title}</h3>
                     <p className="mt-2 text-sm leading-6 text-neutral-600">{insight.description}</p>
                   </div>
-                  <ul className="space-y-3 text-sm leading-6 text-neutral-600">
+                  <ul className="space-y-3 text-sm text-neutral-600">
                     {insight.points.map((point) => (
                       <li key={point.label} className="rounded-2xl bg-white p-4">
                         <p className="text-xs font-semibold uppercase tracking-wide text-brand-600">{point.label}</p>
-                        <p className="mt-1 text-neutral-600">{point.detail}</p>
+                        <p className="mt-1 leading-6 text-neutral-600">{point.detail}</p>
                       </li>
                     ))}
                   </ul>
@@ -177,14 +233,14 @@ export default function VoteDetailPage({ params }: VoteDetailPageProps) {
           aria-labelledby="vote-voices-heading"
           className="mx-auto w-full max-w-5xl px-4 sm:px-6 lg:px-8"
         >
-          <div className="space-y-6 rounded-3xl border border-neutral-200/80 bg-white p-6 shadow-sm sm:p-8">
+          <div className="space-y-6 rounded-3xl border border-neutral-200/80 bg-white p-6 shadow-sm sm:p-6">
             <div className="space-y-3">
               <p className="text-xs font-semibold uppercase tracking-[0.3em] text-brand-600">Community Voices</p>
               <h2 id="vote-voices-heading" className="text-2xl font-semibold text-neutral-900 sm:text-3xl">
-                現場から寄せられた声
+                みんなの声のハイライト
               </h2>
               <p className="text-sm leading-6 text-neutral-600 sm:text-base">
-                職人・演奏家・聴き手など複数の立場から届いたコメントを抜粋しています。どのような視点があるのか、ぜひ参考にしてください。
+                属性ごとに寄せられたコメントを抜粋し、議論の幅を感じられるように整理しています。
               </p>
             </div>
             <div className="grid gap-6 lg:grid-cols-3">
@@ -193,11 +249,11 @@ export default function VoteDetailPage({ params }: VoteDetailPageProps) {
                   key={voice.segment}
                   className="flex h-full flex-col gap-4 rounded-2xl border border-neutral-100 bg-neutral-50 p-5"
                 >
-                  <div className="space-y-2">
+                  <div className="space-y-1">
                     <p className="text-xs font-semibold uppercase tracking-wide text-brand-600">{voice.segment}</p>
                     <p className="text-sm leading-6 text-neutral-600">{voice.summary}</p>
                   </div>
-                  <ul className="space-y-3 text-sm leading-6 text-neutral-600">
+                  <ul className="space-y-3 text-sm text-neutral-600">
                     {voice.quotes.map((quote) => (
                       <li key={quote.comment} className="space-y-2 rounded-xl bg-white p-4 shadow-sm">
                         <p className="text-sm font-semibold text-neutral-800">{quote.speaker}</p>
@@ -217,7 +273,7 @@ export default function VoteDetailPage({ params }: VoteDetailPageProps) {
             <div className="space-y-3">
               <p className="text-xs font-semibold uppercase tracking-[0.3em] text-brand-600">Area Context</p>
               <h2 id="vote-area-context-heading" className="text-2xl font-semibold text-neutral-900 sm:text-3xl">
-                {vote.area.name} の背景とこれから
+                {vote.area.name} の背景と課題
               </h2>
               <p className="text-sm leading-6 text-neutral-600 sm:text-base">{vote.area.overview}</p>
             </div>
@@ -268,13 +324,6 @@ export default function VoteDetailPage({ params }: VoteDetailPageProps) {
           </div>
         </section>
       </main>
-      <a
-        href="#vote-entry"
-        className="fixed bottom-6 right-4 inline-flex items-center gap-2 rounded-full bg-brand-600 px-4 py-2 text-sm font-semibold text-white shadow-lg shadow-brand-600/30 transition hover:bg-brand-700 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-brand-500 lg:hidden"
-        aria-label="投票フォームに戻る"
-      >
-        投票に戻る
-      </a>
       <SiteFooter />
     </div>
   )

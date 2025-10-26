@@ -43,7 +43,7 @@ export default function WeeklyVote({ title, question, description, options, resu
     event.preventDefault()
     if (!selectedOption) return
     setHasSubmitted(true)
-    router.push(`/votes/${resultSlug}?selected=${selectedOption}`)
+    router.push(`/votes/${resultSlug}/results?selected=${selectedOption}`)
   }
 
   return (

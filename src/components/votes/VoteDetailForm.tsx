@@ -37,7 +37,7 @@ export default function VoteDetailForm({
     event.preventDefault()
     if (!selectedOption) return
     setHasSubmitted(true)
-    router.replace(`/votes/${resultSlug}?selected=${selectedOption}#vote-distribution`)
+    router.replace(`/votes/${resultSlug}/results?selected=${selectedOption}#vote-distribution`)
   }
 
   return (
@@ -120,7 +120,7 @@ export default function VoteDetailForm({
           {hasSubmitted ? "投票ありがとうございました" : "この意見で投票する"}
         </button>
         <a
-          href="#vote-distribution-heading"
+          href={`/votes/${resultSlug}/results#vote-distribution-heading`}
           className="inline-flex items-center text-sm font-semibold text-brand-600 transition hover:text-brand-700 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-brand-500"
         >
           集計を見る
@@ -128,8 +128,8 @@ export default function VoteDetailForm({
       </div>
       <p className="text-xs leading-5 text-neutral-500">
         {hasSubmitted
-          ? "選択内容を反映した集計が下部に表示されています。"
-          : "投票すると、下部で現在の集計と議論のハイライトを確認できます。"}
+          ? "集計ページであなたの投票が反映されています。"
+          : "投票すると、集計ページで現在の結果と論点を確認できます。"}
       </p>
     </form>
   )
