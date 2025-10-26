@@ -6,18 +6,15 @@ import { notFound } from "next/navigation"
 import SiteFooter from "@/components/layout/SiteFooter"
 import { getCraftAreaDetail, listCraftAreaSlugs } from "@/data/area-details"
 
-type CraftAreaPageProps = {
-  params: {
-    slug: string
-  }
-}
+type CraftAreaPageParams = Promise<{ slug: string }>
 
 export function generateStaticParams() {
   return listCraftAreaSlugs().map((slug) => ({ slug }))
 }
 
-export function generateMetadata({ params }: CraftAreaPageProps): Metadata {
-  const area = getCraftAreaDetail(params.slug)
+export async function generateMetadata({ params }: { params: CraftAreaPageParams }): Promise<Metadata> {
+  const { slug } = await params
+  const area = getCraftAreaDetail(slug)
 
   if (!area) {
     return {
@@ -31,8 +28,9 @@ export function generateMetadata({ params }: CraftAreaPageProps): Metadata {
   }
 }
 
-export default function CraftAreaPage({ params }: CraftAreaPageProps) {
-  const area = getCraftAreaDetail(params.slug)
+export default async function CraftAreaPage({ params }: { params: CraftAreaPageParams }) {
+  const { slug } = await params
+  const area = getCraftAreaDetail(slug)
 
   if (!area) {
     notFound()

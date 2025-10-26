@@ -2,15 +2,10 @@ import { NextResponse } from "next/server"
 
 import { getVoteResults, VoteError } from "@/lib/votes/service"
 
-type RouteParams = {
-  params: {
-    slug: string
-  }
-}
-
 export const revalidate = 30
 
-export function GET(_request: Request, { params }: RouteParams) {
+export function GET(_request: Request, context: unknown) {
+  const { params } = context as { params: { slug: string } }
   try {
     const result = getVoteResults(params.slug)
     return NextResponse.json({
