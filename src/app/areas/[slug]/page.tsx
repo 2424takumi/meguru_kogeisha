@@ -39,10 +39,15 @@ export default function CraftAreaPage({ params }: CraftAreaPageProps) {
   }
 
   return (
-    <div className="min-h-screen bg-white text-neutral-900">
-      <main className="flex flex-col gap-20 pb-24">
-        <section className="bg-white">
-          <div className="mx-auto max-w-6xl px-4 pb-20 pt-16 sm:px-6 lg:px-8">
+    <div className="min-h-screen bg-neutral-50 text-neutral-900">
+      <main className="flex flex-col gap-6 pb-12">
+        <section className="relative isolate overflow-hidden bg-neutral-100">
+          <div
+            className={`absolute inset-0 bg-gradient-to-br ${area.themeColor} opacity-80`}
+            aria-hidden="true"
+          />
+          <div className="absolute inset-x-0 bottom-0 h-40 bg-white/70 backdrop-blur" aria-hidden="true" />
+          <div className="relative mx-auto max-w-6xl px-4 pb-8 pt-6 sm:px-6 lg:px-8">
             <nav className="text-xs font-medium text-neutral-700 sm:text-sm">
               <ol className="flex flex-wrap items-center gap-2">
                 <li>
@@ -66,8 +71,8 @@ export default function CraftAreaPage({ params }: CraftAreaPageProps) {
                 <li className="text-neutral-900">{area.name}</li>
               </ol>
             </nav>
-            <div className="mt-12 grid gap-12 lg:grid-cols-[minmax(0,1.2fr)_minmax(0,1fr)] lg:items-center">
-              <div className="flex flex-col gap-10">
+            <div className="mt-6 grid gap-6 lg:grid-cols-[minmax(0,1.2fr)_minmax(0,1fr)] lg:items-start">
+              <div className="flex flex-col gap-6">
                 <div className="flex flex-col gap-3">
                   <h1 className="text-4xl font-semibold text-neutral-900 sm:text-5xl">{area.name}</h1>
                   <div className="flex flex-wrap gap-2">
@@ -119,13 +124,13 @@ export default function CraftAreaPage({ params }: CraftAreaPageProps) {
           aria-labelledby="area-story-heading"
           className="mx-auto w-full max-w-6xl px-4 sm:px-6 lg:px-8"
         >
-          <div className="grid gap-12 lg:grid-cols-[minmax(0,2fr)_minmax(0,1fr)]">
+          <div className="grid gap-6 lg:grid-cols-[minmax(0,2fr)_minmax(0,1fr)]">
             <div>
               <p className="text-sm font-semibold uppercase tracking-widest text-brand-600">ストーリー</p>
               <h2 id="area-story-heading" className="mt-3 text-3xl font-semibold text-neutral-900">
                 {area.story.title}
               </h2>
-              <div className="mt-8 grid gap-6 sm:grid-cols-2">
+              <div className="mt-6 grid gap-6 sm:grid-cols-2">
                 {area.story.highlights.map((highlight) => (
                   <article
                     key={highlight.title}
@@ -157,7 +162,7 @@ export default function CraftAreaPage({ params }: CraftAreaPageProps) {
 
         <section
           aria-labelledby="area-workshop-heading"
-          className="bg-white py-16"
+          className="bg-white py-6 lg:py-8"
         >
           <div className="mx-auto max-w-6xl px-4 sm:px-6 lg:px-8">
             <div className="flex flex-col gap-4 lg:flex-row lg:items-end lg:justify-between">
@@ -177,7 +182,7 @@ export default function CraftAreaPage({ params }: CraftAreaPageProps) {
                 団体向けの相談をする
               </Link>
             </div>
-            <div className="mt-10 grid gap-8 lg:grid-cols-2">
+            <div className="mt-6 grid gap-6 lg:grid-cols-2">
               {area.workshops.map((workshop) => (
                 <article
                   key={workshop.title}
@@ -222,7 +227,7 @@ export default function CraftAreaPage({ params }: CraftAreaPageProps) {
               </p>
             </div>
           </div>
-          <div className="mt-8 grid gap-6 md:grid-cols-2">
+          <div className="mt-6 grid gap-6 md:grid-cols-2">
             {area.projects.map((project) => (
               <article
                 key={project.title}
@@ -247,14 +252,14 @@ export default function CraftAreaPage({ params }: CraftAreaPageProps) {
 
         <section
           aria-labelledby="area-artisans-heading"
-          className="bg-white py-16"
+          className="bg-white py-6 lg:py-8"
         >
           <div className="mx-auto max-w-6xl px-4 sm:px-6 lg:px-8">
             <p className="text-sm font-semibold uppercase tracking-widest text-brand-600">職人紹介</p>
             <h2 id="area-artisans-heading" className="mt-2 text-3xl font-semibold text-neutral-900">
               この産地をつくる人たち
             </h2>
-            <div className="mt-10 grid gap-8 lg:grid-cols-2">
+            <div className="mt-6 grid gap-6 lg:grid-cols-2">
               {area.artisans.map((artisan) => (
                 <article
                   key={artisan.name}
@@ -278,7 +283,7 @@ export default function CraftAreaPage({ params }: CraftAreaPageProps) {
           aria-labelledby="area-visit-heading"
           className="mx-auto w-full max-w-6xl px-4 sm:px-6 lg:px-8"
         >
-          <div className="grid gap-8 lg:grid-cols-[minmax(0,1.6fr)_minmax(0,1fr)]">
+          <div className="grid gap-6 lg:grid-cols-[minmax(0,1.6fr)_minmax(0,1fr)]">
             <div>
               <p className="text-sm font-semibold uppercase tracking-widest text-brand-600">訪れる前に</p>
               <h2 id="area-visit-heading" className="mt-2 text-3xl font-semibold text-neutral-900">
@@ -304,7 +309,7 @@ export default function CraftAreaPage({ params }: CraftAreaPageProps) {
         </section>
 
         <section className="mx-auto w-full max-w-6xl px-4 sm:px-6 lg:px-8">
-          <div className="rounded-3xl border border-neutral-200 bg-white p-8 shadow-sm">
+          <div className="rounded-3xl bg-gradient-to-br from-brand-500/10 via-brand-500/5 to-white p-6 shadow-sm">
             <div className="flex flex-col gap-6 lg:flex-row lg:items-center lg:justify-between">
               <div>
                 <p className="text-sm font-semibold uppercase tracking-widest text-brand-600">支援・連絡先</p>

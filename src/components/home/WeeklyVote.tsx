@@ -53,7 +53,7 @@ export default function WeeklyVote({ title, question, description, options, resu
       className="mx-auto w-full max-w-4xl px-4 sm:px-6"
     >
       <div className="overflow-hidden rounded-3xl border border-neutral-200/80 bg-white shadow-md shadow-brand-500/10">
-        <div className="grid gap-8 p-6 sm:p-8 md:grid-cols-[1.1fr,0.9fr] md:p-10">
+        <div className="grid gap-6 p-6 md:grid-cols-[1.1fr,0.9fr]">
           <div>
             <p className="text-xs font-semibold uppercase tracking-[0.35em] text-brand-600 sm:text-sm">{title}</p>
             <h2 id="weekly-vote-heading" className="mt-3 text-2xl font-semibold text-neutral-900 sm:mt-4 sm:text-3xl">
