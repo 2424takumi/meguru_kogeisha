@@ -1,6 +1,7 @@
 "use client"
 
 import { useMemo, useState } from "react"
+import { useRouter } from "next/navigation"
 import type { WeeklyVoteOption } from "@/data/home"
 
 type WeeklyVoteProps = {
@@ -8,12 +9,14 @@ type WeeklyVoteProps = {
   question: string
   description: string
   options: WeeklyVoteOption[]
+  resultSlug: string
 }
 
-export default function WeeklyVote({ title, question, description, options }: WeeklyVoteProps) {
+export default function WeeklyVote({ title, question, description, options, resultSlug }: WeeklyVoteProps) {
   const [selectedOption, setSelectedOption] = useState<string | null>(null)
   const [hasSubmitted, setHasSubmitted] = useState(false)
   const [comment, setComment] = useState("")
+  const router = useRouter()
 
   const selectedOptionDetail = useMemo(
     () => options.find((option) => option.id === selectedOption) ?? null,
@@ -39,10 +42,15 @@ export default function WeeklyVote({ title, question, description, options }: We
     event.preventDefault()
     if (!selectedOption) return
     setHasSubmitted(true)
+    router.push(`/votes/${resultSlug}?selected=${selectedOption}`)
   }
 
   return (
-    <section aria-labelledby="weekly-vote-heading" className="mx-auto w-full max-w-4xl px-4 sm:px-6">
+    <section
+      id="weekly-vote"
+      aria-labelledby="weekly-vote-heading"
+      className="mx-auto w-full max-w-4xl px-4 sm:px-6"
+    >
       <div className="overflow-hidden rounded-3xl border border-neutral-200/80 bg-white shadow-md shadow-brand-500/10">
         <div className="grid gap-8 p-6 sm:p-8 md:grid-cols-[1.1fr,0.9fr] md:p-10">
           <div>
