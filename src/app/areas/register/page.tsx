@@ -12,9 +12,9 @@ export const metadata: Metadata = {
 export default function AreaRegisterPage() {
   return (
     <div className="min-h-screen bg-neutral-50 text-neutral-900">
-      <main className="flex flex-col gap-20 pb-24">
+      <main className="flex flex-col gap-6 pb-12">
         <section className="bg-gradient-to-br from-white via-neutral-50 to-brand-50/50">
-          <div className="mx-auto flex w-full max-w-4xl flex-col gap-10 px-4 py-16 sm:px-6 lg:px-8 lg:py-20">
+          <div className="mx-auto flex w-full max-w-4xl flex-col gap-6 px-4 py-6 sm:px-6 lg:px-8 lg:py-8">
             <nav className="text-xs font-medium text-neutral-600 sm:text-sm">
               <ol className="flex flex-wrap items-center gap-2">
                 <li>
@@ -55,7 +55,7 @@ export default function AreaRegisterPage() {
           aria-labelledby="area-register-steps-heading"
           className="mx-auto w-full max-w-4xl px-4 sm:px-6 lg:px-8"
         >
-          <div className="space-y-8 rounded-3xl border border-neutral-200/80 bg-white p-6 shadow-sm sm:p-8">
+          <div className="space-y-6 rounded-3xl border border-neutral-200/80 bg-white p-6 shadow-sm sm:p-6">
             <div className="space-y-3">
               <p className="text-xs font-semibold uppercase tracking-[0.3em] text-brand-600">FLOW</p>
               <h2 id="area-register-steps-heading" className="text-2xl font-semibold text-neutral-900 sm:text-3xl">
@@ -92,7 +92,7 @@ export default function AreaRegisterPage() {
           aria-labelledby="area-register-form-heading"
           className="mx-auto w-full max-w-4xl px-4 sm:px-6 lg:px-8"
         >
-          <div className="space-y-6 rounded-3xl border border-brand-200/70 bg-white p-6 shadow-md shadow-brand-500/10 sm:p-8">
+          <div className="space-y-6 rounded-3xl border border-brand-200/70 bg-white p-6 shadow-md shadow-brand-500/10 sm:p-6">
             <div className="space-y-3">
               <p className="text-xs font-semibold uppercase tracking-[0.3em] text-brand-600">FORM</p>
               <h2 id="area-register-form-heading" className="text-2xl font-semibold text-neutral-900 sm:text-3xl">

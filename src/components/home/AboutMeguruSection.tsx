@@ -2,7 +2,7 @@ export default function AboutMeguruSection() {
   return (
     <section
       aria-labelledby="about-meguru-heading"
-      className="mx-auto mt-20 w-full max-w-4xl px-4 text-center sm:px-6 lg:px-8"
+      className="mx-auto mt-6 w-full max-w-4xl px-4 text-center sm:px-6 lg:px-8"
     >
       <p className="text-sm font-semibold uppercase tracking-widest text-brand-600">めぐる工芸舎について</p>
       <h2 id="about-meguru-heading" className="mt-4 text-3xl font-semibold text-neutral-900 sm:text-4xl">
