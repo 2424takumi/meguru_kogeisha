@@ -52,13 +52,13 @@ export default function VoteResultPage({ params, searchParams }: VoteResultPageP
 
   return (
     <div className="min-h-screen bg-neutral-50 text-neutral-900">
-      <main className="flex flex-col gap-20 pb-24">
+      <main className="flex flex-col gap-6 pb-12">
         <section className="relative isolate overflow-hidden bg-gradient-to-br from-rose-50 via-white to-amber-50">
           <div
             className="absolute inset-0 bg-[radial-gradient(circle_at_top,_rgba(159,53,58,0.12),_transparent_55%)]"
             aria-hidden="true"
           />
-          <div className="relative mx-auto flex w-full max-w-5xl flex-col gap-10 px-4 py-16 sm:px-6 lg:px-8 lg:py-20">
+          <div className="relative mx-auto flex w-full max-w-5xl flex-col gap-6 px-4 py-6 sm:px-6 lg:px-8 lg:py-8">
             <nav className="text-xs font-medium text-neutral-600 sm:text-sm">
               <ol className="flex flex-wrap items-center gap-2">
                 <li>
@@ -82,7 +82,7 @@ export default function VoteResultPage({ params, searchParams }: VoteResultPageP
                 <li className="text-neutral-900">{vote.title}</li>
               </ol>
             </nav>
-            <div className="grid gap-12 lg:grid-cols-[minmax(0,1.5fr)_minmax(0,1fr)] lg:items-end">
+            <div className="grid gap-6 lg:grid-cols-[minmax(0,1.5fr)_minmax(0,1fr)] lg:items-end">
               <div className="space-y-6">
                 <p className="text-xs font-semibold uppercase tracking-[0.38em] text-brand-600">RESULT</p>
                 <h1 className="text-3xl font-semibold text-neutral-900 sm:text-4xl">{vote.title}</h1>
@@ -113,7 +113,7 @@ export default function VoteResultPage({ params, searchParams }: VoteResultPageP
           aria-labelledby="vote-distribution-heading"
           className="mx-auto w-full max-w-5xl px-4 sm:px-6 lg:px-8"
         >
-          <div className="flex flex-col gap-10">
+          <div className="flex flex-col gap-6">
             <div className="space-y-3">
               <p className="text-xs font-semibold uppercase tracking-[0.3em] text-brand-600">Distribution</p>
               <h2 id="vote-distribution-heading" className="text-2xl font-semibold text-neutral-900 sm:text-3xl">
@@ -123,7 +123,7 @@ export default function VoteResultPage({ params, searchParams }: VoteResultPageP
                 各選択肢の票数と割合、寄せられた主な論点をまとめています。
               </p>
             </div>
-            <div className="space-y-6 rounded-3xl border border-neutral-200/80 bg-white p-6 shadow-sm sm:p-8">
+            <div className="space-y-6 rounded-3xl border border-neutral-200/80 bg-white p-6 shadow-sm sm:p-6">
               <ol className="space-y-6">
                 {optionsWithPercentage.map((option) => {
                   const isSelected = selectedOptionId === option.id
@@ -170,9 +170,9 @@ export default function VoteResultPage({ params, searchParams }: VoteResultPageP
 
         <section
           aria-labelledby="vote-insights-heading"
-          className="bg-white py-16"
+          className="bg-white py-6 lg:py-8"
         >
-          <div className="mx-auto flex w-full max-w-5xl flex-col gap-10 px-4 sm:px-6 lg:px-8">
+          <div className="mx-auto flex w-full max-w-5xl flex-col gap-6 px-4 sm:px-6 lg:px-8">
             <div className="space-y-3">
               <p className="text-xs font-semibold uppercase tracking-[0.3em] text-brand-600">Insights</p>
               <h2 id="vote-insights-heading" className="text-2xl font-semibold text-neutral-900 sm:text-3xl">
@@ -210,7 +210,7 @@ export default function VoteResultPage({ params, searchParams }: VoteResultPageP
           aria-labelledby="vote-voices-heading"
           className="mx-auto w-full max-w-5xl px-4 sm:px-6 lg:px-8"
         >
-          <div className="space-y-8 rounded-3xl border border-neutral-200/80 bg-white p-6 shadow-sm sm:p-8">
+          <div className="space-y-6 rounded-3xl border border-neutral-200/80 bg-white p-6 shadow-sm sm:p-6">
             <div className="space-y-3">
               <p className="text-xs font-semibold uppercase tracking-[0.3em] text-brand-600">Community Voices</p>
               <h2 id="vote-voices-heading" className="text-2xl font-semibold text-neutral-900 sm:text-3xl">
@@ -247,9 +247,9 @@ export default function VoteResultPage({ params, searchParams }: VoteResultPageP
 
         <section
           aria-labelledby="vote-area-context-heading"
-          className="bg-gradient-to-br from-white to-neutral-100 py-16"
+          className="bg-gradient-to-br from-white to-neutral-100 py-6 lg:py-8"
         >
-          <div className="mx-auto flex w-full max-w-5xl flex-col gap-10 px-4 sm:px-6 lg:px-8">
+          <div className="mx-auto flex w-full max-w-5xl flex-col gap-6 px-4 sm:px-6 lg:px-8">
             <div className="space-y-3">
               <p className="text-xs font-semibold uppercase tracking-[0.3em] text-brand-600">Area Context</p>
               <h2 id="vote-area-context-heading" className="text-2xl font-semibold text-neutral-900 sm:text-3xl">

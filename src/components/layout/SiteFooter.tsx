@@ -30,8 +30,8 @@ const footerLinks = [
 export default function SiteFooter() {
   return (
     <footer className="border-t border-brand-800/50 bg-brand-900 text-brand-50">
-      <div className="mx-auto max-w-6xl px-4 py-12 sm:px-6 lg:px-8">
-        <div className="grid gap-8 sm:grid-cols-2 lg:grid-cols-4">
+      <div className="mx-auto max-w-6xl px-4 py-6 sm:px-6 lg:px-8">
+        <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-4">
           <div>
             <p className="text-lg font-semibold text-white">めぐる工芸舎</p>
             <p className="mt-3 text-sm leading-6 text-brand-100">
@@ -56,7 +56,7 @@ export default function SiteFooter() {
             </div>
           ))}
         </div>
-        <div className="mt-12 flex flex-col justify-between gap-4 border-t border-brand-800 pt-6 text-xs text-brand-200 sm:flex-row">
+        <div className="mt-6 flex flex-col justify-between gap-4 border-t border-brand-800 pt-6 text-xs text-brand-200 sm:flex-row">
           <p>© {new Date().getFullYear()} めぐる工芸舎 / ONDO Project.</p>
           <p className="flex gap-3">
             <Link href="/privacy" className="transition-colors hover:text-white">

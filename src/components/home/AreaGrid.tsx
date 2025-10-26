@@ -26,8 +26,8 @@ export default function AreaGrid({ areas }: AreaGridProps) {
           各カードをクリックすると詳細ページへ移動し、工房のストーリーやイベント、職人のプロフィールを読むことができます。
         </p>
       </div>
-      <div className="mt-8 overflow-x-auto pb-4">
-        <div className="flex gap-5">
+      <div className="mt-6 overflow-x-auto pb-4">
+        <div className="flex gap-6">
           {areas.map((area) => (
             <Link
               key={area.slug}
