@@ -30,7 +30,7 @@
   --color-neutral-900: #2f2421;
 
   /* Paper baseline */
-  --color-paper: #fffbf9;
+  --color-paper: #ffffff;
 
   /* Typography */
   --font-sans: ui-sans-serif, system-ui, "Noto Sans JP", "Hiragino Kaku Gothic ProN", "Yu Gothic", sans-serif;
@@ -42,8 +42,8 @@
 
 /* デフォルト背景/本文 */
 :root {
-  --color-paper: #fffbf9;
-  --background: var(--color-neutral-50);
+  --color-paper: #ffffff;
+  --background: #ffffff;
   --foreground: var(--color-neutral-900);
 }
 @media (prefers-color-scheme: dark) {

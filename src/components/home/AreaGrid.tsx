@@ -38,7 +38,7 @@ export default function AreaGrid({ areas }: AreaGridProps) {
               <article className="relative flex aspect-[3/4] w-full flex-col overflow-hidden rounded-3xl border border-neutral-200/80 bg-white shadow-sm transition group-hover:-translate-y-1 group-hover:shadow-lg">
                 <div className="relative w-full overflow-hidden">
                   <div
-                    className={`aspect-[4/3] w-full bg-gradient-to-br ${area.themeColor}`}
+                    className={`aspect-[4/3] w-full ${area.themeColor}`}
                     aria-hidden="true"
                   />
                 </div>

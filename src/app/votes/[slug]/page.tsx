@@ -51,13 +51,10 @@ export default function VoteResultPage({ params, searchParams }: VoteResultPageP
   const formattedUpdatedAt = updatedAtFormatter.format(new Date(vote.updatedAt))
 
   return (
-    <div className="min-h-screen bg-neutral-50 text-neutral-900">
+    <div className="min-h-screen bg-white text-neutral-900">
       <main className="flex flex-col gap-6 pb-12">
-        <section className="relative isolate overflow-hidden bg-gradient-to-br from-rose-50 via-white to-amber-50">
-          <div
-            className="absolute inset-0 bg-[radial-gradient(circle_at_top,_rgba(159,53,58,0.12),_transparent_55%)]"
-            aria-hidden="true"
-          />
+        <section className="relative isolate overflow-hidden bg-white">
+          <div className="absolute inset-x-0 top-0 h-1 bg-brand-500/20" aria-hidden="true" />
           <div className="relative mx-auto flex w-full max-w-5xl flex-col gap-6 px-4 py-6 sm:px-6 lg:px-8 lg:py-8">
             <nav className="text-xs font-medium text-neutral-600 sm:text-sm">
               <ol className="flex flex-wrap items-center gap-2">
@@ -247,7 +244,7 @@ export default function VoteResultPage({ params, searchParams }: VoteResultPageP
 
         <section
           aria-labelledby="vote-area-context-heading"
-          className="bg-gradient-to-br from-white to-neutral-100 py-6 lg:py-8"
+          className="bg-white py-6 lg:py-8"
         >
           <div className="mx-auto flex w-full max-w-5xl flex-col gap-6 px-4 sm:px-6 lg:px-8">
             <div className="space-y-3">
