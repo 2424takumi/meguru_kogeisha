@@ -47,7 +47,7 @@ export default function AreaGrid({ areas }: AreaGridProps) {
                   <span className="mt-3 inline-flex w-fit items-center rounded-full border border-neutral-200 bg-neutral-100 px-2 py-1 text-xs font-medium text-neutral-600">
                     {extractPrefecture(area.region)}
                   </span>
-                  <p className="mt-3 text-sm leading-relaxed text-neutral-600 [display:-webkit-box] [-webkit-line-clamp:3] [-webkit-box-orient:vertical]">
+                  <p className="mt-3 overflow-hidden text-sm leading-relaxed text-neutral-600 [display:-webkit-box] [-webkit-line-clamp:3] [-webkit-box-orient:vertical]">
                     {area.description}
                   </p>
                   <div className="mt-auto flex items-center justify-end text-sm font-semibold text-neutral-900 transition group-hover:text-brand-600">
