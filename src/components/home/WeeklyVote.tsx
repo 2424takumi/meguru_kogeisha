@@ -146,6 +146,11 @@ export default function WeeklyVote({
     )
   }
 
+  const selectedQuery = selectedOptionIds.join(",")
+  const resultDetailHref = selectedQuery
+    ? `/votes/${resultSlug}/results?selected=${encodeURIComponent(selectedQuery)}`
+    : `/votes/${resultSlug}/results`
+
   return (
     <section
       id="weekly-vote"
@@ -327,13 +332,22 @@ export default function WeeklyVote({
                 {formError}
               </p>
             ) : null}
-            <button
-              type="submit"
-              disabled={submitDisabled}
-              className="inline-flex items-center justify-center rounded-full bg-brand-600 px-5 py-2.5 text-sm font-semibold text-white transition hover:bg-brand-700 disabled:cursor-not-allowed disabled:bg-brand-400"
-            >
-              {hasSubmitted ? "みんなの意見を見る" : isSubmitting ? "送信中..." : "この意見で投票する"}
-            </button>
+            {hasSubmitted ? (
+              <Link
+                href={resultDetailHref}
+                className="inline-flex items-center justify-center rounded-full bg-brand-600 px-5 py-2.5 text-sm font-semibold text-white transition hover:bg-brand-700 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-brand-500"
+              >
+                みんなの意見を見る
+              </Link>
+            ) : (
+              <button
+                type="submit"
+                disabled={submitDisabled}
+                className="inline-flex items-center justify-center rounded-full bg-brand-600 px-5 py-2.5 text-sm font-semibold text-white transition hover:bg-brand-700 disabled:cursor-not-allowed disabled:bg-brand-400"
+              >
+                {isSubmitting ? "送信中..." : "この意見で投票する"}
+              </button>
+            )}
             <p className="text-[11px] leading-5 text-neutral-500 sm:text-xs">
               {hasSubmitted
                 ? "集計ページであなたの投票が反映されています。"
