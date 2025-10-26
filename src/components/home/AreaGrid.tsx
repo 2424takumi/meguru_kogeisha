@@ -38,13 +38,13 @@ export default function AreaGrid({ areas }: AreaGridProps) {
               <article className="relative flex aspect-[3/4] w-full flex-col overflow-hidden rounded-3xl border border-neutral-200/80 bg-white shadow-sm transition group-hover:-translate-y-1 group-hover:shadow-lg">
                 <div className="relative w-full overflow-hidden">
                   <div
-                    className={`aspect-[4/3] w-full bg-gradient-to-br ${area.themeColor}`}
+                    className={`aspect-[3/4] w-full bg-gradient-to-br ${area.themeColor}`}
                     aria-hidden="true"
                   />
                 </div>
                 <div className="flex flex-1 flex-col px-5 pb-5 pt-4">
                   <h3 className="text-xl font-semibold text-neutral-900">{area.name}</h3>
-                  <span className="mt-3 inline-flex w-fit items-center rounded-full border border-neutral-200 bg-neutral-100 px-2 py-1 text-xs font-medium text-neutral-600">
+                  <span className="mt-2 inline-flex w-fit items-center rounded-full border border-neutral-200 bg-neutral-100 px-3 py-1 text-xs font-medium text-neutral-600">
                     {extractPrefecture(area.region)}
                   </span>
                   <p className="mt-3 overflow-hidden text-sm leading-relaxed text-neutral-600 [display:-webkit-box] [-webkit-line-clamp:3] [-webkit-box-orient:vertical]">
