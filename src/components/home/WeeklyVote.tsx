@@ -135,7 +135,7 @@ export default function WeeklyVote({ title, question, description, options }: We
                 </div>
               </div>
               <div className="hidden gap-4 sm:grid sm:grid-cols-5">
-                {options.map((option, index) => {
+                {options.map((option) => {
                   const isSelected = selectedOption === option.id
                   return (
                     <label
