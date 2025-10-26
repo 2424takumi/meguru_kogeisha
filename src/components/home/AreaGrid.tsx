@@ -1,6 +1,13 @@
 import Link from "next/link"
 import type { CraftArea } from "@/data/home"
 
+const PREFECTURE_PATTERN = /^(.*?[都道府県])/
+
+const extractPrefecture = (region: string) => {
+  const match = region.match(PREFECTURE_PATTERN)
+  return match ? match[1] : region
+}
+
 type AreaGridProps = {
   areas: CraftArea[]
 }
@@ -31,9 +38,12 @@ export default function AreaGrid({ areas }: AreaGridProps) {
               <article className="relative flex aspect-[3/4] w-full flex-col overflow-hidden rounded-3xl border border-neutral-200/80 bg-white shadow-sm transition group-hover:-translate-y-1 group-hover:shadow-lg">
                 <div className={`h-28 w-full bg-gradient-to-br ${area.themeColor}`} aria-hidden="true" />
                 <div className="flex flex-1 flex-col px-5 pb-5 pt-4">
-                  <p className="text-xs font-semibold uppercase tracking-wide text-brand-600">{area.region}</p>
-                  <h3 className="mt-2 text-xl font-semibold text-neutral-900">{area.name}</h3>
-                  <div className="mt-auto inline-flex items-center gap-2 text-sm font-semibold text-neutral-900 transition group-hover:text-brand-600">
+                  <h3 className="text-xl font-semibold text-neutral-900">{area.name}</h3>
+                  <span className="mt-3 inline-flex w-fit items-center rounded-full border border-brand-200 bg-brand-50 px-2 py-1 text-xs font-semibold text-brand-700">
+                    {extractPrefecture(area.region)}
+                  </span>
+                  <p className="mt-3 text-sm leading-relaxed text-neutral-600">{area.description}</p>
+                  <div className="mt-auto flex items-center justify-end text-sm font-semibold text-neutral-900 transition group-hover:text-brand-600">
                     詳細を見る
                     <span aria-hidden="true" className="transition group-hover:translate-x-1">
                       →
