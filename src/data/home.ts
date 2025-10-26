@@ -35,6 +35,15 @@ export const craftAreas: CraftArea[] = [
     highlight: '職人と一緒に織機を体験し、オリジナルストールを仕立てるワークショップ。',
     themeColor: 'from-sky-500/10 to-sky-500/20',
   },
+  {
+    slug: 'tokyo-wagakki',
+    name: '東京和楽器',
+    region: '東京都荒川区',
+    description:
+      '三味線や鼓など邦楽器を手掛ける職人が集まる町工場エリア。演奏家と共創しながら素材の議論を重ねている。',
+    highlight: '工房と稽古場を巡り、三味線の皮張り工程を体験できるスタディツアーを準備中。',
+    themeColor: 'from-rose-500/10 to-amber-500/20',
+  },
 ]
 
 export type WeeklyVoteOption = {
@@ -45,6 +54,7 @@ export type WeeklyVoteOption = {
 }
 
 export const weeklyVote = {
+  resultSlug: 'shamisen-skin-materials',
   title: '今週の投票',
   question: '三味線の皮に動物由来の素材を使い続けることについて、あなたはどう考えますか？',
   description:
