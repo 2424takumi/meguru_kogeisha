@@ -2,6 +2,8 @@ import { getVoteResultDetail } from "./vote-details"
 import type { VoteOptionBase } from "./vote-details"
 import type { VoteStatus, VoteType } from "./votes/types"
 
+export type { VoteType }
+
 export type CraftArea = {
   slug: string
   name: string
