@@ -332,7 +332,7 @@ export default function WeeklyVote({
               disabled={submitDisabled}
               className="inline-flex items-center justify-center rounded-full bg-brand-600 px-5 py-2.5 text-sm font-semibold text-white transition hover:bg-brand-700 disabled:cursor-not-allowed disabled:bg-brand-400"
             >
-              {hasSubmitted ? "投票ありがとうございました" : isSubmitting ? "送信中..." : "この意見で投票する"}
+              {hasSubmitted ? "みんなの意見を見る" : isSubmitting ? "送信中..." : "この意見で投票する"}
             </button>
             <p className="text-[11px] leading-5 text-neutral-500 sm:text-xs">
               {hasSubmitted
