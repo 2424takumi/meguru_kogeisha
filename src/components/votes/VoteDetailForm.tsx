@@ -60,6 +60,14 @@ function formatPeriodLabel(value: string) {
   return periodFormatter.format(date)
 }
 
+function haveSameMembers(left: string[], right: string[]) {
+  if (left.length !== right.length) {
+    return false
+  }
+  const rightSet = new Set(right)
+  return left.every((value) => rightSet.has(value))
+}
+
 export default function VoteDetailForm({
   question,
   options,
@@ -105,10 +113,16 @@ export default function VoteDetailForm({
       if (!raw) return
       const stored = JSON.parse(raw) as StoredBallot
       if (Array.isArray(stored.choices) && stored.choices.length > 0) {
-        setSelectedOptionIds(
-          stored.choices.filter((value): value is string => typeof value === "string"),
+        const persistedChoices = stored.choices.filter(
+          (value): value is string => typeof value === "string",
         )
-        setHasSubmitted(true)
+        if (persistedChoices.length === 0) {
+          return
+        }
+        setSelectedOptionIds((previous) =>
+          haveSameMembers(previous, persistedChoices) ? previous : persistedChoices,
+        )
+        setHasSubmitted((previous) => previous || persistedChoices.length > 0)
       }
     } catch {
       // ローカルストレージの値が壊れていても無視する
