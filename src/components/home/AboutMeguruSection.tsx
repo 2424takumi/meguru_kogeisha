@@ -6,7 +6,7 @@ export default function AboutMeguruSection() {
     >
       <p className="text-sm font-semibold uppercase tracking-widest text-brand-600">めぐる工芸舎について</p>
       <h2 id="about-meguru-heading" className="mt-4 text-3xl font-semibold text-neutral-900 sm:text-4xl">
-        文化の生態系をめぐるためのデジタル・コモンズ
+        めぐる工芸舎の紹介
       </h2>
       <div className="mt-6 space-y-5 text-left text-base leading-7 text-neutral-600 sm:text-lg sm:leading-8">
         <p>
