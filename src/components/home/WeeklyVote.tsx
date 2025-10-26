@@ -1,11 +1,15 @@
 "use client"
 
-import { useEffect, useId, useMemo, useState } from "react"
-import type { FormEvent, KeyboardEvent } from "react"
+import { useCallback, useId } from "react"
+import type { KeyboardEvent } from "react"
 import Link from "next/link"
 import { useRouter } from "next/navigation"
 import type { VoteType, WeeklyVoteOption } from "@/data/home"
 import type { VoteStatus } from "@/data/votes/types"
+import {
+  COMMENT_MAX_LENGTH,
+  useBallotForm,
+} from "@/components/votes/useBallotForm"
 
 type WeeklyVoteProps = {
   title: string
@@ -22,52 +26,6 @@ type WeeklyVoteProps = {
   status: VoteStatus
   startAt: string
   endAt: string
-}
-
-type StoredBallot = {
-  choices?: string[]
-  comment?: string | null
-  submittedAt?: string
-}
-
-const COMMENT_MAX_LENGTH = 2000
-const periodFormatter = new Intl.DateTimeFormat("ja-JP", {
-  dateStyle: "medium",
-  timeStyle: "short",
-})
-
-function computeVoteWindow(status: VoteStatus, startAt: string, endAt: string) {
-  const start = new Date(startAt).getTime()
-  const end = new Date(endAt).getTime()
-  const now = Date.now()
-  const beforeStart = Number.isFinite(start) && now < start
-  const afterEnd = Number.isFinite(end) && now > end
-  const isActive = status === "open" && !beforeStart && !afterEnd
-  let reason: string | null = null
-  if (beforeStart) {
-    reason = "投票はまだ開始していません。"
-  } else if (afterEnd) {
-    reason = "投票期間が終了しました。"
-  } else if (status !== "open") {
-    reason = "この投票は現在準備中です。"
-  }
-  return { isActive, reason }
-}
-
-function formatPeriodLabel(value: string) {
-  const date = new Date(value)
-  if (Number.isNaN(date.getTime())) {
-    return null
-  }
-  return periodFormatter.format(date)
-}
-
-function haveSameMembers(left: string[], right: string[]) {
-  if (left.length !== right.length) {
-    return false
-  }
-  const rightSet = new Set(right)
-  return left.every((value) => rightSet.has(value))
 }
 
 export default function WeeklyVote({
@@ -89,63 +47,51 @@ export default function WeeklyVote({
   const router = useRouter()
   const commentIdBase = useId()
   const fieldsetLegendId = useId()
-  const [selectedOptionIds, setSelectedOptionIds] = useState<string[]>([])
-  const [hasSubmitted, setHasSubmitted] = useState(false)
-  const [comment, setComment] = useState("")
-  const [formError, setFormError] = useState<string | null>(null)
-  const [isSubmitting, setIsSubmitting] = useState(false)
 
-  const ballotStorageKey = useMemo(() => `ballot:${resultSlug}`, [resultSlug])
   const commentFieldMobileId = `${commentIdBase}-mobile`
   const commentCounterMobileId = `${commentIdBase}-mobile-counter`
   const commentFieldDesktopId = `${commentIdBase}-desktop`
   const commentCounterDesktopId = `${commentIdBase}-desktop-counter`
   const isMultiple = voteType === "multiple"
   const isLikert = voteType === "likert5" && options.length === 5
-  const minSelection = minChoices ?? (isMultiple ? 1 : 1)
-  const maxSelection = maxChoices ?? (isMultiple ? options.length : 1)
   const commentLabelText =
     commentLabel ?? (commentRequired ? "コメント (必須)" : "コメント (任意)")
-  const trimmedComment = comment.trim()
-  const voteWindow = useMemo(
-    () => computeVoteWindow(status, startAt, endAt),
-    [status, startAt, endAt],
-  )
-  const startLabel = useMemo(() => formatPeriodLabel(startAt), [startAt])
-  const endLabel = useMemo(() => formatPeriodLabel(endAt), [endAt])
 
-  useEffect(() => {
-    if (typeof window === "undefined") return
-    try {
-      const raw = window.localStorage.getItem(ballotStorageKey)
-      if (!raw) return
-      const stored = JSON.parse(raw) as StoredBallot
-      if (Array.isArray(stored.choices) && stored.choices.length > 0) {
-        const persistedChoices = stored.choices.filter(
-          (value): value is string => typeof value === "string",
-        )
-        if (persistedChoices.length === 0) {
-          return
-        }
-        setSelectedOptionIds((previous) =>
-          haveSameMembers(previous, persistedChoices) ? previous : persistedChoices,
-        )
-        setHasSubmitted((previous) => previous || persistedChoices.length > 0)
-      }
-    } catch {
-      // 壊れたデータは無視する
-    }
-  }, [ballotStorageKey])
-
-  const selectedOptionDetails = useMemo(
-    () =>
-      selectedOptionIds
-        .map((optionId) => options.find((option) => option.id === optionId))
-        .filter((option): option is WeeklyVoteOption => Boolean(option)),
-    [options, selectedOptionIds],
+  const handleSubmitSuccess = useCallback(
+    (selection: string[]) => {
+      const selectedQuery = selection.join(",")
+      router.push(`/votes/${resultSlug}/results?selected=${encodeURIComponent(selectedQuery)}`)
+    },
+    [resultSlug, router],
   )
 
-  const hasSelection = selectedOptionIds.length > 0
+  const {
+    selectedOptionIds,
+    selectedOptions: selectedOptionDetails,
+    hasSelection,
+    hasSubmitted,
+    comment,
+    setComment,
+    formError,
+    isSubmitting,
+    submitDisabled,
+    voteWindow,
+    startLabel,
+    endLabel,
+    handleOptionToggle,
+    handleSubmit,
+  } = useBallotForm<WeeklyVoteOption>({
+    resultSlug,
+    options,
+    voteType,
+    status,
+    startAt,
+    endAt,
+    minChoices,
+    maxChoices,
+    commentRequired,
+    onSubmitSuccess: handleSubmitSuccess,
+  })
 
   const sizeClasses = ["h-12 w-12", "h-11 w-11", "h-10 w-10", "h-11 w-11", "h-12 w-12"] as const
 
@@ -156,7 +102,7 @@ export default function WeeklyVote({
       const nextIndex = Math.min(index + 1, options.length - 1)
       const nextId = options[nextIndex]?.id
       if (nextId) {
-        setSelectedOptionIds([nextId])
+        handleOptionToggle(nextId)
       }
     }
     if (event.key === "ArrowLeft" || event.key === "ArrowUp") {
@@ -164,30 +110,9 @@ export default function WeeklyVote({
       const prevIndex = Math.max(index - 1, 0)
       const prevId = options[prevIndex]?.id
       if (prevId) {
-        setSelectedOptionIds([prevId])
+        handleOptionToggle(prevId)
       }
     }
-  }
-
-  const handleOptionSelect = (optionId: string) => {
-    if (hasSubmitted) {
-      return
-    }
-    setFormError(null)
-    if (isMultiple) {
-      setSelectedOptionIds((previous) => {
-        if (previous.includes(optionId)) {
-          return previous.filter((id) => id !== optionId)
-        }
-        if (previous.length >= maxSelection) {
-          setFormError(`選択できるのは最大で${maxSelection}件までです。`)
-          return previous
-        }
-        return [...previous, optionId]
-      })
-      return
-    }
-    setSelectedOptionIds([optionId])
   }
 
   const renderCommentField = (id: string, counterId: string) => {
@@ -220,91 +145,6 @@ export default function WeeklyVote({
       </div>
     )
   }
-
-  const handleSubmit = async (event: FormEvent<HTMLFormElement>) => {
-    event.preventDefault()
-    setFormError(null)
-
-    if (!voteWindow.isActive) {
-      setFormError(voteWindow.reason ?? "現在この投票には参加できません。")
-      return
-    }
-
-    if (selectedOptionIds.length < minSelection) {
-      setFormError(`少なくとも${minSelection}件選択してください。`)
-      return
-    }
-    if (isMultiple && selectedOptionIds.length > maxSelection) {
-      setFormError(`選択できるのは最大で${maxSelection}件までです。`)
-      return
-    }
-
-    const sanitizedComment = comment.trim()
-    if (commentRequired && sanitizedComment.length === 0) {
-      setFormError("コメントを入力してください。")
-      return
-    }
-    if (sanitizedComment.length > COMMENT_MAX_LENGTH) {
-      setFormError("コメントは2000文字以内で入力してください。")
-      return
-    }
-
-    const payload = {
-      choices: selectedOptionIds.map((optionId) => {
-        const option = options.find((candidate) => candidate.id === optionId)
-        return {
-          option_id: optionId,
-          ...(typeof option?.numericValue === "number" ? { numeric_value: option.numericValue } : {}),
-        }
-      }),
-      comment: sanitizedComment.length > 0 ? sanitizedComment : undefined,
-    }
-
-    setIsSubmitting(true)
-    try {
-      const response = await fetch(`/api/votes/${resultSlug}/ballots`, {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify(payload),
-      })
-      const data = await response.json().catch(() => null)
-
-      if (!response.ok) {
-        const message =
-          (data && typeof data.error === "string" && data.error) ||
-          "投票の送信に失敗しました。時間をおいて再度お試しください。"
-        setFormError(message)
-        return
-      }
-
-      if (typeof window !== "undefined") {
-        const storedBallot: StoredBallot = {
-          choices: selectedOptionIds,
-          comment: sanitizedComment.length > 0 ? sanitizedComment : null,
-          submittedAt: new Date().toISOString(),
-        }
-        window.localStorage.setItem(ballotStorageKey, JSON.stringify(storedBallot))
-      }
-
-      setHasSubmitted(true)
-      const selectedQuery = selectedOptionIds.join(",")
-      router.push(`/votes/${resultSlug}/results?selected=${encodeURIComponent(selectedQuery)}`)
-    } catch {
-      setFormError("ネットワークエラーが発生しました。接続状況をご確認ください。")
-    } finally {
-      setIsSubmitting(false)
-    }
-  }
-
-  const submitDisabled =
-    hasSubmitted ||
-    isSubmitting ||
-    !voteWindow.isActive ||
-    selectedOptionIds.length < minSelection ||
-    (isMultiple && selectedOptionIds.length > maxSelection) ||
-    (commentRequired && trimmedComment.length === 0)
 
   return (
     <section
@@ -383,7 +223,7 @@ export default function WeeklyVote({
                             aria-labelledby={optionLabelId}
                             aria-disabled={hasSubmitted}
                             tabIndex={hasSubmitted ? -1 : isSelected || (!hasSelection && index === 0) ? 0 : -1}
-                            onClick={() => handleOptionSelect(option.id)}
+                            onClick={() => handleOptionToggle(option.id)}
                             onKeyDown={(event) => handleMobileKeyDown(event, index)}
                             disabled={hasSubmitted}
                             className={`flex flex-col items-center gap-2 text-[11px] font-semibold transition ${
@@ -422,7 +262,7 @@ export default function WeeklyVote({
                         <button
                           key={option.id}
                           type="button"
-                          onClick={() => handleOptionSelect(option.id)}
+                          onClick={() => handleOptionToggle(option.id)}
                           disabled={hasSubmitted}
                           className={`w-full rounded-full border px-4 py-2.5 text-left text-sm font-semibold transition focus:outline-none focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-brand-500 ${
                             isSelected
@@ -453,7 +293,7 @@ export default function WeeklyVote({
                         value={option.id}
                         checked={isSelected}
                         disabled={hasSubmitted}
-                        onChange={() => handleOptionSelect(option.id)}
+                        onChange={() => handleOptionToggle(option.id)}
                         className="mt-1.5 h-4 w-4 border-neutral-300 text-brand-600 focus:ring-brand-500"
                       />
                       <div className="space-y-1">
