@@ -38,143 +38,148 @@ export default function CraftAreaPage({ params }: CraftAreaPageProps) {
     notFound()
   }
 
+  const heroStatPlacement = [
+    "lg:absolute lg:-top-14 lg:-left-20 lg:mt-0 lg:w-56",
+    "lg:absolute lg:top-20 lg:-right-20 lg:mt-0 lg:w-56",
+    "lg:absolute lg:-bottom-14 lg:-left-10 lg:mt-0 lg:w-56",
+    "lg:absolute lg:-bottom-10 lg:-right-12 lg:mt-0 lg:w-56",
+  ]
+
   return (
-    <div className="flex flex-col bg-[--neu-50]">
-      <section className="border-b border-[--neu-200] bg-white/90">
-        <div className="mx-auto w-full max-w-[72rem] px-4 py-12 sm:px-6 lg:px-8">
-          <nav className="text-xs font-medium text-[--neu-600] sm:text-sm">
-            <ol className="flex flex-wrap items-center gap-2">
-              <li>
-                <Link
-                  href="/"
-                  className="rounded-[4px] px-1 py-0.5 transition-colors hover:text-[--brand-600] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[--info-600]"
-                >
-                  ホーム
-                </Link>
-              </li>
-              <li aria-hidden="true">/</li>
-              <li>
-                <Link
-                  href="/areas"
-                  className="rounded-[4px] px-1 py-0.5 transition-colors hover:text-[--brand-600] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[--info-600]"
-                >
-                  産地を探す
-                </Link>
-              </li>
-              <li aria-hidden="true">/</li>
-              <li className="text-[--neu-800]">{area.name}</li>
-            </ol>
-          </nav>
-          <div className="mt-12 grid gap-12 lg:grid-cols-[minmax(0,1.35fr)_minmax(0,1fr)] lg:items-start">
-            <div className="space-y-6">
-              <p className="text-xs font-medium uppercase tracking-[0.3em] text-[--brand-600]">
-                {area.region}
-              </p>
-              <div className="space-y-5">
-                <h1 className="font-serif text-[2.5rem] font-semibold leading-tight text-[--neu-900] sm:text-[2.75rem]">
-                  {area.name}
-                </h1>
-                <p className="text-lg font-medium leading-8 text-[--neu-700] sm:max-w-xl">
-                  {area.hero.tagline}
-                </p>
-                <div className="h-px w-12 bg-[--neu-200]" aria-hidden="true" />
-                <p className="max-w-3xl text-base leading-7 text-[--neu-700]">
-                  {area.hero.narrative}
-                </p>
-              </div>
-              <div className="flex flex-wrap gap-2">
-                {area.hero.keywords.map((keyword) => (
-                  <span
-                    key={keyword}
-                    className="inline-flex items-center rounded-full border border-[--neu-200] bg-white px-3 py-1 text-xs font-medium text-[--neu-600]"
+    <div className="min-h-screen bg-neutral-50 text-neutral-900">
+      <main className="flex flex-col gap-20 pb-24">
+        <section className="relative isolate overflow-hidden bg-neutral-100">
+          <div
+            className={`absolute inset-0 bg-gradient-to-br ${area.themeColor} opacity-80`}
+            aria-hidden="true"
+          />
+          <div className="absolute inset-x-0 bottom-0 h-40 bg-white/70 backdrop-blur" aria-hidden="true" />
+          <div className="relative mx-auto max-w-6xl px-4 pb-24 pt-16 sm:px-6 lg:px-8">
+            <nav className="text-xs font-medium text-neutral-700 sm:text-sm">
+              <ol className="flex flex-wrap items-center gap-2">
+                <li>
+                  <Link
+                    href="/"
+                    className="transition hover:text-brand-600 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-brand-500"
                   >
-                    {keyword}
-                  </span>
-                ))}
-              </div>
-            </div>
-            <div className="space-y-6">
-              <div className="relative aspect-[4/5] overflow-hidden rounded-[12px] border border-[--neu-200] bg-white/95">
-                {area.hero.visual ? (
-                  <Image
-                    src={area.hero.visual.src}
-                    alt={area.hero.visual.alt}
-                    fill
-                    sizes="(min-width: 1024px) 360px, 70vw"
-                    className="object-contain"
-                    priority
-                  />
-                ) : (
-                  <div className="flex h-full w-full items-center justify-center text-sm text-[--neu-500]">
-                    ビジュアルを準備中です
-                  </div>
-                )}
-              </div>
-              {area.hero.visual?.credit ? (
-                <p className="text-xs text-[--neu-500]">{area.hero.visual.credit}</p>
-              ) : null}
-              {area.hero.stats.length > 0 ? (
-                <dl className="grid gap-4 sm:grid-cols-2">
-                  {area.hero.stats.map((stat) => (
-                    <div
-                      key={stat.label}
-                      className="rounded-[6px] border border-[--neu-200] bg-[--neu-50] p-4"
+                    ホーム
+                  </Link>
+                </li>
+                <li aria-hidden="true">/</li>
+                <li>
+                  <Link
+                    href="/areas"
+                    className="transition hover:text-brand-600 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-brand-500"
+                  >
+                    産地を探す
+                  </Link>
+                </li>
+                <li aria-hidden="true">/</li>
+                <li className="text-neutral-900">{area.name}</li>
+              </ol>
+            </nav>
+            <div className="mt-12 grid gap-12 lg:grid-cols-[minmax(0,1.4fr)_minmax(0,1fr)] lg:items-center">
+              <div className="order-2 flex flex-col gap-6 lg:order-1">
+                <p className="text-xs font-semibold uppercase tracking-widest text-neutral-700">
+                  {area.region}
+                </p>
+                <div className="flex flex-col gap-5">
+                  <h1 className="text-4xl font-semibold text-neutral-900 sm:text-5xl">{area.name}</h1>
+                  <p className="text-xl font-medium text-neutral-800 sm:max-w-3xl">{area.hero.tagline}</p>
+                  <div className="h-px w-16 bg-neutral-300" aria-hidden="true" />
+                  <p className="max-w-3xl text-base leading-7 text-neutral-700">{area.hero.narrative}</p>
+                </div>
+                <div className="flex flex-wrap gap-2">
+                  {area.hero.keywords.map((keyword) => (
+                    <span
+                      key={keyword}
+                      className="inline-flex items-center rounded-full border border-white/70 bg-white/80 px-3 py-1 text-xs font-semibold uppercase tracking-wide text-brand-600 shadow-sm backdrop-blur"
                     >
-                      <dt className="text-xs font-medium uppercase tracking-[0.2em] text-[--neu-500]">
-                        {stat.label}
-                      </dt>
-                      <dd className="mt-2 font-serif text-2xl font-semibold text-[--brand-600]">
-                        {stat.value}
-                      </dd>
-                      {stat.note ? (
-                        <p className="mt-2 text-xs leading-relaxed text-[--neu-600]">{stat.note}</p>
-                      ) : null}
-                    </div>
+                      {keyword}
+                    </span>
                   ))}
-                </dl>
-              ) : null}
+                </div>
+              </div>
+              <div className="order-1 flex justify-center lg:order-2">
+                <div className="relative flex w-full max-w-[22rem] flex-col items-center">
+                  <div
+                    className="absolute -left-24 -top-20 hidden h-56 w-56 rounded-full bg-white/60 blur-3xl lg:block"
+                    aria-hidden="true"
+                  />
+                  <div
+                    className="absolute -right-20 -bottom-16 hidden h-60 w-60 rounded-full bg-white/50 blur-3xl lg:block"
+                    aria-hidden="true"
+                  />
+                  <div className="relative flex aspect-square w-full items-center justify-center rounded-[3rem] border border-white/60 bg-white/80 p-10 shadow-xl shadow-neutral-300/50 backdrop-blur-sm">
+                    {area.hero.visual ? (
+                      <Image
+                        src={area.hero.visual.src}
+                        alt={area.hero.visual.alt}
+                        fill
+                        sizes="(min-width: 1024px) 352px, 70vw"
+                        className="object-contain"
+                        priority
+                      />
+                    ) : (
+                      <span className="text-3xl font-semibold text-neutral-800">{area.name.slice(0, 2)}</span>
+                    )}
+                  </div>
+                  <div className="relative mt-10 w-full space-y-4 lg:mt-0 lg:space-y-0">
+                    {area.hero.stats.map((stat, index) => (
+                      <div
+                        key={stat.label}
+                        className={`rounded-2xl border border-white/70 bg-white/90 px-5 py-4 text-left shadow-sm backdrop-blur-sm transition duration-300 hover:-translate-y-1 hover:shadow-lg ${heroStatPlacement[index] ?? heroStatPlacement[heroStatPlacement.length - 1]}`}
+                      >
+                        <p className="text-xs font-semibold uppercase tracking-wide text-neutral-500">{stat.label}</p>
+                        <p className="mt-2 text-xl font-semibold text-neutral-900">{stat.value}</p>
+                        {stat.note ? (
+                          <p className="mt-1 text-xs leading-5 text-neutral-500">{stat.note}</p>
+                        ) : null}
+                      </div>
+                    ))}
+                  </div>
+                  {area.hero.visual?.credit ? (
+                    <p className="mt-24 text-xs text-neutral-500 lg:mt-36">{area.hero.visual.credit}</p>
+                  ) : null}
+                </div>
+              </div>
             </div>
           </div>
-        </div>
-      </section>
+        </section>
 
-      <div className="space-y-24 py-24">
         <section
           aria-labelledby="area-story-heading"
-          className="mx-auto w-full max-w-[72rem] px-4 sm:px-6 lg:px-8"
+          className="mx-auto w-full max-w-6xl px-4 sm:px-6 lg:px-8"
         >
           <div className="grid gap-12 lg:grid-cols-[minmax(0,2fr)_minmax(0,1fr)]">
-            <div className="space-y-6">
-              <p className="text-xs font-medium uppercase tracking-[0.3em] text-[--brand-600]">ストーリー</p>
-              <h2
-                id="area-story-heading"
-                className="font-serif text-3xl font-semibold text-[--neu-900] sm:text-[2rem]"
-              >
+            <div>
+              <p className="text-sm font-semibold uppercase tracking-widest text-brand-600">ストーリー</p>
+              <h2 id="area-story-heading" className="mt-3 text-3xl font-semibold text-neutral-900">
                 {area.story.title}
               </h2>
-              <div className="grid gap-6 sm:grid-cols-2">
+              <div className="mt-8 grid gap-6 sm:grid-cols-2">
                 {area.story.highlights.map((highlight) => (
                   <article
                     key={highlight.title}
-                    className="rounded-[6px] border border-[--neu-200] bg-white p-6"
+                    className="rounded-3xl border border-neutral-200/80 bg-white p-6 shadow-sm"
                   >
-                    <h3 className="font-serif text-lg font-semibold text-[--neu-900]">{highlight.title}</h3>
-                    <p className="mt-3 text-sm leading-relaxed text-[--neu-600]">{highlight.description}</p>
+                    <h3 className="text-lg font-semibold text-neutral-900">{highlight.title}</h3>
+                    <p className="mt-3 text-sm leading-6 text-neutral-600">{highlight.description}</p>
                   </article>
                 ))}
               </div>
             </div>
             <div>
-              <p className="text-xs font-medium uppercase tracking-[0.3em] text-[--neu-500]">年表</p>
-              <ol className="mt-4 space-y-4 border-l border-[--neu-200] pl-6">
+              <p className="text-sm font-semibold uppercase tracking-widest text-neutral-500">年表</p>
+              <ol className="mt-4 space-y-4 border-l border-neutral-200 pl-6">
                 {area.story.timeline.map((item) => (
                   <li key={item.period} className="relative pl-4">
-                    <span className="absolute -left-3 top-2 block h-2 w-2 rounded-full bg-[--brand-600]" />
-                    <p className="text-xs font-medium uppercase tracking-wide text-[--neu-500]">
+                    <span className="absolute -left-[35px] top-2 h-2.5 w-2.5 rounded-full bg-brand-500" />
+                    <p className="text-xs font-semibold uppercase tracking-wide text-neutral-500">
                       {item.period}
                     </p>
-                    <p className="mt-1 text-sm font-semibold text-[--neu-900]">{item.title}</p>
-                    <p className="mt-1 text-sm leading-relaxed text-[--neu-600]">{item.description}</p>
+                    <p className="mt-1 text-sm font-semibold text-neutral-900">{item.title}</p>
+                    <p className="mt-1 text-sm leading-6 text-neutral-600">{item.description}</p>
                   </li>
                 ))}
               </ol>
@@ -184,25 +189,22 @@ export default function CraftAreaPage({ params }: CraftAreaPageProps) {
 
         <section
           aria-labelledby="area-workshop-heading"
-          className="border-y border-[--neu-200] bg-white/90 py-16"
+          className="bg-white py-16"
         >
-          <div className="mx-auto max-w-[72rem] px-4 sm:px-6 lg:px-8">
+          <div className="mx-auto max-w-6xl px-4 sm:px-6 lg:px-8">
             <div className="flex flex-col gap-4 lg:flex-row lg:items-end lg:justify-between">
-              <div className="space-y-3">
-                <p className="text-xs font-medium uppercase tracking-[0.3em] text-[--brand-600]">体験・見学</p>
-                <h2
-                  id="area-workshop-heading"
-                  className="font-serif text-3xl font-semibold text-[--neu-900]"
-                >
+              <div>
+                <p className="text-sm font-semibold uppercase tracking-widest text-brand-600">体験・見学</p>
+                <h2 id="area-workshop-heading" className="mt-2 text-3xl font-semibold text-neutral-900">
                   職人と出会うワークショップ
                 </h2>
-                <p className="max-w-2xl text-sm leading-relaxed text-[--neu-600]">
+                <p className="mt-3 max-w-2xl text-sm leading-6 text-neutral-600">
                   見て学ぶだけでなく、手を動かしながら産地の知恵を体感できるプログラムをピックアップ。
                 </p>
               </div>
               <Link
                 href="/contact"
-                className="inline-flex h-10 items-center justify-center rounded-[6px] border border-[--neu-300] px-4 text-sm font-medium text-[--neu-700] transition-colors hover:border-[--neu-400] hover:text-[--brand-600] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[--info-600]"
+                className="inline-flex items-center rounded-full border border-brand-500/60 px-4 py-2 text-sm font-semibold text-brand-600 transition hover:border-brand-500 hover:text-brand-700 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-brand-500"
               >
                 団体向けの相談をする
               </Link>
@@ -211,24 +213,24 @@ export default function CraftAreaPage({ params }: CraftAreaPageProps) {
               {area.workshops.map((workshop) => (
                 <article
                   key={workshop.title}
-                  className="flex h-full flex-col justify-between gap-5 rounded-[6px] border border-[--neu-200] bg-white p-6"
+                  className="flex h-full flex-col justify-between gap-4 rounded-3xl border border-neutral-200/80 bg-neutral-50 p-6 shadow-sm"
                 >
-                  <div className="space-y-3">
-                    <h3 className="font-serif text-xl font-semibold text-[--neu-900]">{workshop.title}</h3>
-                    <p className="text-sm leading-relaxed text-[--neu-600]">{workshop.description}</p>
+                  <div>
+                    <h3 className="text-xl font-semibold text-neutral-900">{workshop.title}</h3>
+                    <p className="mt-3 text-sm leading-6 text-neutral-600">{workshop.description}</p>
                   </div>
-                  <dl className="grid gap-2 text-xs font-medium uppercase tracking-wide text-[--neu-500]">
+                  <dl className="grid gap-2 text-xs font-semibold uppercase tracking-wide text-neutral-500">
                     <div>
                       <dt>所要時間</dt>
-                      <dd className="text-sm font-medium text-[--neu-700]">{workshop.duration}</dd>
+                      <dd className="text-sm font-medium text-neutral-800">{workshop.duration}</dd>
                     </div>
                     <div>
                       <dt>定員</dt>
-                      <dd className="text-sm font-medium text-[--neu-700]">{workshop.capacity}</dd>
+                      <dd className="text-sm font-medium text-neutral-800">{workshop.capacity}</dd>
                     </div>
                     <div>
                       <dt>予約</dt>
-                      <dd className="text-sm font-medium text-[--neu-700]">{workshop.reservation}</dd>
+                      <dd className="text-sm font-medium text-neutral-800">{workshop.reservation}</dd>
                     </div>
                   </dl>
                 </article>
@@ -239,35 +241,34 @@ export default function CraftAreaPage({ params }: CraftAreaPageProps) {
 
         <section
           aria-labelledby="area-projects-heading"
-          className="mx-auto w-full max-w-[72rem] px-4 sm:px-6 lg:px-8"
+          className="mx-auto w-full max-w-6xl px-4 sm:px-6 lg:px-8"
         >
-          <div className="space-y-3">
-            <p className="text-xs font-medium uppercase tracking-[0.3em] text-[--brand-600]">プロジェクト</p>
-            <h2
-              id="area-projects-heading"
-              className="font-serif text-3xl font-semibold text-[--neu-900]"
-            >
-              今、産地で動いていること
-            </h2>
-            <p className="max-w-2xl text-sm leading-relaxed text-[--neu-600]">
-              地域と職人、来訪者が手を取り合いながら進める取り組み。関わる方法も紹介します。
-            </p>
+          <div className="flex flex-col gap-4 lg:flex-row lg:items-end lg:justify-between">
+            <div>
+              <p className="text-sm font-semibold uppercase tracking-widest text-brand-600">プロジェクト</p>
+              <h2 id="area-projects-heading" className="mt-2 text-3xl font-semibold text-neutral-900">
+                今、産地で動いていること
+              </h2>
+              <p className="mt-3 max-w-2xl text-sm leading-6 text-neutral-600">
+                地域と職人、来訪者が手を取り合いながら進める取り組み。関わる方法も紹介します。
+              </p>
+            </div>
           </div>
-          <div className="mt-10 grid gap-6 md:grid-cols-2">
+          <div className="mt-8 grid gap-6 md:grid-cols-2">
             {area.projects.map((project) => (
               <article
                 key={project.title}
-                className="rounded-[6px] border border-[--neu-200] bg-white p-6"
+                className="rounded-3xl border border-neutral-200/80 bg-white p-6 shadow-sm"
               >
                 <div className="flex items-center justify-between gap-3">
-                  <h3 className="font-serif text-lg font-semibold text-[--neu-900]">{project.title}</h3>
-                  <span className="inline-flex shrink-0 items-center rounded-full bg-[--brand-600]/10 px-3 py-1 text-xs font-medium uppercase tracking-wide text-[--brand-600]">
+                  <h3 className="text-xl font-semibold text-neutral-900">{project.title}</h3>
+                  <span className="inline-flex shrink-0 items-center rounded-full bg-brand-500/10 px-3 py-1 text-xs font-semibold uppercase tracking-wide text-brand-600">
                     {project.status}
                   </span>
                 </div>
-                <p className="mt-3 text-sm leading-relaxed text-[--neu-600]">{project.description}</p>
+                <p className="mt-3 text-sm leading-6 text-neutral-600">{project.description}</p>
                 {project.partner ? (
-                  <p className="mt-4 text-xs font-medium uppercase tracking-wide text-[--neu-500]">
+                  <p className="mt-4 text-xs font-semibold uppercase tracking-wide text-neutral-500">
                     協力: {project.partner}
                   </p>
                 ) : null}
@@ -278,28 +279,25 @@ export default function CraftAreaPage({ params }: CraftAreaPageProps) {
 
         <section
           aria-labelledby="area-artisans-heading"
-          className="border-y border-[--neu-200] bg-white/90 py-16"
+          className="bg-white py-16"
         >
-          <div className="mx-auto max-w-[72rem] px-4 sm:px-6 lg:px-8">
-            <p className="text-xs font-medium uppercase tracking-[0.3em] text-[--brand-600]">職人紹介</p>
-            <h2
-              id="area-artisans-heading"
-              className="mt-3 font-serif text-3xl font-semibold text-[--neu-900]"
-            >
+          <div className="mx-auto max-w-6xl px-4 sm:px-6 lg:px-8">
+            <p className="text-sm font-semibold uppercase tracking-widest text-brand-600">職人紹介</p>
+            <h2 id="area-artisans-heading" className="mt-2 text-3xl font-semibold text-neutral-900">
               この産地をつくる人たち
             </h2>
             <div className="mt-10 grid gap-8 lg:grid-cols-2">
               {area.artisans.map((artisan) => (
                 <article
                   key={artisan.name}
-                  className="flex h-full flex-col gap-4 rounded-[6px] border border-[--neu-200] bg-white p-6"
+                  className="rounded-3xl border border-neutral-200/80 bg-neutral-50 p-6 shadow-sm"
                 >
-                  <div className="space-y-2">
-                    <h3 className="font-serif text-2xl font-semibold text-[--neu-900]">{artisan.name}</h3>
-                    <p className="text-sm font-medium text-[--brand-600]">{artisan.role}</p>
+                  <div className="flex flex-col gap-2">
+                    <h3 className="text-2xl font-semibold text-neutral-900">{artisan.name}</h3>
+                    <p className="text-sm font-semibold text-brand-600">{artisan.role}</p>
                   </div>
-                  <p className="text-sm leading-relaxed text-[--neu-600]">{artisan.bio}</p>
-                  <p className="inline-flex w-fit items-center rounded-[6px] border border-[--neu-200] bg-[--neu-50] px-3 py-1 text-xs font-medium uppercase tracking-wide text-[--neu-600]">
+                  <p className="mt-4 text-sm leading-6 text-neutral-600">{artisan.bio}</p>
+                  <p className="mt-4 inline-flex items-center rounded-full bg-white px-3 py-1 text-xs font-semibold uppercase tracking-wide text-neutral-700">
                     得意分野: {artisan.specialty}
                   </p>
                 </article>
@@ -310,51 +308,52 @@ export default function CraftAreaPage({ params }: CraftAreaPageProps) {
 
         <section
           aria-labelledby="area-visit-heading"
-          className="mx-auto w-full max-w-[72rem] px-4 sm:px-6 lg:px-8"
+          className="mx-auto w-full max-w-6xl px-4 sm:px-6 lg:px-8"
         >
           <div className="grid gap-8 lg:grid-cols-[minmax(0,1.6fr)_minmax(0,1fr)]">
-            <div className="space-y-4">
-              <p className="text-xs font-medium uppercase tracking-[0.3em] text-[--brand-600]">訪れる前に</p>
-              <h2
-                id="area-visit-heading"
-                className="font-serif text-3xl font-semibold text-[--neu-900]"
-              >
+            <div>
+              <p className="text-sm font-semibold uppercase tracking-widest text-brand-600">訪れる前に</p>
+              <h2 id="area-visit-heading" className="mt-2 text-3xl font-semibold text-neutral-900">
                 旅のヒント
               </h2>
-              <p className="text-sm font-medium text-[--neu-700]">
+              <p className="mt-4 text-sm font-semibold text-neutral-700">
                 ベストシーズン: {area.visiting.bestSeason}
               </p>
-              <ul className="mt-4 space-y-3 text-sm leading-relaxed text-[--neu-600]">
+              <ul className="mt-6 space-y-4">
                 {area.visiting.travelTips.map((tip) => (
-                  <li key={tip} className="flex items-start gap-3">
-                    <span aria-hidden="true" className="mt-1 inline-block h-2 w-2 rounded-full bg-[--brand-600]" />
+                  <li key={tip} className="flex items-start gap-3 text-sm leading-6 text-neutral-600">
+                    <span aria-hidden="true" className="mt-1 inline-block h-2 w-2 rounded-full bg-brand-500" />
                     <span>{tip}</span>
                   </li>
                 ))}
               </ul>
             </div>
-            <div className="rounded-[6px] border border-[--neu-200] bg-white p-6">
-              <h3 className="font-serif text-lg font-semibold text-[--neu-900]">アクセス</h3>
-              <p className="mt-3 text-sm leading-relaxed text-[--neu-600]">{area.visiting.access}</p>
+            <div className="rounded-3xl border border-neutral-200/80 bg-white p-6 shadow-sm">
+              <h3 className="text-lg font-semibold text-neutral-900">アクセス</h3>
+              <p className="mt-3 text-sm leading-6 text-neutral-600">{area.visiting.access}</p>
             </div>
           </div>
         </section>
 
-        <section className="mx-auto w-full max-w-[72rem] px-4 sm:px-6 lg:px-8">
-          <div className="rounded-[6px] border border-[--neu-200] bg-white p-8">
-            <div className="flex flex-col gap-6 lg:flex-row lg:items-start lg:justify-between">
-              <div className="space-y-3">
-                <p className="text-xs font-medium uppercase tracking-[0.3em] text-[--brand-600]">支援・連絡先</p>
-                <h2 className="font-serif text-2xl font-semibold text-[--neu-900]">産地とつながる</h2>
-                <p className="max-w-2xl text-sm leading-relaxed text-[--neu-600]">
-                  {area.support.note ?? "取材や訪問、コラボレーションの相談先を掲載しています。"}
-                </p>
+        <section className="mx-auto w-full max-w-6xl px-4 sm:px-6 lg:px-8">
+          <div className="rounded-3xl bg-gradient-to-br from-brand-500/10 via-brand-500/5 to-white p-8 shadow-sm">
+            <div className="flex flex-col gap-6 lg:flex-row lg:items-center lg:justify-between">
+              <div>
+                <p className="text-sm font-semibold uppercase tracking-widest text-brand-600">支援・連絡先</p>
+                <h2 className="mt-2 text-2xl font-semibold text-neutral-900">産地とつながる</h2>
+                {area.support.note ? (
+                  <p className="mt-3 max-w-2xl text-sm leading-6 text-neutral-600">{area.support.note}</p>
+                ) : (
+                  <p className="mt-3 max-w-2xl text-sm leading-6 text-neutral-600">
+                    取材や訪問、コラボレーションの相談先を掲載しています。
+                  </p>
+                )}
               </div>
-              <div className="flex flex-wrap items-center gap-3 text-sm font-medium">
+              <div className="flex flex-wrap items-center gap-3 text-sm font-semibold text-brand-600">
                 {area.support.website ? (
                   <Link
                     href={area.support.website}
-                    className="inline-flex h-10 items-center gap-2 rounded-[6px] border border-[--neu-300] bg-white px-4 text-[--neu-700] transition-colors hover:border-[--neu-400] hover:text-[--brand-600] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[--info-600]"
+                    className="inline-flex items-center gap-2 rounded-full bg-white px-4 py-2 shadow-sm transition hover:-translate-y-0.5 hover:shadow-md focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-brand-500"
                   >
                     公式サイトを見る
                     <span aria-hidden="true">↗</span>
@@ -363,7 +362,7 @@ export default function CraftAreaPage({ params }: CraftAreaPageProps) {
                 {area.support.instagram ? (
                   <Link
                     href={area.support.instagram}
-                    className="inline-flex h-10 items-center gap-2 rounded-[6px] bg-[--brand-600]/10 px-4 text-[--brand-700] transition-colors hover:bg-[--brand-600]/15 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[--info-600]"
+                    className="inline-flex items-center gap-2 rounded-full bg-brand-500/10 px-4 py-2 text-brand-700 transition hover:bg-brand-500/20 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-brand-500"
                   >
                     Instagram
                     <span aria-hidden="true">↗</span>
@@ -372,7 +371,7 @@ export default function CraftAreaPage({ params }: CraftAreaPageProps) {
                 {area.support.contactEmail ? (
                   <a
                     href={`mailto:${area.support.contactEmail}`}
-                    className="inline-flex h-10 items-center gap-2 rounded-[6px] bg-[--brand-600] px-4 text-white transition-colors hover:bg-[--brand-700] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[--info-600]"
+                    className="inline-flex items-center gap-2 rounded-full border border-brand-500/40 px-4 py-2 text-brand-700 transition hover:border-brand-500 hover:text-brand-800 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-brand-500"
                   >
                     メールで相談
                     <span aria-hidden="true">✉</span>
@@ -382,8 +381,7 @@ export default function CraftAreaPage({ params }: CraftAreaPageProps) {
             </div>
           </div>
         </section>
-      </div>
-
+      </main>
       <SiteFooter />
     </div>
   )
