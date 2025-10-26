@@ -2,13 +2,18 @@ export default function AboutMeguruSection() {
   return (
     <section
       aria-labelledby="about-meguru-heading"
-      className="mx-auto mt-20 w-full max-w-4xl px-4 text-center sm:px-6 lg:px-8"
+      className="mx-auto w-full max-w-[60rem] px-4 sm:px-6 lg:px-8"
     >
-      <p className="text-sm font-semibold uppercase tracking-widest text-brand-600">めぐる工芸舎について</p>
-      <h2 id="about-meguru-heading" className="mt-4 text-3xl font-semibold text-neutral-900 sm:text-4xl">
+      <p className="text-xs font-medium uppercase tracking-[0.3em] text-[--brand-600] text-center">
+        めぐる工芸舎について
+      </p>
+      <h2
+        id="about-meguru-heading"
+        className="mt-6 text-center font-serif text-[2.25rem] font-semibold text-[--neu-900] sm:text-[2.5rem]"
+      >
         文化の生態系をめぐるためのデジタル・コモンズ
       </h2>
-      <div className="mt-6 space-y-5 text-left text-base leading-7 text-neutral-600 sm:text-lg sm:leading-8">
+      <div className="mt-8 space-y-6 rounded-[6px] border border-[--neu-200] bg-white/90 p-8 text-base leading-8 text-[--neu-700] sm:text-lg">
         <p>
           めぐる工芸舎は、全国の工芸に携わる人々の営みと、そこに惹かれる来訪者をつなぐオンラインプラットフォームです。
           取材記事や映像、イベント情報を一箇所に集約し、訪れた人が次のアクションを起こしやすくすることを目指しています。

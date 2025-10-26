@@ -6,14 +6,16 @@ import { craftAreas, weeklyVote } from "@/data/home"
 
 export default function Home() {
   return (
-    <div className="min-h-screen bg-neutral-50 text-neutral-900">
-      <main className="flex flex-col gap-20 pb-20">
-        <div className="bg-gradient-to-b from-white via-white to-neutral-50 pb-12 pt-10">
+    <div className="flex flex-col bg-[--neu-50]">
+      <section className="border-b border-[--neu-200] bg-white/80">
+        <div className="mx-auto w-full max-w-[72rem] px-4 py-12 sm:px-6 lg:px-8">
           <WeeklyVote {...weeklyVote} />
         </div>
+      </section>
+      <div className="flex flex-col gap-24 pb-24 pt-16">
         <AreaGrid areas={craftAreas} />
         <AboutMeguruSection />
-      </main>
+      </div>
       <SiteFooter />
     </div>
   )

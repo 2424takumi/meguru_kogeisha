@@ -10,9 +10,13 @@ const navItems = [
 
 export default function SiteHeader() {
   return (
-    <header className="sticky top-0 z-50 border-b border-neutral-200/80 bg-white/90 backdrop-blur">
-      <div className="mx-auto flex w-full max-w-6xl items-center justify-between px-4 py-3 sm:px-6 lg:px-8">
-        <Link href="/" aria-label="めぐる工芸舎" className="flex items-center">
+    <header className="sticky top-0 z-50 border-b border-[--neu-200] bg-white/95 backdrop-blur-sm">
+      <div className="mx-auto flex w-full max-w-[72rem] items-center justify-between px-4 py-4 sm:px-6 lg:px-8">
+        <Link
+          href="/"
+          aria-label="めぐる工芸舎"
+          className="flex items-center gap-3 text-sm font-medium text-[--neu-800] transition-colors hover:text-[--brand-600]"
+        >
           <Image
             src="/meguru_logo.png"
             alt="めぐる工芸舎のロゴ"
@@ -22,12 +26,12 @@ export default function SiteHeader() {
             className="h-[28px] w-auto"
           />
         </Link>
-        <nav className="hidden items-center gap-6 text-sm font-medium text-neutral-600 md:flex">
+        <nav className="hidden items-center gap-7 text-sm font-medium text-[--neu-600] md:flex">
           {navItems.map((item) => (
             <Link
               key={item.href}
               href={item.href}
-              className="transition-colors hover:text-brand-600 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-brand-500"
+              className="rounded-[6px] px-1 py-1 transition-colors hover:text-[--brand-600] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[--info-600]"
             >
               {item.label}
             </Link>
@@ -35,7 +39,7 @@ export default function SiteHeader() {
         </nav>
         <Link
           href="/contact"
-          className="inline-flex items-center rounded-full border border-brand-500/40 bg-brand-500/90 px-3 py-2 text-xs font-semibold text-white shadow-sm transition hover:bg-brand-600 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-brand-500 sm:px-4 sm:text-sm md:px-5"
+          className="inline-flex h-10 items-center justify-center rounded-[6px] bg-[--brand-600] px-4 text-sm font-medium text-white transition-colors hover:bg-[--brand-700] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[--info-600]"
         >
           産地づくりに参加する
         </Link>
