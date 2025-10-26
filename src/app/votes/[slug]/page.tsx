@@ -82,15 +82,6 @@ export default function VoteDetailPage({ params }: VoteDetailPageProps) {
               <div className="space-y-6">
                 <p className="text-xs font-semibold uppercase tracking-[0.35em] text-brand-600">Vote Guide</p>
                 <h1 className="text-3xl font-semibold text-neutral-900 sm:text-4xl">{vote.question}</h1>
-                <div className="space-y-4 text-sm leading-6 text-neutral-600 sm:text-base">
-                  <p className="text-neutral-800">
-                    {vote.area.name} が抱える課題を共有し、立場の違う人たちと視点を照らし合わせながら考えるための投票です。
-                  </p>
-                  <p>{vote.area.overview}</p>
-                  <p className="rounded-2xl bg-neutral-100 px-5 py-4 text-sm text-neutral-700">
-                    このページでは投票の背景や産地からのストーリーをまとめています。内容を読んだうえで、あなたの考えに近い選択肢へ投票してください。
-                  </p>
-                </div>
               </div>
               <div id="vote-entry" className="space-y-4">
                 <VoteDetailForm
@@ -106,6 +97,7 @@ export default function VoteDetailPage({ params }: VoteDetailPageProps) {
                   status={vote.status}
                   startAt={vote.startAt}
                   endAt={vote.endAt}
+                  showOptionDescriptions={false}
                 />
                 <div className="rounded-2xl border border-neutral-200/80 bg-white px-6 py-5 text-xs leading-6 text-neutral-500">
                   <p>投票内容はプロトタイピング段階の集計に反映されます。正式公開まではテストデータとして扱われます。</p>
