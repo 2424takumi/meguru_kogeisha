@@ -1,7 +1,15 @@
-import type { WeeklyVoteOption } from "./home"
 import type { VoteStatus, VoteType } from "./votes/types"
 
-export type VoteOptionDetail = WeeklyVoteOption & {
+export type VoteOptionBase = {
+  id: string
+  label: string
+  description: string
+  supporters: number
+  valueKey?: string
+  numericValue?: number
+}
+
+export type VoteOptionDetail = VoteOptionBase & {
   narrative: string
 }
 
@@ -22,6 +30,11 @@ type VoteVoice = {
     role: string
     comment: string
   }[]
+}
+
+type VoteHomeSummary = {
+  title?: string
+  description: string[]
 }
 
 type VoteAreaContext = {
@@ -60,6 +73,7 @@ export type VoteResultDetail = {
   maxChoices?: number
   initialBallots?: number
   options: VoteOptionDetail[]
+  home?: VoteHomeSummary
   insights: VoteInsight[]
   voices: VoteVoice[]
   area: VoteAreaContext
@@ -81,6 +95,14 @@ export const voteResultDetails: VoteResultDetail[] = [
     commentLabel: "コメント (任意)",
     minChoices: 1,
     maxChoices: 1,
+    home: {
+      title: "今週の投票",
+      description: [
+        "国際的に動物福祉への関心が高まり、三味線皮革の調達は注目を集めています。",
+        "輸出入規制の強化で舞台や練習現場の運営にも影響が出始めています。",
+        "職人と奏者が素材の切り替えをどう捉えるか、地域でも議論が加速しています。",
+      ],
+    },
     options: [
       {
         id: "strongly-disagree",
