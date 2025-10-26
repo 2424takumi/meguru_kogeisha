@@ -5,6 +5,10 @@ const config: Config = {
     "./src/**/*.{js,ts,jsx,tsx,md,mdx}",
     "./docs/**/*.{md,mdx}",
   ],
+  corePlugins: {
+    backgroundImage: false,
+    gradientColorStops: false,
+  },
 }
 
 export default config

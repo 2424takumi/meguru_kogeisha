@@ -20,6 +20,7 @@ This repository hosts **Meguru Kogeisha** — a Next.js (App Router) web app tha
   - Prefer **React Server Components**. Use `"use client"` **only** for interactivity.
   - Do **not** import server-only code into client modules. For server-only files add: `import "server-only"`.
 - **Styling**: Tailwind-first; keep class lists readable; use responsive/state variants.
+- **Visual design**: Gradients are prohibited site-wide; favor flat color fills.
 - **Accessibility**: labels, focus states, contrast; semantic HTML.
 - **DB/Migrations**: Until Supabase lands, **do not** add schema/migrations. When added, include migration + rollback plan in PR.
 
