@@ -97,7 +97,16 @@ export default function VoteDetailPage({ params }: VoteDetailPageProps) {
                 </div>
               </div>
               <div id="vote-entry" className="lg:sticky lg:top-20">
-                <VoteDetailForm question={vote.question} options={vote.options} resultSlug={vote.slug} />
+                <VoteDetailForm
+                  question={vote.question}
+                  options={vote.options}
+                  resultSlug={vote.slug}
+                  voteType={vote.voteType}
+                  allowComment={vote.allowComment}
+                  commentLabel={vote.commentLabel}
+                  minChoices={vote.minChoices}
+                  maxChoices={vote.maxChoices}
+                />
                 <div className="mt-4 rounded-2xl border border-neutral-200/80 bg-white px-6 py-5 text-xs leading-6 text-neutral-500">
                   <p>投票内容はプロトタイピング段階の集計に反映されます。正式公開まではテストデータとして扱われます。</p>
                   <p className="mt-2">投票後は自動的に集計ページへ移動し、あなたの選択と議論のハイライトを確認できます。</p>

@@ -1,4 +1,4 @@
-import type { WeeklyVoteOption } from "./home"
+import type { VoteType, WeeklyVoteOption } from "./home"
 
 export type VoteOptionDetail = WeeklyVoteOption & {
   narrative: string
@@ -48,6 +48,11 @@ export type VoteResultDetail = {
   question: string
   description: string
   updatedAt: string
+  voteType: VoteType
+  allowComment: boolean
+  commentLabel?: string
+  minChoices?: number
+  maxChoices?: number
   options: VoteOptionDetail[]
   insights: VoteInsight[]
   voices: VoteVoice[]
@@ -62,12 +67,19 @@ export const voteResultDetails: VoteResultDetail[] = [
     description:
       "素材転換の議論が進むなかで、演奏家・製作職人・調律師・鑑賞者から寄せられた意見の分布と背景です。票数はテストデータであり、今後の調査で更新予定です。",
     updatedAt: "2024-06-02T12:00:00+09:00",
+    voteType: "likert5",
+    allowComment: true,
+    commentLabel: "コメント (任意)",
+    minChoices: 1,
+    maxChoices: 1,
     options: [
       {
         id: "strongly-disagree",
         label: "強く反対",
         description: "犬・猫といった動物の皮を使わない代替素材へ、直ちに移行すべきだと思う。",
         supporters: 42,
+        valueKey: "-2",
+        numericValue: -2,
         narrative: "動物福祉や国際世論を重視する声が中心。音色変化より社会的責任を優先すべきという意見が目立ちました。",
       },
       {
@@ -75,6 +87,8 @@ export const voteResultDetails: VoteResultDetail[] = [
         label: "やや反対",
         description: "伝統を尊重しつつも、可能な限り動物以外の選択肢を広げてほしい。",
         supporters: 61,
+        valueKey: "-1",
+        numericValue: -1,
         narrative: "品質維持との両立を模索する層。演奏会の場数を踏んだ奏者からは、素材ごとの蓄積データがほしいという要望が上がりました。",
       },
       {
@@ -82,6 +96,8 @@ export const voteResultDetails: VoteResultDetail[] = [
         label: "どちらとも言えない",
         description: "状況をもう少し知りたい。産地と利用者の双方の声を聞いて考えたい。",
         supporters: 33,
+        valueKey: "0",
+        numericValue: 0,
         narrative: "素材や流通事情の情報不足が主な理由。実験データや音の比較試聴の場づくりが求められています。",
       },
       {
@@ -89,6 +105,8 @@ export const voteResultDetails: VoteResultDetail[] = [
         label: "やや賛成",
         description: "現場が抱える実情を理解し、段階的な検討が進むなら使用を認めたい。",
         supporters: 54,
+        valueKey: "+1",
+        numericValue: 1,
         narrative: "皮の張替え頻度やコストを踏まえ、現状維持を支持する声。代替素材研究を前向きに捉える意見も多く寄せられました。",
       },
       {
@@ -96,6 +114,8 @@ export const voteResultDetails: VoteResultDetail[] = [
         label: "強く賛成",
         description: "品質維持のため従来素材を使い続けてほしい。適切に流通が管理されるなら賛成。",
         supporters: 76,
+        valueKey: "+2",
+        numericValue: 2,
         narrative: "舞台での安定性や音の張りを評価し、伝統的な皮革の継続利用を強く願う声。狩猟・畜産副産物としての活用を提案する意見もありました。",
       },
     ],

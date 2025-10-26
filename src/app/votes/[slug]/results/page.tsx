@@ -41,13 +41,19 @@ export default function VoteResultPage({ params, searchParams }: VoteResultPageP
     notFound()
   }
 
-  const selectedOptionId = searchParams?.selected ?? null
+  const selectedParam = searchParams?.selected ?? ""
+  const selectedOptionIds = selectedParam
+    ? selectedParam
+        .split(",")
+        .map((value) => decodeURIComponent(value.trim()))
+        .filter(Boolean)
+    : []
   const totalVotes = vote.options.reduce((accumulator, option) => accumulator + option.supporters, 0)
   const optionsWithPercentage = vote.options.map((option) => {
     const percentage = totalVotes === 0 ? 0 : Number(((option.supporters / totalVotes) * 100).toFixed(1))
     return { ...option, percentage }
   })
-  const selectedOption = vote.options.find((option) => option.id === selectedOptionId) ?? null
+  const selectedOptions = vote.options.filter((option) => selectedOptionIds.includes(option.id))
   const formattedUpdatedAt = updatedAtFormatter.format(new Date(vote.updatedAt))
 
   return (
@@ -123,11 +129,17 @@ export default function VoteResultPage({ params, searchParams }: VoteResultPageP
                 <p className="text-xs leading-5 text-neutral-500">
                   本票数はプロトタイピング用のサンプルデータです。正式な調査開始後に更新されます。
                 </p>
-                {selectedOption ? (
+                {selectedOptions.length > 0 ? (
                   <div className="mt-2 rounded-2xl border border-brand-200/70 bg-white px-4 py-3 text-sm leading-6 text-neutral-600">
                     <p className="text-xs font-semibold uppercase tracking-wide text-brand-600">あなたの投票</p>
-                    <p className="mt-1 text-base font-semibold text-neutral-900">{selectedOption.label}</p>
-                    <p className="mt-1 text-sm text-neutral-600">{selectedOption.description}</p>
+                    <ul className="mt-2 space-y-2">
+                      {selectedOptions.map((option) => (
+                        <li key={option.id}>
+                          <p className="text-base font-semibold text-neutral-900">{option.label}</p>
+                          <p className="mt-1 text-sm text-neutral-600">{option.description}</p>
+                        </li>
+                      ))}
+                    </ul>
                   </div>
                 ) : null}
               </div>
@@ -152,7 +164,7 @@ export default function VoteResultPage({ params, searchParams }: VoteResultPageP
             <div className="space-y-6 rounded-3xl border border-neutral-200/80 bg-white p-6 shadow-sm sm:p-6">
               <ol className="space-y-6">
                 {optionsWithPercentage.map((option) => {
-                  const isSelected = selectedOptionId === option.id
+                  const isSelected = selectedOptionIds.includes(option.id)
                   return (
                     <li key={option.id} className="space-y-3">
                       <div className="flex flex-wrap items-center justify-between gap-3">
