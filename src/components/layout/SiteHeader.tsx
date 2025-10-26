@@ -10,7 +10,7 @@ const navItems = [
 
 export default function SiteHeader() {
   return (
-    <header className="sticky top-0 z-50 border-b border-neutral-200/80 bg-white/90 backdrop-blur">
+    <header className="sticky top-0 z-50 border-b border-brand-100/80 bg-brand-50/90 backdrop-blur">
       <div className="mx-auto flex w-full max-w-6xl items-center justify-between px-4 py-3 sm:px-6 lg:px-8">
         <Link href="/" aria-label="めぐる工芸舎" className="flex items-center">
           <Image
@@ -22,7 +22,7 @@ export default function SiteHeader() {
             className="h-[28px] w-auto"
           />
         </Link>
-        <nav className="hidden items-center gap-6 text-sm font-medium text-neutral-600 md:flex">
+        <nav className="hidden items-center gap-6 text-sm font-medium text-brand-800 md:flex">
           {navItems.map((item) => (
             <Link
               key={item.href}
@@ -35,7 +35,7 @@ export default function SiteHeader() {
         </nav>
         <Link
           href="/contact"
-          className="inline-flex items-center rounded-full border border-brand-500/40 bg-brand-500/90 px-3 py-2 text-xs font-semibold text-white shadow-sm transition hover:bg-brand-600 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-brand-500 sm:px-4 sm:text-sm md:px-5"
+          className="inline-flex items-center rounded-full border border-brand-500/40 bg-brand-600 px-3 py-2 text-xs font-semibold text-white shadow-sm transition hover:bg-brand-700 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-brand-500 sm:px-4 sm:text-sm md:px-5"
         >
           産地づくりに参加する
         </Link>

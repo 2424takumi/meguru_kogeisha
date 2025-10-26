@@ -7,21 +7,21 @@
 }
 
 @theme {
-  /* Brand (主色) */
-  --color-brand-50:  oklch(0.98 0.01 25);
-  --color-brand-100: oklch(0.96 0.02 25);
-  --color-brand-200: oklch(0.93 0.03 25);
-  --color-brand-300: oklch(0.88 0.05 25);
-  --color-brand-400: oklch(0.80 0.08 25);
-  --color-brand-500: oklch(0.70 0.10 25);
-  --color-brand-600: oklch(0.55 0.12 25); /* 基調：落ち着いたえんじ ≈ #7B2E2B */
-  --color-brand-700: oklch(0.48 0.11 25);
-  --color-brand-800: oklch(0.42 0.09 25);
-  --color-brand-900: oklch(0.36 0.08 25);
+  /* Brand (主色：藍 × 群青) */
+  --color-brand-50:  #f0f6ff;
+  --color-brand-100: #d9e7ff;
+  --color-brand-200: #b3d0ff;
+  --color-brand-300: #85b1ff;
+  --color-brand-400: #5d8ff6;
+  --color-brand-500: #3a71e4;
+  --color-brand-600: #1f58c7; /* 基調：深みのある藍色 */
+  --color-brand-700: #1c46a0;
+  --color-brand-800: #183a80;
+  --color-brand-900: #142d61;
 
-  /* Accent（温かみのある黄土〜亜麻色） */
-  --color-accent-500: oklch(0.83 0.05 85);
-  --color-accent-600: oklch(0.78 0.06 85);
+  /* Accent（藍を引き立てる金茶） */
+  --color-accent-500: #f0b347;
+  --color-accent-600: #d99b1b;
 
   /* Warm Neutral（和紙感のある温かいグレー） */
   --color-neutral-50:  oklch(0.97 0.01 40); /* paper 背景 */
