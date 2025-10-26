@@ -1,42 +1,36 @@
 @import "tailwindcss";
 
-:root {
-  --color-paper: oklch(0.97 0.01 40);
-  --background: var(--color-paper);
-  --foreground: oklch(0.20 0.02 40);
-}
-
 @theme {
-  /* Brand (主色：藍 × 群青) */
-  --color-brand-50:  #f0f6ff;
-  --color-brand-100: #d9e7ff;
-  --color-brand-200: #b3d0ff;
-  --color-brand-300: #85b1ff;
-  --color-brand-400: #5d8ff6;
-  --color-brand-500: #3a71e4;
-  --color-brand-600: #1f58c7; /* 基調：深みのある藍色 */
-  --color-brand-700: #1c46a0;
-  --color-brand-800: #183a80;
-  --color-brand-900: #142d61;
+  /* Brand (主色：深縁 / #9F353A) */
+  --color-brand-50:  #f8eeef;
+  --color-brand-100: #f3d8db;
+  --color-brand-200: #e9b2b7;
+  --color-brand-300: #dd8a92;
+  --color-brand-400: #cf616d;
+  --color-brand-500: #c44658;
+  --color-brand-600: #9f353a; /* 基調：深いえんじ */
+  --color-brand-700: #832b30;
+  --color-brand-800: #672126;
+  --color-brand-900: #4b171b;
 
-  /* Accent（藍を引き立てる金茶） */
-  --color-accent-500: #f0b347;
-  --color-accent-600: #d99b1b;
+  /* Accent（和のベージュで落ち着きを添える） */
+  --color-accent-500: #f1c38d;
+  --color-accent-600: #dba266;
 
-  /* Warm Neutral（和紙感のある温かいグレー） */
-  --color-neutral-50:  oklch(0.97 0.01 40); /* paper 背景 */
-  --color-neutral-100: oklch(0.96 0.01 40);
-  --color-neutral-200: oklch(0.92 0.01 40);
-  --color-neutral-300: oklch(0.86 0.01 40);
-  --color-neutral-400: oklch(0.70 0.02 40);
-  --color-neutral-500: oklch(0.55 0.02 40); /* 本文色 */
-  --color-neutral-600: oklch(0.45 0.02 40);
-  --color-neutral-700: oklch(0.35 0.02 40);
-  --color-neutral-800: oklch(0.27 0.02 40);
-  --color-neutral-900: oklch(0.20 0.02 40);
+  /* Warm Neutral（白に近い和紙トーン） */
+  --color-neutral-50:  #fffbf9; /* paper 背景 */
+  --color-neutral-100: #f7f1ed;
+  --color-neutral-200: #ede4df;
+  --color-neutral-300: #dfd3cd;
+  --color-neutral-400: #c5b5ae;
+  --color-neutral-500: #a69089; /* 本文色 */
+  --color-neutral-600: #887266;
+  --color-neutral-700: #6b5850;
+  --color-neutral-800: #4d3d38;
+  --color-neutral-900: #2f2421;
 
   /* Paper baseline */
-  --color-paper: oklch(0.97 0.01 40);
+  --color-paper: #fffbf9;
 
   /* Typography */
   --font-sans: ui-sans-serif, system-ui, "Noto Sans JP", "Hiragino Kaku Gothic ProN", "Yu Gothic", sans-serif;
@@ -48,6 +42,7 @@
 
 /* デフォルト背景/本文 */
 :root {
+  --color-paper: #fffbf9;
   --background: var(--color-neutral-50);
   --foreground: var(--color-neutral-900);
 }

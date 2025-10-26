@@ -93,7 +93,7 @@ export default function WeeklyVote({ title, question, description, options }: We
                             size
                           } ${
                             isSelected
-                              ? "border-brand-500 bg-brand-500 shadow-[0_0_0_4px_rgba(186,62,54,0.18)]"
+                              ? "border-brand-500 bg-brand-500 shadow-[0_0_0_4px_rgba(159,53,58,0.18)]"
                               : "border-neutral-300 bg-neutral-50"
                           }`}
                         >
