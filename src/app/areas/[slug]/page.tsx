@@ -39,15 +39,10 @@ export default function CraftAreaPage({ params }: CraftAreaPageProps) {
   }
 
   return (
-    <div className="min-h-screen bg-neutral-50 text-neutral-900">
+    <div className="min-h-screen bg-white text-neutral-900">
       <main className="flex flex-col gap-20 pb-24">
-        <section className="relative isolate overflow-hidden bg-neutral-100">
-          <div
-            className={`absolute inset-0 bg-gradient-to-br ${area.themeColor} opacity-80`}
-            aria-hidden="true"
-          />
-          <div className="absolute inset-x-0 bottom-0 h-40 bg-white/70 backdrop-blur" aria-hidden="true" />
-          <div className="relative mx-auto max-w-6xl px-4 pb-24 pt-16 sm:px-6 lg:px-8">
+        <section className="bg-white">
+          <div className="mx-auto max-w-6xl px-4 pb-20 pt-16 sm:px-6 lg:px-8">
             <nav className="text-xs font-medium text-neutral-700 sm:text-sm">
               <ol className="flex flex-wrap items-center gap-2">
                 <li>
@@ -71,15 +66,15 @@ export default function CraftAreaPage({ params }: CraftAreaPageProps) {
                 <li className="text-neutral-900">{area.name}</li>
               </ol>
             </nav>
-            <div className="mt-12 grid gap-12 lg:grid-cols-[minmax(0,1.2fr)_minmax(0,1fr)] lg:items-start">
-              <div className="flex flex-col gap-8">
+            <div className="mt-12 grid gap-12 lg:grid-cols-[minmax(0,1.2fr)_minmax(0,1fr)] lg:items-center">
+              <div className="flex flex-col gap-10">
                 <div className="flex flex-col gap-3">
                   <h1 className="text-4xl font-semibold text-neutral-900 sm:text-5xl">{area.name}</h1>
                   <div className="flex flex-wrap gap-2">
                     {area.hero.keywords.map((keyword) => (
                       <span
                         key={keyword}
-                        className="inline-flex items-center rounded-full border border-white/70 bg-white/80 px-3 py-1 text-xs font-semibold uppercase tracking-wide text-brand-600 shadow-sm backdrop-blur"
+                        className="inline-flex items-center rounded-full border border-neutral-200 bg-neutral-50 px-3 py-1 text-xs font-semibold uppercase tracking-wide text-brand-600"
                       >
                         {keyword}
                       </span>
@@ -89,37 +84,31 @@ export default function CraftAreaPage({ params }: CraftAreaPageProps) {
                     {area.region}
                   </p>
                 </div>
-                <div className="relative flex aspect-square w-full max-w-[24rem] items-center justify-center self-center rounded-[3rem] border border-white/50 bg-white/70 p-10 shadow-xl shadow-neutral-300/40 backdrop-blur-sm lg:self-start">
-                  {area.hero.visual ? (
-                    <Image
-                      src={area.hero.visual.src}
-                      alt={area.hero.visual.alt}
-                      fill
-                      sizes="(min-width: 1024px) 352px, 80vw"
-                      className="object-contain"
-                      priority
-                    />
-                  ) : null}
-                </div>
-                {area.hero.visual?.credit ? (
-                  <p className="text-xs text-neutral-500">{area.hero.visual.credit}</p>
-                ) : null}
-              </div>
-              <div className="flex flex-col items-end gap-6">
-                <dl className="flex flex-col items-end gap-4 text-right text-xs text-neutral-500 sm:text-sm">
+                <dl className="flex flex-wrap gap-x-6 gap-y-3 text-sm text-neutral-700 sm:text-base">
                   {area.hero.stats.map((stat) => (
-                    <div key={stat.label} className="flex flex-col items-end">
-                      <dt className="font-semibold uppercase tracking-wide">{stat.label}</dt>
-                      <dd className="mt-1 text-sm font-medium text-neutral-700 sm:text-base">{stat.value}</dd>
-                      {stat.note ? (
-                        <dd className="mt-1 text-[0.7rem] leading-5 text-neutral-500 sm:text-xs">{stat.note}</dd>
-                      ) : null}
+                    <div
+                      key={stat.label}
+                      className="flex items-baseline gap-2"
+                    >
+                      <dt className="font-semibold text-neutral-500">{stat.label}</dt>
+                      <span aria-hidden="true" className="text-neutral-300">
+                        ：
+                      </span>
+                      <dd className="font-medium text-neutral-800">{stat.value}</dd>
                     </div>
                   ))}
                 </dl>
-                <div className="flex w-full max-w-xl flex-col items-end gap-3 text-right">
-                  <p className="text-base font-semibold text-neutral-800 sm:text-lg">{area.hero.tagline}</p>
-                  <p className="text-sm leading-7 text-neutral-700 sm:text-base">{area.hero.narrative}</p>
+              </div>
+              <div className="relative flex w-full items-center justify-center">
+                <div className="relative h-auto w-full max-w-[26rem] overflow-hidden rounded-3xl border border-neutral-200 bg-neutral-50 p-6 shadow-sm">
+                  <Image
+                    src="/area-visuals/area-detail-hero.png"
+                    alt={area.hero.visual?.alt ?? `${area.name}のイメージ`}
+                    width={640}
+                    height={480}
+                    className="h-full w-full object-cover"
+                    priority
+                  />
                 </div>
               </div>
             </div>
@@ -315,7 +304,7 @@ export default function CraftAreaPage({ params }: CraftAreaPageProps) {
         </section>
 
         <section className="mx-auto w-full max-w-6xl px-4 sm:px-6 lg:px-8">
-          <div className="rounded-3xl bg-gradient-to-br from-brand-500/10 via-brand-500/5 to-white p-8 shadow-sm">
+          <div className="rounded-3xl border border-neutral-200 bg-white p-8 shadow-sm">
             <div className="flex flex-col gap-6 lg:flex-row lg:items-center lg:justify-between">
               <div>
                 <p className="text-sm font-semibold uppercase tracking-widest text-brand-600">支援・連絡先</p>
