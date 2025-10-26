@@ -9,7 +9,7 @@ export default function AreaGrid({ areas }: AreaGridProps) {
   return (
     <section
       aria-label="産地一覧"
-      className="mx-auto mt-16 w-full max-w-6xl px-4 sm:px-6 lg:px-8"
+      className="mx-auto w-full max-w-6xl px-4 sm:px-6 lg:px-8"
     >
       <div className="flex items-baseline justify-between gap-4">
         <div>
