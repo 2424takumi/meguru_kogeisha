@@ -23,6 +23,7 @@ type VoteDetailFormProps = {
   status: VoteStatus
   startAt: string
   endAt: string
+  showOptionDescriptions?: boolean
 }
 
 export default function VoteDetailForm({
@@ -38,13 +39,16 @@ export default function VoteDetailForm({
   status,
   startAt,
   endAt,
+  showOptionDescriptions = true,
 }: VoteDetailFormProps) {
   const router = useRouter()
   const fieldsetLegendId = useId()
   const commentCounterId = useId()
   const isMultiple = voteType === "multiple"
+  const isLikert = voteType === "likert5" && options.length === 5
   const commentLabelText =
     commentLabel ?? (commentRequired ? "コメント (必須)" : "コメント (任意)")
+  const sizeClasses = ["h-12 w-12", "h-11 w-11", "h-10 w-10", "h-11 w-11", "h-12 w-12"] as const
 
   const handleSubmitSuccess = useCallback(
     (selection: string[]) => {
@@ -129,37 +133,97 @@ export default function VoteDetailForm({
         <legend id={fieldsetLegendId} className="sr-only">
           投票先を選択
         </legend>
-        <div className="grid gap-3 sm:grid-cols-2">
-          {options.map((option) => {
-            const isSelected = selectedOptionIds.includes(option.id)
-            const optionLabelId = `vote-detail-${option.id}-label`
-            return (
-              <label
-                key={option.id}
-                className={`flex h-full flex-col justify-between rounded-2xl border p-4 transition focus-within:outline focus-within:outline-2 focus-within:outline-offset-4 focus-within:outline-brand-500 hover:border-brand-500/50 hover:bg-brand-500/5 ${
-                  isSelected ? "border-brand-500 bg-brand-500/10 ring-4 ring-brand-500/10" : "border-neutral-200/80 bg-neutral-50"
-                } ${hasSubmitted ? "opacity-80" : ""}`}
-              >
-                <div className="space-y-2">
-                  <span id={optionLabelId} className="text-base font-semibold text-neutral-900">
-                    {option.label}
-                  </span>
-                  <span className="text-sm text-neutral-600">{option.description}</span>
-                </div>
-                <input
-                  type={isMultiple ? "checkbox" : "radio"}
-                  name="vote-detail-option"
-                  value={option.id}
-                  checked={isSelected}
-                  disabled={hasSubmitted}
-                  onChange={() => handleOptionToggle(option.id)}
-                  className="sr-only"
-                  aria-labelledby={optionLabelId}
-                />
-              </label>
-            )
-          })}
-        </div>
+        {isLikert ? (
+          <div className="space-y-3">
+            <div className="flex items-end justify-between text-xs font-medium text-neutral-500 sm:text-sm">
+              <span>強く反対</span>
+              <span>強く賛成</span>
+            </div>
+            <div className="flex items-center justify-between gap-2">
+              {options.map((option, index) => {
+                const isSelected = selectedOptionIds.includes(option.id)
+                const optionInputId = `vote-detail-${option.id}`
+                const size = sizeClasses[index] ?? sizeClasses[sizeClasses.length - 1]
+                return (
+                  <label
+                    key={option.id}
+                    htmlFor={optionInputId}
+                    className={`flex flex-col items-center gap-2 transition focus-within:outline focus-within:outline-2 focus-within:outline-offset-4 focus-within:outline-brand-500 ${
+                      hasSubmitted ? "cursor-default opacity-70" : "cursor-pointer"
+                    }`}
+                  >
+                    <input
+                      id={optionInputId}
+                      type={isMultiple ? "checkbox" : "radio"}
+                      name="vote-detail-option"
+                      value={option.id}
+                      checked={isSelected}
+                      disabled={hasSubmitted}
+                      onChange={() => handleOptionToggle(option.id)}
+                      className="peer sr-only"
+                      aria-label={option.label}
+                    />
+                    <span
+                      aria-hidden="true"
+                      className={`flex items-center justify-center rounded-full border transition ${size} ${
+                        isSelected
+                          ? "border-brand-500 bg-brand-500 shadow-[0_0_0_4px_rgba(159,53,58,0.18)]"
+                          : "border-neutral-300 bg-neutral-50"
+                      } peer-focus-visible:ring-2 peer-focus-visible:ring-brand-500 peer-focus-visible:ring-offset-2`}
+                    >
+                      <span
+                        className={`h-2.5 w-2.5 rounded-full transition-transform ${
+                          isSelected ? "scale-100 bg-white" : "scale-0 bg-transparent"
+                        }`}
+                      />
+                    </span>
+                    <span
+                      className={`text-[11px] font-semibold sm:text-xs ${
+                        isSelected ? "text-brand-600" : "text-neutral-500"
+                      }`}
+                    >
+                      {option.label}
+                    </span>
+                  </label>
+                )
+              })}
+            </div>
+          </div>
+        ) : (
+          <div className="grid gap-3 sm:grid-cols-2">
+            {options.map((option) => {
+              const isSelected = selectedOptionIds.includes(option.id)
+              const optionLabelId = `vote-detail-${option.id}-label`
+              return (
+                <label
+                  key={option.id}
+                  className={`flex h-full flex-col justify-between rounded-2xl border p-4 transition focus-within:outline focus-within:outline-2 focus-within:outline-offset-4 focus-within:outline-brand-500 hover:border-brand-500/50 hover:bg-brand-500/5 ${
+                    isSelected ? "border-brand-500 bg-brand-500/10 ring-4 ring-brand-500/10" : "border-neutral-200/80 bg-neutral-50"
+                  } ${hasSubmitted ? "opacity-80" : ""}`}
+                >
+                  <div className="space-y-2">
+                    <span id={optionLabelId} className="text-base font-semibold text-neutral-900">
+                      {option.label}
+                    </span>
+                    {showOptionDescriptions ? (
+                      <span className="text-sm text-neutral-600">{option.description}</span>
+                    ) : null}
+                  </div>
+                  <input
+                    type={isMultiple ? "checkbox" : "radio"}
+                    name="vote-detail-option"
+                    value={option.id}
+                    checked={isSelected}
+                    disabled={hasSubmitted}
+                    onChange={() => handleOptionToggle(option.id)}
+                    className="sr-only"
+                    aria-labelledby={optionLabelId}
+                  />
+                </label>
+              )
+            })}
+          </div>
+        )}
       </fieldset>
       {selectedOptionDetails.length > 0 ? (
         <div className="space-y-2 text-sm leading-6 text-neutral-600">
@@ -170,7 +234,9 @@ export default function VoteDetailForm({
             {selectedOptionDetails.map((option) => (
               <li key={option.id}>
                 <p className="text-base font-semibold text-neutral-900">{option.label}</p>
-                <p className="text-sm text-neutral-600">{option.description}</p>
+                {showOptionDescriptions ? (
+                  <p className="text-sm text-neutral-600">{option.description}</p>
+                ) : null}
               </li>
             ))}
           </ul>
