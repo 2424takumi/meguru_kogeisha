@@ -107,32 +107,31 @@ export default function WeeklyVote({ title, question, description, options }: We
                     )
                   })}
                 </div>
-                <div className="mt-4 space-y-4 rounded-2xl border border-neutral-200/80 bg-neutral-50 p-4 text-sm leading-6 text-neutral-600">
-                  {selectedOptionDetail ? (
-                    <>
-                      <p className="font-semibold text-neutral-900">{selectedOptionDetail.label}</p>
-                      <p className="mt-2">{selectedOptionDetail.description}</p>
-                      {!hasSubmitted && (
-                        <div className="space-y-2 text-left">
-                          <label htmlFor="weekly-vote-comment-mobile" className="text-xs font-semibold uppercase tracking-wide text-neutral-500">
-                            コメント (任意)
-                          </label>
-                          <textarea
-                            id="weekly-vote-comment-mobile"
-                            name="weekly-vote-comment"
-                            value={comment}
-                            onChange={(event) => setComment(event.target.value)}
-                            placeholder="この意見にした理由を伝える。"
-                            rows={4}
-                            className="w-full rounded-2xl border border-neutral-200/80 bg-white px-4 py-3 text-sm text-neutral-700 placeholder-neutral-400 focus:border-brand-500 focus:outline-none focus:ring-4 focus:ring-brand-500/10"
-                          />
-                        </div>
-                      )}
-                    </>
-                  ) : (
-                    <p className="text-neutral-500">選択すると詳しい説明が表示されます。</p>
-                  )}
-                </div>
+                {selectedOptionDetail && (
+                  <div className="mt-4 space-y-4 text-sm leading-6 text-neutral-600">
+                    <p className="font-semibold text-neutral-900">{selectedOptionDetail.label}</p>
+                    <p className="mt-2">{selectedOptionDetail.description}</p>
+                    {!hasSubmitted && (
+                      <div className="space-y-2 text-left">
+                        <label
+                          htmlFor="weekly-vote-comment-mobile"
+                          className="text-xs font-semibold uppercase tracking-wide text-neutral-500"
+                        >
+                          コメント (任意)
+                        </label>
+                        <textarea
+                          id="weekly-vote-comment-mobile"
+                          name="weekly-vote-comment"
+                          value={comment}
+                          onChange={(event) => setComment(event.target.value)}
+                          placeholder="この意見にした理由を伝える。"
+                          rows={4}
+                          className="w-full rounded-2xl border border-neutral-200/80 bg-white px-4 py-3 text-sm text-neutral-700 placeholder-neutral-400 focus:border-brand-500 focus:outline-none focus:ring-4 focus:ring-brand-500/10"
+                        />
+                      </div>
+                    )}
+                  </div>
+                )}
               </div>
               <div className="hidden gap-4 sm:grid sm:grid-cols-5">
                 {options.map((option) => {
