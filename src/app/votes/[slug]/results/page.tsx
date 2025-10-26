@@ -2,6 +2,7 @@ import Link from "next/link"
 import type { Metadata } from "next"
 import { notFound } from "next/navigation"
 
+import MarkdownText from "@/components/MarkdownText"
 import SiteFooter from "@/components/layout/SiteFooter"
 import type { VoteResultDetail } from "@/data/vote-details"
 import { getVoteDefinition, getVoteResults, listVoteSlugs, VoteError } from "@/lib/votes/service"
@@ -75,6 +76,7 @@ export default async function VoteResultPage({
     const percentage = distributionPoint?.percent ?? 0
     return { ...option, count, percentage }
   })
+  const optionsWithoutVotes = optionsWithPercentage.filter((option) => option.count === 0)
   const selectedOptions = vote.options.filter((option) => selectedOptionIds.includes(option.id))
   const formattedUpdatedAt = updatedAtFormatter.format(new Date(vote.updatedAt))
 
@@ -119,57 +121,59 @@ export default async function VoteResultPage({
               <div className="space-y-8">
                 <p className="text-xs font-semibold uppercase tracking-[0.35em] text-brand-600">Result</p>
                 <h1 className="text-3xl font-semibold text-neutral-900 sm:text-4xl">{vote.title}</h1>
-                <div className="space-y-3 text-sm leading-6 text-neutral-700 sm:text-base">
-                  <p className="font-semibold text-neutral-800">{vote.question}</p>
-                  <p>{vote.description}</p>
-                </div>
-                <div className="flex flex-wrap items-center gap-3 text-sm">
-                  <a
-                    href="#vote-distribution-heading"
-                    className="inline-flex items-center rounded-full bg-brand-600 px-5 py-2 text-sm font-semibold text-white transition hover:bg-brand-700 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-brand-500"
-                  >
-                    集計を見る
-                  </a>
-                  <Link
-                    href={`/votes/${vote.slug}`}
-                    className="inline-flex items-center font-semibold text-brand-600 transition hover:text-brand-700 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-brand-500"
-                  >
-                    投票の背景をもう一度読む
-                  </Link>
+                <div>
+                  <p className="text-sm font-medium leading-6 text-neutral-700">{vote.question}</p>
                 </div>
               </div>
-              <div className="flex flex-col gap-4 rounded-3xl border border-neutral-200/80 bg-neutral-50 p-6 shadow-sm">
-                <p className="text-xs font-semibold uppercase tracking-[0.25em] text-neutral-500">集計状況</p>
-                <div className="flex flex-col gap-1 text-sm">
-                  <span className="text-neutral-500">更新日時</span>
-                  <span className="text-lg font-semibold text-neutral-900">{formattedUpdatedAt}</span>
-                </div>
-                <div className="flex flex-col gap-1 text-sm">
-                  <span className="text-neutral-500">総票数</span>
-                  <span className="text-lg font-semibold text-brand-700">{totalVotes.toLocaleString()} 票</span>
-                </div>
-                {typeof results.avg === "number" ? (
-                  <div className="flex flex-col gap-1 text-sm">
-                    <span className="text-neutral-500">平均スコア</span>
-                    <span className="text-lg font-semibold text-brand-600">{results.avg.toFixed(2)}</span>
-                  </div>
-                ) : null}
-                <p className="text-xs leading-5 text-neutral-500">
-                  本票数はプロトタイピング用のサンプルデータです。正式な調査開始後に更新されます。
-                </p>
-                {selectedOptions.length > 0 ? (
-                  <div className="mt-2 rounded-2xl border border-brand-200/70 bg-white px-4 py-3 text-sm leading-6 text-neutral-600">
-                    <p className="text-xs font-semibold uppercase tracking-wide text-brand-600">あなたの投票</p>
-                    <ul className="mt-2 space-y-2">
-                      {selectedOptions.map((option) => (
-                        <li key={option.id}>
-                          <p className="text-base font-semibold text-neutral-900">{option.label}</p>
-                          <p className="mt-1 text-sm text-neutral-600">{option.description}</p>
+              <div className="flex flex-col gap-4">
+                {optionsWithoutVotes.length > 0 ? (
+                  <div className="flex flex-col gap-3 rounded-3xl border border-neutral-200/80 bg-white p-6 shadow-sm">
+                    <p className="text-xs font-semibold uppercase tracking-[0.25em] text-neutral-500">投票結果のない立場</p>
+                    <p className="text-xs leading-5 text-neutral-500">
+                      まだ票が集まっていない選択肢です。調査の更新時に変化が反映されます。
+                    </p>
+                    <ul className="space-y-2">
+                      {optionsWithoutVotes.map((option) => (
+                        <li key={option.id} className="rounded-2xl border border-neutral-100 px-4 py-3">
+                          <p className="text-sm font-semibold text-neutral-900">{option.label}</p>
                         </li>
                       ))}
                     </ul>
                   </div>
                 ) : null}
+                <div className="flex flex-col gap-4 rounded-3xl border border-neutral-200/80 bg-neutral-50 p-6 shadow-sm">
+                  <p className="text-xs font-semibold uppercase tracking-[0.25em] text-neutral-500">集計状況</p>
+                  <div className="flex flex-col gap-1 text-sm">
+                    <span className="text-neutral-500">更新日時</span>
+                    <span className="text-lg font-semibold text-neutral-900">{formattedUpdatedAt}</span>
+                  </div>
+                  <div className="flex flex-col gap-1 text-sm">
+                    <span className="text-neutral-500">総票数</span>
+                    <span className="text-lg font-semibold text-brand-700">{totalVotes.toLocaleString()} 票</span>
+                  </div>
+                  {typeof results.avg === "number" ? (
+                    <div className="flex flex-col gap-1 text-sm">
+                      <span className="text-neutral-500">平均スコア</span>
+                      <span className="text-lg font-semibold text-brand-600">{results.avg.toFixed(2)}</span>
+                    </div>
+                  ) : null}
+                  <p className="text-xs leading-5 text-neutral-500">
+                    本票数はプロトタイピング用のサンプルデータです。正式な調査開始後に更新されます。
+                  </p>
+                  {selectedOptions.length > 0 ? (
+                    <div className="mt-2 rounded-2xl border border-brand-200/70 bg-white px-4 py-3 text-sm leading-6 text-neutral-600">
+                      <p className="text-xs font-semibold uppercase tracking-wide text-brand-600">あなたの投票</p>
+                      <ul className="mt-2 space-y-2">
+                        {selectedOptions.map((option) => (
+                          <li key={option.id}>
+                            <p className="text-base font-semibold text-neutral-900">{option.label}</p>
+                            <MarkdownText content={option.description} className="mt-1" />
+                          </li>
+                        ))}
+                      </ul>
+                    </div>
+                  ) : null}
+                </div>
               </div>
             </div>
           </div>
@@ -222,9 +226,9 @@ export default async function VoteResultPage({
                           aria-hidden="true"
                         />
                       </div>
-                      <div className="space-y-1 text-sm leading-6 text-neutral-600 sm:text-base">
-                        <p>{option.description}</p>
-                        <p className="text-neutral-500">{option.narrative}</p>
+                      <div className="space-y-2">
+                        <MarkdownText content={option.description} />
+                        <MarkdownText content={option.narrative} variant="muted" />
                       </div>
                     </li>
                   )
@@ -265,7 +269,7 @@ export default async function VoteResultPage({
                   <ul className="mt-4 space-y-3 text-sm leading-6 text-neutral-600">
                     {voice.highlights.map((highlight, index) => (
                       <li key={`${voice.position}-${index}`} className="rounded-xl bg-white p-4 shadow-sm">
-                        {highlight}
+                        <MarkdownText content={highlight} />
                       </li>
                     ))}
                   </ul>
@@ -274,6 +278,23 @@ export default async function VoteResultPage({
             </div>
           </div>
         </section>
+
+        <div className="mx-auto w-full max-w-5xl px-4 sm:px-6 lg:px-8">
+          <div className="flex flex-wrap items-center gap-3 rounded-3xl border border-neutral-200/80 bg-white px-6 py-5 text-sm shadow-sm">
+            <a
+              href="#vote-distribution-heading"
+              className="inline-flex items-center rounded-full bg-brand-600 px-5 py-2 text-sm font-semibold text-white transition hover:bg-brand-700 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-brand-500"
+            >
+              集計を見る
+            </a>
+            <Link
+              href={`/votes/${vote.slug}`}
+              className="inline-flex items-center font-semibold text-brand-600 transition hover:text-brand-700 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-brand-500"
+            >
+              投票の背景をもう一度読む
+            </Link>
+          </div>
+        </div>
       </main>
       <SiteFooter />
     </div>
