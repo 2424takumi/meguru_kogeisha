@@ -3,6 +3,7 @@ import type { Metadata } from "next"
 import { notFound } from "next/navigation"
 
 import SiteFooter from "@/components/layout/SiteFooter"
+import VoteDetailForm from "@/components/votes/VoteDetailForm"
 import { getVoteResultDetail, listVoteResultSlugs } from "@/data/vote-details"
 
 type VoteResultPageProps = {
@@ -79,14 +80,20 @@ export default function VoteResultPage({ params, searchParams }: VoteResultPageP
                 <li className="text-neutral-900">{vote.title}</li>
               </ol>
             </nav>
-            <div className="grid gap-6 lg:grid-cols-[minmax(0,1.5fr)_minmax(0,1fr)] lg:items-end">
-              <div className="space-y-6">
+            <div className="grid gap-12 lg:grid-cols-[minmax(0,1.5fr)_minmax(0,1fr)] lg:items-end">
+              <div className="space-y-8">
                 <p className="text-xs font-semibold uppercase tracking-[0.38em] text-brand-600">RESULT</p>
                 <h1 className="text-3xl font-semibold text-neutral-900 sm:text-4xl">{vote.title}</h1>
                 <div className="space-y-3 text-sm leading-6 text-neutral-700 sm:text-base">
                   <p className="font-semibold text-neutral-800">{vote.question}</p>
                   <p>{vote.description}</p>
                 </div>
+                <VoteDetailForm
+                  question={vote.question}
+                  options={vote.options}
+                  resultSlug={vote.slug}
+                  initialSelectedOptionId={selectedOptionId}
+                />
               </div>
               <div className="flex flex-col items-start gap-4 rounded-3xl border border-brand-200/60 bg-white/80 p-6 shadow-md shadow-brand-500/10 backdrop-blur">
                 <p className="text-xs font-semibold uppercase tracking-[0.25em] text-neutral-500">集計状況</p>

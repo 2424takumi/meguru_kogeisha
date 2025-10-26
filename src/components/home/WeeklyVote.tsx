@@ -1,13 +1,14 @@
 "use client"
 
 import { useMemo, useState } from "react"
+import Link from "next/link"
 import { useRouter } from "next/navigation"
 import type { WeeklyVoteOption } from "@/data/home"
 
 type WeeklyVoteProps = {
   title: string
   question: string
-  description: string
+  description: string[]
   options: WeeklyVoteOption[]
   resultSlug: string
 }
@@ -58,9 +59,17 @@ export default function WeeklyVote({ title, question, description, options, resu
             <h2 id="weekly-vote-heading" className="mt-3 text-2xl font-semibold text-neutral-900 sm:mt-4 sm:text-3xl">
               {question}
             </h2>
-            <p className="mt-4 text-sm leading-5 text-neutral-600 sm:text-base">
-              {description}
-            </p>
+            <div className="mt-4 space-y-1.5 text-sm leading-6 text-neutral-600 sm:space-y-2 sm:text-base">
+              {description.map((line, index) => (
+                <p key={index}>{line}</p>
+              ))}
+            </div>
+            <Link
+              href={`/votes/${resultSlug}`}
+              className="mt-3 inline-flex items-center gap-1 text-[11px] font-semibold text-brand-600 underline-offset-4 transition hover:text-brand-700 hover:underline focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-brand-500 sm:text-xs"
+            >
+              さらに詳しい説明をみる
+            </Link>
           </div>
           <form onSubmit={handleSubmit} className="flex flex-col gap-5">
             <fieldset className="space-y-4">
