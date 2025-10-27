@@ -435,7 +435,7 @@ export default function VoteDetailForm({
       ) : (
         <div className="flex flex-wrap items-center gap-3">
           <a
-            href={`/votes/${resultSlug}/results#vote-voices-heading`}
+            href={`/votes/${resultSlug}/results#vote-distribution-heading`}
             className="inline-flex items-center justify-center rounded-full bg-brand-600 px-6 py-3 text-sm font-semibold text-white transition hover:bg-brand-700 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-brand-500"
           >
             みんなの意見を見る
