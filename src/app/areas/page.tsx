@@ -1,7 +1,8 @@
-import AreaGrid from "@/components/home/AreaGrid";
-import SiteFooter from "@/components/layout/SiteFooter";
-import { craftAreas } from "@/data/home";
-import Link from "next/link";
+import JapanCraftBrowser from "@/components/areas/JapanCraftBrowser"
+import AreaGrid from "@/components/home/AreaGrid"
+import SiteFooter from "@/components/layout/SiteFooter"
+import { craftAreas } from "@/data/home"
+import Link from "next/link"
 
 export default function AreasPage() {
   return (
@@ -10,12 +11,8 @@ export default function AreasPage() {
         <section className="border-b border-neutral-200 bg-brand-50/40">
           <div className="mx-auto flex w-full max-w-6xl flex-col gap-4 px-4 py-12 sm:px-6 lg:flex-row lg:items-end lg:justify-between lg:py-16 lg:px-8">
             <div>
-              <p className="text-xs font-semibold uppercase tracking-widest text-brand-600">
-                Areas
-              </p>
-              <h1 className="mt-3 text-3xl font-semibold text-neutral-900 sm:text-4xl">
-                産地をめぐる
-              </h1>
+              <p className="text-xs font-semibold uppercase tracking-widest text-brand-600">Areas</p>
+              <h1 className="mt-3 text-3xl font-semibold text-neutral-900 sm:text-4xl">産地をめぐる</h1>
               <p className="mt-4 max-w-2xl text-sm leading-relaxed text-neutral-600 sm:text-base">
                 越前和紙から東京和楽器まで、日本各地の工芸が生まれる土地を取材し、職人や工房との関係性を記録しています。
                 気になるカードを選んで、ストーリーや訪問のヒントに触れてください。
@@ -35,6 +32,8 @@ export default function AreasPage() {
           </div>
         </section>
 
+        <JapanCraftBrowser />
+
         <section className="py-12 sm:py-16">
           <AreaGrid areas={craftAreas} />
         </section>
@@ -42,5 +41,5 @@ export default function AreasPage() {
 
       <SiteFooter />
     </div>
-  );
+  )
 }

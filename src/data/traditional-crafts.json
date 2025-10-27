@@ -1,0 +1,170 @@
+[
+  {
+    "id": "aizu-nuri",
+    "name_ja": "会津塗",
+    "name_en": "Aizu Lacquerware",
+    "category": "漆器",
+    "prefCode": "07",
+    "tags": [
+      "漆",
+      "堅牢"
+    ],
+    "prefName": "福島県",
+    "prefNameEn": "Fukushima",
+    "region": "東北"
+  },
+  {
+    "id": "bizen-yaki",
+    "name_ja": "備前焼",
+    "name_en": "Bizen Stoneware",
+    "category": "陶磁器",
+    "prefCode": "33",
+    "tags": [
+      "登り窯",
+      "焼締"
+    ],
+    "prefName": "岡山県",
+    "prefNameEn": "Okayama",
+    "region": "中国"
+  },
+  {
+    "id": "nishijin-ori",
+    "name_ja": "西陣織",
+    "name_en": "Nishijin Textiles",
+    "category": "染織",
+    "prefCode": "26",
+    "tags": [
+      "絹織物",
+      "帯"
+    ],
+    "prefName": "京都府",
+    "prefNameEn": "Kyoto",
+    "region": "近畿"
+  },
+  {
+    "id": "tsubame-sanjo-kougei",
+    "name_ja": "燕三条金工",
+    "name_en": "Tsubame-Sanjo Metalwork",
+    "category": "金工",
+    "prefCode": "15",
+    "tags": [
+      "打出し",
+      "刃物"
+    ],
+    "prefName": "新潟県",
+    "prefNameEn": "Niigata",
+    "region": "中部"
+  },
+  {
+    "id": "hakata-ori",
+    "name_ja": "博多織",
+    "name_en": "Hakata Textiles",
+    "category": "染織",
+    "prefCode": "40",
+    "tags": [
+      "帯",
+      "献上柄"
+    ],
+    "prefName": "福岡県",
+    "prefNameEn": "Fukuoka",
+    "region": "九州・沖縄"
+  },
+  {
+    "id": "edo-kiriko",
+    "name_ja": "江戸切子",
+    "name_en": "Edo Faceted Glass",
+    "category": "その他",
+    "prefCode": "13",
+    "tags": [
+      "ガラス",
+      "カット"
+    ],
+    "prefName": "東京都",
+    "prefNameEn": "Tokyo",
+    "region": "関東"
+  },
+  {
+    "id": "odate-magewappa",
+    "name_ja": "大館曲げわっぱ",
+    "name_en": "Odate Bentwood",
+    "category": "木工",
+    "prefCode": "05",
+    "tags": [
+      "秋田杉",
+      "弁当箱"
+    ],
+    "prefName": "秋田県",
+    "prefNameEn": "Akita",
+    "region": "東北"
+  },
+  {
+    "id": "mino-washi",
+    "name_ja": "美濃和紙",
+    "name_en": "Mino Washi",
+    "category": "和紙",
+    "prefCode": "21",
+    "tags": [
+      "本美濃紙",
+      "照明"
+    ],
+    "prefName": "岐阜県",
+    "prefNameEn": "Gifu",
+    "region": "中部"
+  },
+  {
+    "id": "takaoka-douki",
+    "name_ja": "高岡銅器",
+    "name_en": "Takaoka Metal Casting",
+    "category": "金工",
+    "prefCode": "16",
+    "tags": [
+      "鋳造",
+      "仏具"
+    ],
+    "prefName": "富山県",
+    "prefNameEn": "Toyama",
+    "region": "中部"
+  },
+  {
+    "id": "kyo-butsudan",
+    "name_ja": "京仏壇",
+    "name_en": "Kyoto Buddhist Altars",
+    "category": "仏壇・仏具",
+    "prefCode": "26",
+    "tags": [
+      "蒔絵",
+      "金箔"
+    ],
+    "prefName": "京都府",
+    "prefNameEn": "Kyoto",
+    "region": "近畿"
+  },
+  {
+    "id": "okinawa-ryukyu-glass",
+    "name_ja": "琉球ガラス",
+    "name_en": "Ryukyu Glassware",
+    "category": "その他",
+    "prefCode": "47",
+    "tags": [
+      "宙吹き",
+      "再生ガラス"
+    ],
+    "prefName": "沖縄県",
+    "prefNameEn": "Okinawa",
+    "region": "未分類"
+  },
+  {
+    "id": "satsuma-yaki",
+    "name_ja": "薩摩焼",
+    "name_en": "Satsuma Ware",
+    "category": "陶磁器",
+    "prefCode": "46",
+    "tags": [
+      "白薩摩",
+      "錦手"
+    ],
+    "prefName": "鹿児島県",
+    "prefNameEn": "Kagoshima",
+    "region": "九州・沖縄"
+  }
+]
