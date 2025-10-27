@@ -1,0 +1,92 @@
+[
+  {
+    "id": "aizu-nuri",
+    "name_ja": "会津塗",
+    "name_en": "Aizu Lacquerware",
+    "category": "漆器",
+    "prefCode": "07",
+    "prefName": "福島県",
+    "region": "北海道・東北"
+  },
+  {
+    "id": "tsugaru-nuri",
+    "name_ja": "津軽塗",
+    "name_en": "Tsugaru Lacquerware",
+    "category": "漆器",
+    "prefCode": "02",
+    "prefName": "青森県",
+    "region": "北海道・東北"
+  },
+  {
+    "id": "nambu-tekki",
+    "name_ja": "南部鉄器",
+    "name_en": "Nambu Ironware",
+    "category": "金工",
+    "prefCode": "03",
+    "prefName": "岩手県",
+    "region": "北海道・東北"
+  },
+  {
+    "id": "naruko-kokeshi",
+    "name_ja": "鳴子こけし",
+    "name_en": "Naruko Kokeshi Dolls",
+    "category": "木工",
+    "prefCode": "04",
+    "prefName": "宮城県",
+    "region": "北海道・東北"
+  },
+  {
+    "id": "mashiko-yaki",
+    "name_ja": "益子焼",
+    "name_en": "Mashiko Ware",
+    "category": "陶磁器",
+    "prefCode": "09",
+    "prefName": "栃木県",
+    "region": "関東"
+  },
+  {
+    "id": "edo-kiriko",
+    "name_ja": "江戸切子",
+    "name_en": "Edo Kiriko Cut Glass",
+    "category": "その他",
+    "prefCode": "13",
+    "prefName": "東京都",
+    "region": "関東"
+  },
+  {
+    "id": "wajima-nuri",
+    "name_ja": "輪島塗",
+    "name_en": "Wajima Lacquerware",
+    "category": "漆器",
+    "prefCode": "17",
+    "prefName": "石川県",
+    "region": "中部"
+  },
+  {
+    "id": "yuki-tsumugi",
+    "name_ja": "結城紬",
+    "name_en": "Yuki Tsumugi Silk",
+    "category": "染織",
+    "prefCode": "08",
+    "prefName": "茨城県",
+    "region": "関東"
+  },
+  {
+    "id": "arita-yaki",
+    "name_ja": "有田焼",
+    "name_en": "Arita Porcelain",
+    "category": "陶磁器",
+    "prefCode": "41",
+    "prefName": "佐賀県",
+    "region": "九州・沖縄"
+  },
+  {
+    "id": "hakata-ori",
+    "name_ja": "博多織",
+    "name_en": "Hakata Textiles",
+    "category": "染織",
+    "prefCode": "40",
+    "prefName": "福岡県",
+    "region": "九州・沖縄"
+  }
+]

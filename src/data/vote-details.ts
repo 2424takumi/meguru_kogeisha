@@ -11,6 +11,7 @@ export type VoteOptionBase = {
 
 export type VoteOptionDetail = VoteOptionBase & {
   narrative: string
+  voicePositions?: string[]
 }
 
 type VoteInsight = {
@@ -106,6 +107,7 @@ export const voteResultDetails: VoteResultDetail[] = [
         valueKey: "-2",
         numericValue: -2,
         narrative: "動物福祉や国際世論を重視する声が中心。音色変化より社会的責任を優先すべきという意見が目立ちました。",
+        voicePositions: ["反対に近い声"],
       },
       {
         id: "disagree",
@@ -115,6 +117,7 @@ export const voteResultDetails: VoteResultDetail[] = [
         valueKey: "-1",
         numericValue: -1,
         narrative: "品質維持との両立を模索する層。演奏会の場数を踏んだ奏者からは、素材ごとの蓄積データがほしいという要望が上がりました。",
+        voicePositions: ["反対に近い声"],
       },
       {
         id: "neutral",
@@ -124,6 +127,7 @@ export const voteResultDetails: VoteResultDetail[] = [
         valueKey: "0",
         numericValue: 0,
         narrative: "素材や流通事情の情報不足が主な理由。実験データや音の比較試聴の場づくりが求められています。",
+        voicePositions: ["慎重・中立の声"],
       },
       {
         id: "agree",
@@ -133,6 +137,7 @@ export const voteResultDetails: VoteResultDetail[] = [
         valueKey: "+1",
         numericValue: 1,
         narrative: "皮の張替え頻度やコストを踏まえ、現状維持を支持する声。代替素材研究を前向きに捉える意見も多く寄せられました。",
+        voicePositions: ["賛成に近い声"],
       },
       {
         id: "strongly-agree",
@@ -142,6 +147,7 @@ export const voteResultDetails: VoteResultDetail[] = [
         valueKey: "+2",
         numericValue: 2,
         narrative: "舞台での安定性や音の張りを評価し、伝統的な皮革の継続利用を強く願う声。狩猟・畜産副産物としての活用を提案する意見もありました。",
+        voicePositions: ["賛成に近い声"],
       },
     ],
     insights: [
@@ -274,6 +280,7 @@ export const voteResultDetails: VoteResultDetail[] = [
         valueKey: "yes",
         numericValue: 1,
         narrative: "来訪者の回遊が増え、宿泊につながると期待する声が多く集まりました。安全面の順路設計を前提に賛成する意見です。",
+        voicePositions: ["賛成に近い声"],
       },
       {
         id: "no",
@@ -283,6 +290,7 @@ export const voteResultDetails: VoteResultDetail[] = [
         valueKey: "no",
         numericValue: 0,
         narrative: "地域の高齢世帯や子育て世帯から、夜間交通と防犯に対する懸念が寄せられました。",
+        voicePositions: ["反対・慎重な声"],
       },
     ],
     insights: [
@@ -365,6 +373,7 @@ export const voteResultDetails: VoteResultDetail[] = [
         supporters: 21,
         valueKey: "focus-weaving",
         narrative: "即戦力を求める工房から支持が集まりました。織機の操作に早く慣れる狙いです。",
+        voicePositions: ["賛成に近い声"],
       },
       {
         id: "balanced",
@@ -373,6 +382,7 @@ export const voteResultDetails: VoteResultDetail[] = [
         supporters: 34,
         valueKey: "balanced",
         narrative: "学習者と地域企業から、基礎理論を押さえた上で現場に入る案が最も支持されました。",
+        voicePositions: ["中立・調整を望む声"],
       },
       {
         id: "mentorship",
@@ -381,6 +391,7 @@ export const voteResultDetails: VoteResultDetail[] = [
         supporters: 12,
         valueKey: "mentorship",
         narrative: "細やかな技術伝承を重視する声が中心ですが、指導側の負担が課題として挙がりました。",
+        voicePositions: ["反対・慎重な声"],
       },
     ],
     insights: [
@@ -466,6 +477,7 @@ export const voteResultDetails: VoteResultDetail[] = [
         supporters: 44,
         valueKey: "sand-casting",
         narrative: "小学生から参加できるプログラムとして人気。安全講習を合わせる案が出ています。",
+        voicePositions: ["賛成に近い声"],
       },
       {
         id: "patina-workshop",
@@ -474,6 +486,7 @@ export const voteResultDetails: VoteResultDetail[] = [
         supporters: 37,
         valueKey: "patina",
         narrative: "完成品に愛着が湧くとして、観光事業者から採用要望が多数寄せられました。",
+        voicePositions: ["賛成に近い声"],
       },
       {
         id: "foundry-tour",
@@ -482,6 +495,7 @@ export const voteResultDetails: VoteResultDetail[] = [
         supporters: 51,
         valueKey: "foundry",
         narrative: "職人の作業を間近で見たいという声が最も多く、参加人数コントロールが課題です。",
+        voicePositions: ["賛成に近い声", "慎重な声"],
       },
       {
         id: "design-talk",
@@ -490,6 +504,7 @@ export const voteResultDetails: VoteResultDetail[] = [
         supporters: 29,
         valueKey: "design",
         narrative: "企業の研修利用を想定したニーズ。オンライン連携の要望も挙がりました。",
+        voicePositions: ["賛成に近い声"],
       },
     ],
     insights: [
@@ -511,6 +526,7 @@ export const voteResultDetails: VoteResultDetail[] = [
         summary: "複数体験の組み合わせで滞在価値を高めたいという声です。",
         highlights: [
           "色付け体験と炉見学のセットが人気で、予約枠を調整しやすい仕組みを整えたい。",
+          "砂型づくり体験は初参加でも達成感があるので、デザイナーとの対話と組み合わせたコースを用意したい。",
         ],
       },
       {
