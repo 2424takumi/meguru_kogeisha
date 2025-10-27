@@ -1,0 +1,284 @@
+[
+  {
+    "prefCode": "01",
+    "prefName": "北海道",
+    "prefNameEn": "Hokkaido",
+    "region": "北海道"
+  },
+  {
+    "prefCode": "02",
+    "prefName": "青森県",
+    "prefNameEn": "Aomori",
+    "region": "東北"
+  },
+  {
+    "prefCode": "03",
+    "prefName": "岩手県",
+    "prefNameEn": "Iwate",
+    "region": "東北"
+  },
+  {
+    "prefCode": "04",
+    "prefName": "宮城県",
+    "prefNameEn": "Miyagi",
+    "region": "東北"
+  },
+  {
+    "prefCode": "05",
+    "prefName": "秋田県",
+    "prefNameEn": "Akita",
+    "region": "東北"
+  },
+  {
+    "prefCode": "06",
+    "prefName": "山形県",
+    "prefNameEn": "Yamagata",
+    "region": "東北"
+  },
+  {
+    "prefCode": "07",
+    "prefName": "福島県",
+    "prefNameEn": "Fukushima",
+    "region": "東北"
+  },
+  {
+    "prefCode": "08",
+    "prefName": "茨城県",
+    "prefNameEn": "Ibaraki",
+    "region": "関東"
+  },
+  {
+    "prefCode": "09",
+    "prefName": "栃木県",
+    "prefNameEn": "Tochigi",
+    "region": "関東"
+  },
+  {
+    "prefCode": "10",
+    "prefName": "群馬県",
+    "prefNameEn": "Gunma",
+    "region": "関東"
+  },
+  {
+    "prefCode": "11",
+    "prefName": "埼玉県",
+    "prefNameEn": "Saitama",
+    "region": "関東"
+  },
+  {
+    "prefCode": "12",
+    "prefName": "千葉県",
+    "prefNameEn": "Chiba",
+    "region": "関東"
+  },
+  {
+    "prefCode": "13",
+    "prefName": "東京都",
+    "prefNameEn": "Tokyo",
+    "region": "関東"
+  },
+  {
+    "prefCode": "14",
+    "prefName": "神奈川県",
+    "prefNameEn": "Kanagawa",
+    "region": "関東"
+  },
+  {
+    "prefCode": "15",
+    "prefName": "新潟県",
+    "prefNameEn": "Niigata",
+    "region": "中部"
+  },
+  {
+    "prefCode": "16",
+    "prefName": "富山県",
+    "prefNameEn": "Toyama",
+    "region": "中部"
+  },
+  {
+    "prefCode": "17",
+    "prefName": "石川県",
+    "prefNameEn": "Ishikawa",
+    "region": "中部"
+  },
+  {
+    "prefCode": "18",
+    "prefName": "福井県",
+    "prefNameEn": "Fukui",
+    "region": "中部"
+  },
+  {
+    "prefCode": "19",
+    "prefName": "山梨県",
+    "prefNameEn": "Yamanashi",
+    "region": "中部"
+  },
+  {
+    "prefCode": "20",
+    "prefName": "長野県",
+    "prefNameEn": "Nagano",
+    "region": "中部"
+  },
+  {
+    "prefCode": "21",
+    "prefName": "岐阜県",
+    "prefNameEn": "Gifu",
+    "region": "中部"
+  },
+  {
+    "prefCode": "22",
+    "prefName": "静岡県",
+    "prefNameEn": "Shizuoka",
+    "region": "中部"
+  },
+  {
+    "prefCode": "23",
+    "prefName": "愛知県",
+    "prefNameEn": "Aichi",
+    "region": "中部"
+  },
+  {
+    "prefCode": "24",
+    "prefName": "三重県",
+    "prefNameEn": "Mie",
+    "region": "近畿"
+  },
+  {
+    "prefCode": "25",
+    "prefName": "滋賀県",
+    "prefNameEn": "Shiga",
+    "region": "近畿"
+  },
+  {
+    "prefCode": "26",
+    "prefName": "京都府",
+    "prefNameEn": "Kyoto",
+    "region": "近畿"
+  },
+  {
+    "prefCode": "27",
+    "prefName": "大阪府",
+    "prefNameEn": "Osaka",
+    "region": "近畿"
+  },
+  {
+    "prefCode": "28",
+    "prefName": "兵庫県",
+    "prefNameEn": "Hyogo",
+    "region": "近畿"
+  },
+  {
+    "prefCode": "29",
+    "prefName": "奈良県",
+    "prefNameEn": "Nara",
+    "region": "近畿"
+  },
+  {
+    "prefCode": "30",
+    "prefName": "和歌山県",
+    "prefNameEn": "Wakayama",
+    "region": "近畿"
+  },
+  {
+    "prefCode": "31",
+    "prefName": "鳥取県",
+    "prefNameEn": "Tottori",
+    "region": "中国"
+  },
+  {
+    "prefCode": "32",
+    "prefName": "島根県",
+    "prefNameEn": "Shimane",
+    "region": "中国"
+  },
+  {
+    "prefCode": "33",
+    "prefName": "岡山県",
+    "prefNameEn": "Okayama",
+    "region": "中国"
+  },
+  {
+    "prefCode": "34",
+    "prefName": "広島県",
+    "prefNameEn": "Hiroshima",
+    "region": "中国"
+  },
+  {
+    "prefCode": "35",
+    "prefName": "山口県",
+    "prefNameEn": "Yamaguchi",
+    "region": "中国"
+  },
+  {
+    "prefCode": "36",
+    "prefName": "徳島県",
+    "prefNameEn": "Tokushima",
+    "region": "四国"
+  },
+  {
+    "prefCode": "37",
+    "prefName": "香川県",
+    "prefNameEn": "Kagawa",
+    "region": "四国"
+  },
+  {
+    "prefCode": "38",
+    "prefName": "愛媛県",
+    "prefNameEn": "Ehime",
+    "region": "四国"
+  },
+  {
+    "prefCode": "39",
+    "prefName": "高知県",
+    "prefNameEn": "Kochi",
+    "region": "四国"
+  },
+  {
+    "prefCode": "40",
+    "prefName": "福岡県",
+    "prefNameEn": "Fukuoka",
+    "region": "九州・沖縄"
+  },
+  {
+    "prefCode": "41",
+    "prefName": "佐賀県",
+    "prefNameEn": "Saga",
+    "region": "九州・沖縄"
+  },
+  {
+    "prefCode": "42",
+    "prefName": "長崎県",
+    "prefNameEn": "Nagasaki",
+    "region": "九州・沖縄"
+  },
+  {
+    "prefCode": "43",
+    "prefName": "熊本県",
+    "prefNameEn": "Kumamoto",
+    "region": "九州・沖縄"
+  },
+  {
+    "prefCode": "44",
+    "prefName": "大分県",
+    "prefNameEn": "Oita",
+    "region": "九州・沖縄"
+  },
+  {
+    "prefCode": "45",
+    "prefName": "宮崎県",
+    "prefNameEn": "Miyazaki",
+    "region": "九州・沖縄"
+  },
+  {
+    "prefCode": "46",
+    "prefName": "鹿児島県",
+    "prefNameEn": "Kagoshima",
+    "region": "九州・沖縄"
+  },
+  {
+    "prefCode": "47",
+    "prefName": "沖縄県",
+    "prefNameEn": "Okinawa",
+    "region": "未分類"
+  }
+]
